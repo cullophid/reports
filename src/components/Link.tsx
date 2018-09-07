@@ -1,5 +1,5 @@
 import * as React from "react"
-import {push} from "./simpleRouter"
+import {router} from "../router"
 // import * as Finch from "finch"
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 export default (props:Props) =>{
   const onClick = (e:React.MouseEvent<Element>) => {
     e.preventDefault()
-    push(props.to)
+    router.push(props.to)
   }
   return (
 

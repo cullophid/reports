@@ -2,8 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import View from './View';
 import registerServiceWorker from './registerServiceWorker';
-import {initialState, State} from "./App"
-import {subscribe} from "./Store"
+import {State} from "./app"
+import {subscribe} from "./store"
+import * as Router from "./router"
 import "./router"
 
 const render = (state:State) =>
@@ -13,6 +14,6 @@ const render = (state:State) =>
   );
 
 subscribe(render)
-render(initialState)
 registerServiceWorker();
+Router.init()
 
