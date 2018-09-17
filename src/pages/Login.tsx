@@ -2,6 +2,7 @@ import * as React from "react"
 import styled from "styled-components"
 import {dispatch} from "../store"
 import Spinner from "../components/Spinner"
+import {Session} from "../app"
 
 let Page = styled.div`
   display:flex;
@@ -53,23 +54,32 @@ let Submit = styled.button`
 
 
 type Props = {
-  email: string,
-  loading?:boolean
+  session:Session
 }
-export default (props:Props) =>  {
-  let login = (e:React.FormEvent) => {
-    e.preventDefault()
-    dispatch({type:"Login", email: props.email})
+type State = {
+  email: string
+}
+export default class Login extends React.Component<Props, State> {
+  constructor(p:Props) {
+    super(p)
+    this.state = {
+      email: ""
+    }
   }
-
-  return (
-  <Page>
+  render() {
+    let login = (e:React.FormEvent) => {
+      e.preventDefault()
+      dispatch({type:"Login", email: this.state.email})
+    }
+    return (
+      <Page>
     <LoginForm onSubmit={login}>
-      <Input value={props.email} onChange={e => dispatch({type:"LoginUpdateEmail", email:e.target.value})} placeholder="Email"/>
+      <Input value={this.state.email} onChange={e => this.setState({email:e.target.value})} placeholder="Email"/>
       <Submit onClick={login}>
-      { props.loading ? <Spinner size={20} color="white" /> : "GO"} 
+      { this.props.session === "Loading" ? <Spinner size={20} color="white" /> : "GO"} 
       </Submit>
     </LoginForm>
     </Page>
   )
-  };
+}
+};

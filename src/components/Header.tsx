@@ -13,11 +13,12 @@ const Header = styled.header`
 const Title = styled.h1`
 margin:auto;
 font-family: 'Montserrat', sans-serif;
-font-size: 36px;
+font-size: 24px;
 font-weight:normal;
 color: #4E4D50;
 margin:0;
 align-self: flex-end;
+color: #4E4D50;
 `
 const Menu = styled.div`
   width: 50px;
