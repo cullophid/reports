@@ -1,7 +1,7 @@
 import { Cmd, CmdType } from "redux-loop";
 import * as Router from "@oolon/router.js";
 import history from "./history";
-import { Report } from "./services/report.service";
+import { Report, createReport, saveReport } from "./services/report.service";
 const delay = <T>(t: T, ms: number): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(t), ms));
 
@@ -23,23 +23,22 @@ type User = {
 
 export type Session = null | "Loading" | User;
 
-const defaultReport = {
-  id: Math.round(Math.random() * 10000),
-  name: "Untitled",
-  pages: []
+export type ReportEditor = {
+  report: Report;
+  unsaveChanges: boolean;
 };
 
 export type State = {
   page: Page;
   session: Session;
   reports: { [id: string]: Report };
-  createReportStatus: null | "Loading";
+  reportEditor: ReportEditor | null;
 };
 
 export const initialState: State = {
   page: { name: "Login" },
   session: null,
-  createReportStatus: null,
+  reportEditor: null,
   reports: {}
 };
 
@@ -49,7 +48,8 @@ export type Action =
   | { type: "Login"; email: string }
   | { type: "LoginSuccess" }
   | { type: "ReportCreate" }
-  | { type: "ReportCreateSuccess"; report: Report };
+  | { type: "ReportSave"; report: Report }
+  | { type: "ReportEditorUpdate"; reportEditor: ReportEditor };
 
 type Update = State | [State, CmdType<Action>];
 
@@ -70,23 +70,28 @@ export const reducer = (state: State, action: Action): Update => {
     case "LoginSuccess":
       return [state, Cmd.run(() => history.push("/reports"))];
     case "ReportCreate":
-      return [
-        { ...state, createReportStatus: "Loading" },
-        run(() => delay({}, 200), {
-          success: () => ({
-            type: "ReportCreateSuccess",
-            report: defaultReport
-          })
-        })
-      ];
-    case "ReportCreateSuccess":
+      const report = createReport();
       return [
         {
           ...state,
-          createReportStatus: null,
+          reports: { ...state.reports, [report.id]: report }
+        },
+        Cmd.run(() => {
+          saveReport(report);
+          history.push(`/reports/${report.id}`);
+        }, {})
+      ];
+    case "ReportEditorUpdate":
+      return { ...state, reportEditor: action.reportEditor };
+    case "ReportSave":
+      const reportEditor = { report: action.report, unsaveChanges: false };
+      return [
+        {
+          ...state,
+          reportEditor,
           reports: { ...state.reports, [action.report.id]: action.report }
         },
-        Cmd.run(() => history.push(`/reports/${action.report.id}`), {})
+        Cmd.run(() => saveReport(action.report), {})
       ];
   }
 };
@@ -111,10 +116,16 @@ const router = (state: State, location: Location): Update =>
       },
       {
         route: "/reports/:id",
-        handler: (params: Router.Params): Update => ({
-          ...state,
-          page: { name: "Report", id: params.id }
-        })
+        handler: (params: Router.Params): Update => {
+          const report = state.reports[params.id];
+          const reportEditor =
+            report === null ? null : { report, unsaveChanges: false };
+          return {
+            ...state,
+            page: { name: "Report", id: params.id },
+            reportEditor
+          };
+        }
       },
       {
         route: "/reports",

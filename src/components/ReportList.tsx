@@ -1,10 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import Header from "../components/Header";
-import NewButton from "../components/NewButton";
-import Link from "../components/Link";
+import Header from "./Header";
+import NewButton from "./NewButton";
+import Link from "./Link";
 import { Report } from "../services/report.service";
 import { dispatch } from "../store";
+import { FrontPage } from "./Slides/FrontPage";
+import NewSlide from "./Slides/NewSlide";
 const Page = styled.div`
   display: flex;
   height: 100vh;
@@ -22,21 +24,10 @@ const Main = styled.main`
   flex-wrap: wrap;
 `;
 
-const Report = styled.div`
-  display: flex;
+const Tile = styled.div`
   margin: 15px;
-  align-items: center;
-  justify-content: center;
   width: 228px;
   height: 138px;
-  background: white;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.4);
-`;
-const ReportTitle = styled.span`
-  font-family: Montserrat;
-  font-weight: normal;
-  font-size: 18px;
-  color: #000000;
 `;
 
 type Props = {
@@ -47,12 +38,14 @@ export default (props: Props) => (
   <Page>
     <Header title="Choose a report or create a new  " />
     <Main>
-      <NewButton onClick={() => dispatch({ type: "ReportCreate" })} />
+      <Tile>
+        <NewSlide onClick={() => dispatch({ type: "ReportCreate" })} />
+      </Tile>
       {props.reports.map((report, i) => (
         <Link to={`/reports/${report.id}`}>
-          <Report key={i}>
-            <ReportTitle>{report.name}</ReportTitle>
-          </Report>
+          <Tile key={i}>
+            <FrontPage page={report.frontPage} />
+          </Tile>
         </Link>
       ))}
     </Main>

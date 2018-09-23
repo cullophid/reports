@@ -1,8 +1,8 @@
 import * as React from "react";
 import { State } from "./app";
-import LoginPage from "./pages/Login";
-import ReportListPage from "./pages/ReportList";
-import ReportEditor from "./pages/ReportEditor";
+import LoginPage from "./components/Login";
+import ReportListPage from "./components/ReportList";
+import ReportEditor from "./components/ReportEditor/Editor";
 import { values } from "./util";
 
 type Props = {
@@ -15,7 +15,7 @@ export default ({ state }: Props): React.ReactElement<Props> => {
     case "Reports":
       return <ReportListPage reports={values(state.reports)} />;
     case "Report":
-      return <ReportEditor report={state.reports[state.page.id]} />;
+      return <ReportEditor reportEditor={state.reportEditor} />;
     case "NotFound":
       return <h1> Not Found </h1>;
   }
