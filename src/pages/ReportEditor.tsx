@@ -1,10 +1,10 @@
 import * as React from "react";
+import { Report } from "../services/report.service";
 import styled from "styled-components";
-import Header from "../components/Header";
 import NewButton from "../components/NewButton";
-import { Report } from "../app";
+import Header from "../components/Header";
+import Slide from "../components/Slide";
 
-const Slide = styled.div``;
 const Page = styled.div`
   display: flex;
   height: 100vh;
@@ -20,7 +20,7 @@ const Main = styled.main`
   flex-direction: row;
   align-items: stretch;
   justify-content: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 `;
 
 const SlideList = styled.aside`
@@ -32,7 +32,8 @@ const SlideList = styled.aside`
   align-items: center;
 `;
 const Stage = styled.div`
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,10 +57,6 @@ const FrontPage = styled.div`
   justify-content: center;
   color: black;
   font-size: 48px;
-  height: 500px;
-  width: 889px;
-  background: white;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 `;
 
 type Props = {
@@ -72,13 +69,14 @@ export default (props: Props) => (
     <Main>
       <SlideList>
         <FrontPageThumb>
-          {" "}
-          {props.report ? props.report.name : "Untitled"}{" "}
+          {props.report ? props.report.name : "Untitled"}
         </FrontPageThumb>
         <NewButton />
       </SlideList>
       <Stage>
-        <FrontPage> {props.report ? props.report.name : "Untitled"} </FrontPage>
+        <Slide>
+          <FrontPage>{props.report ? props.report.name : "Untitled"}</FrontPage>
+        </Slide>
       </Stage>
     </Main>
   </Page>

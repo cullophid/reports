@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import plus from "../plus.svg";
 
 const Button = styled.button`
   margin: 15px;
@@ -20,4 +21,8 @@ const Button = styled.button`
 type Props = {
   onClick?: (e: React.MouseEvent<Element>) => void;
 };
-export default (props: Props) => <Button onClick={props.onClick}>+</Button>;
+export default (props: Props) => (
+  <Button onClick={props.onClick}>
+    <img src={plus} />
+  </Button>
+);

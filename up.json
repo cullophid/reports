@@ -1,0 +1,23 @@
+{
+  "name": "reports",
+  "profile": "andreas",
+  "type": "static",
+  "regions": ["eu-west-1"],
+  "static": {
+    "dir": "build"
+  },
+  "hooks": {
+    "build": "yarn run build"
+  },
+  "redirects": {
+    "/*": {
+      "location": "/",
+      "status": 200
+    }
+  },
+  "stages": {
+    "production": {
+      "domain": "reports.andreas.enterprises"
+    }
+  }
+}

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import NewButton from "../components/NewButton";
 import Link from "../components/Link";
-import { Report } from "../app";
+import { Report } from "../services/report.service";
 import { dispatch } from "../store";
 const Page = styled.div`
   display: flex;
@@ -47,7 +47,7 @@ export default (props: Props) => (
   <Page>
     <Header title="Choose a report or create a new  " />
     <Main>
-      <NewButton onClick={() => dispatch({ type: "CreateReport" })} />
+      <NewButton onClick={() => dispatch({ type: "ReportCreate" })} />
       {props.reports.map((report, i) => (
         <Link to={`/reports/${report.id}`}>
           <Report key={i}>

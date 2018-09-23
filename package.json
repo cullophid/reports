@@ -6,6 +6,7 @@
     "@oolon/router.js": "^3.0.2",
     "history": "^4.7.2",
     "react": "^16.4.2",
+    "react-auto-scale": "^1.0.4",
     "react-dom": "^16.4.2",
     "react-scripts-ts": "2.17.0",
     "redux": "^4.0.0",
@@ -21,21 +22,22 @@
     "build-storybook": "build-storybook"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.1",
-    "@types/finch": "^0.5.27",
-    "@types/history": "^4.7.0",
-    "@types/navigo": "^7.0.1",
-    "@types/page": "^1.8.0",
-    "@types/riot-route": "^3.1.0",
-    "@types/node": "^10.9.4",
-    "@types/react": "^16.4.13",
-    "@types/react-dom": "^16.0.7",
-    "typescript": "^3.0.3",
-    "@storybook/react": "^3.4.10",
     "@storybook/addon-actions": "^3.4.10",
     "@storybook/addon-links": "^3.4.10",
     "@storybook/addons": "^3.4.10",
+    "@storybook/react": "^3.4.10",
+    "@types/finch": "^0.5.27",
+    "@types/history": "^4.7.0",
+    "@types/jest": "^23.3.1",
+    "@types/navigo": "^7.0.1",
+    "@types/node": "^10.9.4",
+    "@types/page": "^1.8.0",
+    "@types/react": "^16.4.13",
+    "@types/react-dom": "^16.0.7",
+    "@types/riot-route": "^3.1.0",
     "babel-core": "^6.26.3",
-    "babel-runtime": "^6.26.0"
+    "babel-runtime": "^6.26.0",
+    "typescript": "^3.0.3",
+    "typescript-plugin-styled-components": "^1.0.0"
   }
 }

@@ -1,6 +1,7 @@
 import { Cmd, CmdType } from "redux-loop";
 import * as Router from "@oolon/router.js";
 import history from "./history";
+import { Report } from "./services/report.service";
 const delay = <T>(t: T, ms: number): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(t), ms));
 
@@ -21,17 +22,6 @@ type User = {
 };
 
 export type Session = null | "Loading" | User;
-
-export type ReportPage = {
-  title: string;
-  text: string[];
-};
-
-export type Report = {
-  id: number;
-  name: string;
-  pages: ReportPage[];
-};
 
 const defaultReport = {
   id: Math.round(Math.random() * 10000),
@@ -58,8 +48,8 @@ export type Action =
   | { type: "Navigate"; location: Location }
   | { type: "Login"; email: string }
   | { type: "LoginSuccess" }
-  | { type: "CreateReport" }
-  | { type: "CreateReportSuccess"; report: Report };
+  | { type: "ReportCreate" }
+  | { type: "ReportCreateSuccess"; report: Report };
 
 type Update = State | [State, CmdType<Action>];
 
@@ -79,17 +69,17 @@ export const reducer = (state: State, action: Action): Update => {
       ];
     case "LoginSuccess":
       return [state, Cmd.run(() => history.push("/reports"))];
-    case "CreateReport":
+    case "ReportCreate":
       return [
         { ...state, createReportStatus: "Loading" },
         run(() => delay({}, 200), {
           success: () => ({
-            type: "CreateReportSuccess",
+            type: "ReportCreateSuccess",
             report: defaultReport
           })
         })
       ];
-    case "CreateReportSuccess":
+    case "ReportCreateSuccess":
       return [
         {
           ...state,
@@ -132,7 +122,7 @@ const router = (state: State, location: Location): Update =>
       },
       {
         route: "*",
-        handler: (): Update => [state, run(() => history.push("/login"), {})]
+        handler: (): Update => [state, run(() => history.push("/reports"), {})]
       }
     ]
   ) || state;

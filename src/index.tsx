@@ -15,7 +15,3 @@ subscribe(render);
 registerServiceWorker();
 history.listen(() => dispatch({ type: "Navigate", location: window.location }));
 dispatch({ type: "Navigate", location: window.location });
-
-subscribe((state: State) =>
-  localStorage.setItem("reports", JSON.stringify(state.reports))
-);
