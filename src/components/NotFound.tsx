@@ -1,12 +1,13 @@
-import * as React from "react"
-import styled from "styled-components"
-import {Center} from "../components/Layout"
+import * as React from "react";
+import styled from "styled-components";
+import { Center } from "./Layout";
 
 const Text = styled.h1`
-  color:#bababa;
+  color: #bababa;
   font-size: 36px;
-`
-export default () =>
+`;
+export default () => (
   <Center>
     <Text>Page Not Found</Text>
   </Center>
+);

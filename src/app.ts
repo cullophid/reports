@@ -1,20 +1,22 @@
-import { Cmd, CmdType } from "redux-loop";
+import * as Loop from "redux-loop";
 import * as Router from "@oolon/router.js";
 import history from "./history";
-import { Report, createReport, saveReport } from "./services/report.service";
-const delay = <T>(t: T, ms: number): Promise<T> =>
-  new Promise((resolve) => setTimeout(() => resolve(t), ms));
+import { Report, createReport, saveReport } from "./reports";
 
-type run = <T>(
-  f: (() => T | Promise<T>),
-  config?: { success?: (t: T) => Action; fail?: (t: T) => Action }
-) => CmdType<Action>;
+type Cmd = Loop.CmdType<Msg>;
+namespace Cmd {
+  export const run = <T>(
+    f: () => T | Promise<T>,
+    { success, error }: { success?: (t: T) => Msg; error?: (t: T) => Msg }
+  ) =>
+    Loop.Cmd.run(f, {
+      successActionCreator: success,
+      failActionCreator: error
+    });
+  export const action = (action: Msg) => Loop.Cmd.action(action);
+  export const list = (cmds: Cmd[]) => Loop.Cmd.list(cmds);
+}
 
-const run: run = (f, options = {}) =>
-  Cmd.run(f, {
-    successActionCreator: options.success,
-    failActionCreator: options.fail
-  });
 type User = {
   firstname: string;
   lastname: string;
@@ -25,7 +27,8 @@ export type Session = null | "Loading" | User;
 
 export type ReportEditor = {
   report: Report;
-  unsaveChanges: boolean;
+  unsavedChanges: boolean;
+  showNewSlideModal: boolean;
 };
 
 export type State = {
@@ -34,41 +37,48 @@ export type State = {
   reports: { [id: string]: Report };
   reportEditor: ReportEditor | null;
 };
-
-export const initialState: State = {
+const defaultState: State = {
   page: { name: "Login" },
   session: null,
   reportEditor: null,
   reports: {}
 };
+export const initialState = () => {
+  let reports = localStorage.getItem("reports");
+  if (reports === null) {
+    return defaultState;
+  } else {
+    return { ...defaultState, reports: JSON.parse(reports) };
+  }
+};
 
-export type Action =
+export type Msg =
   | { type: "@@INIT" }
-  | { type: "Navigate"; location: Location }
+  | { type: "@@Navigate"; location: Location }
   | { type: "Login"; email: string }
   | { type: "LoginSuccess" }
   | { type: "ReportCreate" }
   | { type: "ReportSave"; report: Report }
   | { type: "ReportEditorUpdate"; reportEditor: ReportEditor };
 
-type Update = State | [State, CmdType<Action>];
+type Update = State | [State, Cmd];
 
-export const reducer = (state: State, action: Action): Update => {
+export const update = (state: State, action: Msg): Update => {
   switch (action.type) {
     case "@@INIT":
       return state;
-    case "Navigate":
+    case "@@Navigate":
       return router(state, action.location);
     case "Login":
       if (state.page.name !== "Login") return state;
       return [
         { ...state, session: "Loading" },
-        run(() => delay({}, 1000), {
+        Cmd.run(() => Promise.resolve(), {
           success: () => ({ type: "LoginSuccess" })
         })
       ];
     case "LoginSuccess":
-      return [state, Cmd.run(() => history.push("/reports"))];
+      return [state, Cmd.run(() => history.push("/reports"), {})];
     case "ReportCreate":
       const report = createReport();
       return [
@@ -84,7 +94,12 @@ export const reducer = (state: State, action: Action): Update => {
     case "ReportEditorUpdate":
       return { ...state, reportEditor: action.reportEditor };
     case "ReportSave":
-      const reportEditor = { report: action.report, unsaveChanges: false };
+      if (state.reportEditor === null) return state;
+      const reportEditor = {
+        ...state.reportEditor,
+        report: action.report,
+        unsaveChanges: false
+      };
       return [
         {
           ...state,
@@ -119,7 +134,9 @@ const router = (state: State, location: Location): Update =>
         handler: (params: Router.Params): Update => {
           const report = state.reports[params.id];
           const reportEditor =
-            report === null ? null : { report, unsaveChanges: false };
+            report === null
+              ? null
+              : { showNewSlideModal: false, report, unsavedChanges: false };
           return {
             ...state,
             page: { name: "Report", id: params.id },
@@ -133,7 +150,10 @@ const router = (state: State, location: Location): Update =>
       },
       {
         route: "*",
-        handler: (): Update => [state, run(() => history.push("/reports"), {})]
+        handler: (): Update => [
+          state,
+          Cmd.run(() => history.push("/reports"), {})
+        ]
       }
     ]
   ) || state;

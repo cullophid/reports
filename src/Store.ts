@@ -1,6 +1,6 @@
 import { createStore, compose } from "redux";
-import { install, getModel } from "redux-loop";
-import { reducer, initialState, Action, State } from "./app";
+import * as Loop from "redux-loop";
+import { CmdType } from "redux-loop";
 
 declare global {
   interface Window {
@@ -9,18 +9,13 @@ declare global {
 }
 const devtools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const getInitialState = () => {
-  let reports = localStorage.getItem("reports");
-  if (reports === null) {
-    return initialState;
-  } else {
-    return { ...initialState, reports: JSON.parse(reports) };
-  }
+let store: any;
+export let dispatch = <Msg>(action: Msg): void => {
+  throw new Error("You must call init before you can call dispatch");
 };
-const store = createStore(reducer, getInitialState(), devtools(install()));
 
-export const dispatch: ((action: Action) => void) = store.dispatch;
-
-export const subscribe = (f: ((state: State) => void)) => {
-  store.subscribe(() => f(getModel(store.getState())));
+export const init = ({ update, initialState, render }: any) => {
+  store = createStore(update, initialState(), devtools(Loop.install()));
+  dispatch = store.dispatch;
+  store.subscribe(() => render(store.getState()));
 };

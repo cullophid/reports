@@ -1,15 +1,15 @@
 import * as React from "react";
 import styled from "styled-components";
 import Header from "./Header";
-import NewButton from "./NewButton";
 import Link from "./Link";
-import { Report } from "../services/report.service";
+import { Report } from "../reports";
 import { dispatch } from "../store";
 import { FrontPage } from "./Slides/FrontPage";
-import NewSlide from "./Slides/NewSlide";
+import NewSlide from "./NewSlide";
+
 const Page = styled.div`
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
   align-items: stretch;
   background: #eee;

@@ -2,8 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import View from "./View";
 import registerServiceWorker from "./registerServiceWorker";
-import { State } from "./app";
-import { subscribe, dispatch } from "./store";
+import { State, update, initialState } from "./app";
+import * as Store from "./store";
 import history from "./history";
 
 const render = (state: State) =>
@@ -11,7 +11,9 @@ const render = (state: State) =>
     "root"
   ) as HTMLElement);
 
-subscribe(render);
+Store.init({ update, initialState, render });
 registerServiceWorker();
-history.listen(() => dispatch({ type: "Navigate", location: window.location }));
-dispatch({ type: "Navigate", location: window.location });
+history.listen(() =>
+  Store.dispatch({ type: "@@Navigate", location: window.location })
+);
+Store.dispatch({ type: "@@Navigate", location: window.location });

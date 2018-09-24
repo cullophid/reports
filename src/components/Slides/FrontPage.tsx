@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ReportPage } from "../../services/report.service";
+import { ReportPage } from "../../reports";
 import styled from "styled-components";
 import Slide from "../Slide";
 import TextField from "../TextField";
@@ -72,6 +72,15 @@ export const FrontPageEditor = (props: EditorProps) => (
           })
         }
       />
+    </Content>
+  </Slide>
+);
+
+export const FrontPageTemplate = () => (
+  <Slide>
+    <Content>
+      <Title>Title</Title>
+      <SubTitle>Subtitle</SubTitle>
     </Content>
   </Slide>
 );

@@ -7,14 +7,14 @@ export type ReportPage = {
 
 export type Report = {
   id: number;
-  name: string;
+  title: string;
   frontPage: ReportPage;
   pages: ReportPage[];
 };
 
 export const createReport = (): Report => ({
   id: Math.round(Math.random() * 10000),
-  name: "Untitled",
+  title: "Untitled",
   frontPage: {
     title: "Untitled",
     text: {

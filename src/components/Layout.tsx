@@ -1,95 +1,99 @@
-import styled from "styled-components"
+import * as React from "react";
+import styled from "styled-components";
 
-type Column = {
-  flex?: number,
-  top?:boolean,
-  middle?:boolean,
-  bottom?:boolean,
-  left?:boolean,
-  center?:boolean,
-  right?:boolean,
-  stretch?:boolean,
-  spacing?: string,
-  spaceEvenly?:boolean,
-  spaceAround?:boolean,
-  spaceBetween?:boolean
-}
+type RowProps = {
+  spacing?: string;
+  fullWidth?: boolean;
+  justify?: "left" | "right" | "center" | "space-around" | "space-between";
+  align?: "top" | "middle" | "bottom" | "stretch";
+};
 
-let alignColumn = (props:Column) => 
-  props.bottom ? "flex-end"
-    : props.center ? "center"
-    : props.stretch ? "stretch"
-    : "flex-start";
-
-let justifyColumn = (props:Column) => 
-  props.right ? "flex-end"
-    : props.middle ? "center"
-    : props.spaceEvenly ? "space-evenly"
-    : props.spaceAround ? "space-around"
-    : props.spaceBetween ? "space-between"
-    : "flex-start"
-
-export const Column = styled.div<Column>`
-  display:flex;
-  flex: ${props => props.flex || 0};
-  flex-direction: column;
-  align-items: ${props => alignColumn(props)};
-  justify-content: ${props => justifyColumn(props)};
-  & > * {
-    margin-bottom: ${props => props.spacing || "0"};
+const justifyRow = (val?: string) => {
+  switch (val) {
+    case "left":
+      return "flex-start";
+    case "right":
+      return "flex-end";
+    default:
+      return val;
   }
-  & > *:last-child {
-    margin-bottom: 0;
+};
+const alignRow = (val?: string) => {
+  switch (val) {
+    case "top":
+      return "flex-start";
+    case "bottom":
+      return "flex-end";
+    case "middle":
+      return "center";
+    default:
+      return val;
   }
- }
-`
-type Row = {
-  flex?: number,
-  top?:boolean,
-  middle?:boolean,
-  bottom?:boolean,
-  left?:boolean,
-  center?:boolean,
-  right?:boolean,
-  stretch?:boolean,
-  spacing?: string,
-  spaceEvenly?:boolean,
-  spaceAround?:boolean,
-  spaceBetween?:boolean
-}
-
-let justifyRow = (props:Row) => 
-  props.right ? "flex-end"
-    : props.center ? "center"
-    : props.spaceEvenly ? "space-evenly"
-    : props.spaceAround ? "space-around"
-    : props.spaceBetween ? "space-between"
-    : "flex-start"
-
-let alignRow = (props:Row) => 
-  props.right ? "flex-end"
-    : props.middle ? "center"
-    : props.stretch ? "stretch"
-    : "flex-start"
-
-export const Row = styled.div<Column>`
-  display:flex;
-  flex: ${props => props.flex || 0};
-  flex-direction: column;
-  align-items: ${props => alignRow(props)};
-  justify-content: ${props => justifyRow(props)};
+};
+export const Row = styled.div<RowProps>`
+  box-sizing: border-box;
+  display: flex;
+  width: ${(props) => (props.fullWidth ? "100%" : "auto")}
+  flex-direction: row;
+  justify-content: ${(props) => justifyRow(props.justify)};
+  align-items: ${(props) => alignRow(props.align)};
   & > * {
-    margin-right: ${props => props.spacing || "0"};
+    margin-right: ${(props) => props.spacing || 0};
   }
   & > *:last-child {
     margin-right: 0;
   }
- }
-`
+`;
+
+type ColumnProps = {
+  fullHeight?: boolean;
+  spacing?: string;
+  justify?: "top" | "bottom" | "middle" | "space-around" | "space-between";
+  align?: "left" | "right" | "center" | "stretch";
+};
+
+const justifyColumn = (val?: string) => {
+  switch (val) {
+    case "top":
+      return "flex-start";
+    case "bottom":
+      return "flex-end";
+    case "middle":
+      return "center";
+    default:
+      return val;
+  }
+};
+const alignColumn = (val?: string) => {
+  switch (val) {
+    case "left":
+      return "flex-start";
+    case "right":
+      return "flex-end";
+    default:
+      return val;
+  }
+};
+export const Column = styled.div<ColumnProps>`
+  box-sizing: border-box;
+  display: flex;
+  height: ${(props) => (props.fullHeight ? "100%" : "auto")}
+  flex-direction: column;
+  justify-content: ${(props) => justifyColumn(props.justify)};
+  align-items: ${(props) => alignColumn(props.align)};
+  & > * {
+    margin-bottom: ${({ spacing = "0" }) => spacing};
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
 
 export const Center = styled.div`
-  display:flex;
+  flex: 1;
+  width: 100%;
   height: 100%;
-  justify-content:center;
+  display: flex;
   align-items: center;
-`
+  justify-content: center;
+`;
