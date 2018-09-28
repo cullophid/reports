@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ReportPage } from "../../reports";
 import styled from "styled-components";
-import Slide from "../Slide";
+import PageContainer from "../PageContainer";
 import TextField from "../TextField";
 
 const Content = styled.div`
@@ -41,22 +41,24 @@ const SubTitleEditor = styled(TextField)`
 `;
 type Props = {
   page: ReportPage;
+  onClick?: () => void;
 };
-export const FrontPage = (props: Props) => (
-  <Slide>
-    <Content>
+export const Page = (props: Props) => (
+  <PageContainer>
+    <Content onClick={props.onClick}>
       <Title>{props.page.title}</Title>
       <SubTitle>{props.page.text.subtitle}</SubTitle>
     </Content>
-  </Slide>
+  </PageContainer>
 );
 type EditorProps = {
   page: ReportPage;
   onChange: (page: ReportPage) => void;
+  onClick?: () => void;
 };
-export const FrontPageEditor = (props: EditorProps) => (
-  <Slide>
-    <Content>
+export const Editor = (props: EditorProps) => (
+  <PageContainer>
+    <Content onClick={props.onClick}>
       <TitleEditor
         value={props.page.title}
         onChange={(e) =>
@@ -73,14 +75,14 @@ export const FrontPageEditor = (props: EditorProps) => (
         }
       />
     </Content>
-  </Slide>
+  </PageContainer>
 );
 
-export const FrontPageTemplate = () => (
-  <Slide>
+export const Template = () => (
+  <PageContainer>
     <Content>
       <Title>Title</Title>
       <SubTitle>Subtitle</SubTitle>
     </Content>
-  </Slide>
+  </PageContainer>
 );

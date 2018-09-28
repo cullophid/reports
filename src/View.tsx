@@ -4,7 +4,6 @@ import LoginPage from "./components/Login";
 import ReportListPage from "./components/ReportList";
 import ReportEditor from "./components/ReportEditor";
 import { values } from "./util";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 const renderPage = (state: State) => {
   switch (state.page.name) {

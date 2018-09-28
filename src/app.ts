@@ -27,6 +27,7 @@ export type Session = null | "Loading" | User;
 
 export type ReportEditor = {
   report: Report;
+  selectedPage: "FrontPage" | number;
   unsavedChanges: boolean;
   showNewSlideModal: boolean;
 };
@@ -133,10 +134,15 @@ const router = (state: State, location: Location): Update =>
         route: "/reports/:id",
         handler: (params: Router.Params): Update => {
           const report = state.reports[params.id];
-          const reportEditor =
+          const reportEditor: ReportEditor | null =
             report === null
               ? null
-              : { showNewSlideModal: false, report, unsavedChanges: false };
+              : {
+                  showNewSlideModal: false,
+                  report,
+                  unsavedChanges: false,
+                  selectedPage: 0
+                };
           return {
             ...state,
             page: { name: "Report", id: params.id },

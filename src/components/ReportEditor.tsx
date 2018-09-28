@@ -1,15 +1,26 @@
 import * as React from "react";
 import { Report } from "../reports";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Spinner from "./Spinner";
-import { FrontPageEditor } from "./Slides/FrontPage";
+import * as Page from "./Pages/Page";
 import { dispatch } from "../store";
 import { ReportEditor } from "../app";
-import SlideList from "./SlideList";
+import PageList from "./PageList";
 import Header from "./Header";
-import NewSlide from "./NewSlide";
+import { ReportPage } from "../reports";
+import PageTemplates from "./PageTemplates";
+import { Column } from "./Layout";
 
-const Page = styled.main`
+const slideOut = keyframes`
+  from {
+    transform:translateX(0)
+  }
+  to {
+    transform:translateX(100%)
+  }
+`;
+
+const PageWrap = styled.main`
   background: #eee;
   flex: 1;
   min-height: 100vh;
@@ -24,19 +35,19 @@ const Aside = styled.aside`
   flex-shrink: 0;
   width: 300px;
   box-sizing: border-box;
-  background: #686e75;
+  background: #ccc;
   transition: width 300ms;
   box-shadow: -1px 0 4px rgba(0, 0, 0, 0.4) inset;
 `;
-const Stage = styled.div`
-  transition: transform 300ms;
-  transform: translateX(0);
+const Stage = styled(Column)`
   flex-grow: 1;
   flex-shrink: 1;
   padding: 50px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation-duration: 200ms;
+  animation-name: ${slideOut};
 `;
 
 const Save = styled.button`
@@ -69,7 +80,7 @@ export default class Editor extends React.PureComponent<Props, {}> {
       return <Spinner color="black" size={48} />;
     const { reportEditor } = this.props;
     const { report, unsavedChanges } = reportEditor;
-
+    const selectedPage = report.pages[reportEditor.selectedPage];
     const update = (reportEditor: ReportEditor) =>
       dispatch({
         type: "ReportEditorUpdate",
@@ -85,34 +96,64 @@ export default class Editor extends React.PureComponent<Props, {}> {
         }
       });
     return (
-      <Page>
+      <PageWrap>
         <Aside>
           <Header title={report.title} />
-          <SlideList
+          <PageList
             report={report}
             show={!reportEditor.showNewSlideModal}
             updateReport={updateReport}
-            onNewSlide={console.log}
+            onNewSlide={() =>
+              update({ ...reportEditor, showNewSlideModal: true })
+            }
+            onSelect={(page: number) =>
+              update({ ...reportEditor, selectedPage: page })
+            }
+          />
+          <PageTemplates
+            show={reportEditor.showNewSlideModal}
+            selectPageTemplate={(page: ReportPage) =>
+              update({
+                ...reportEditor,
+                selectedPage: report.pages.length,
+                report: { ...report, pages: [...report.pages, page] },
+                showNewSlideModal: false
+              })
+            }
           />
         </Aside>
         <Stage
+          spacing="15px"
           style={
             reportEditor.showNewSlideModal
-              ? { transform: "translateX(100%)" }
-              : {}
+              ? { animationPlayState: "running" }
+              : {
+                  animationPlayState: "running",
+                  animationDirection: "reverse",
+                  animationDelay: "400ms"
+                }
           }
         >
-          <FrontPageEditor
-            page={report.frontPage}
-            onChange={(frontPage) => updateReport({ ...report, frontPage })}
-          />
+          {selectedPage ? (
+            <Page.Editor
+              page={selectedPage}
+              onChange={(page) =>
+                updateReport({
+                  ...report,
+                  pages: report.pages.map(
+                    (p, i) => (i === reportEditor.selectedPage ? page : p)
+                  )
+                })
+              }
+            />
+          ) : null}
         </Stage>
         {unsavedChanges ? (
           <Save onClick={() => dispatch({ type: "ReportSave", report })}>
             SAVE
           </Save>
         ) : null}
-      </Page>
+      </PageWrap>
     );
   }
 }

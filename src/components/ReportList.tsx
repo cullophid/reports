@@ -4,10 +4,10 @@ import Header from "./Header";
 import Link from "./Link";
 import { Report } from "../reports";
 import { dispatch } from "../store";
-import { FrontPage } from "./Slides/FrontPage";
-import NewSlide from "./NewSlide";
+import * as Page from "./Pages/Page";
+import NewPage from "./NewPage";
 
-const Page = styled.div`
+const PageWrap = styled.div`
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -35,19 +35,19 @@ type Props = {
 };
 
 export default (props: Props) => (
-  <Page>
+  <PageWrap>
     <Header title="Choose a report or create a new  " />
     <Main>
       <Tile>
-        <NewSlide onClick={() => dispatch({ type: "ReportCreate" })} />
+        <NewPage onClick={() => dispatch({ type: "ReportCreate" })} />
       </Tile>
       {props.reports.map((report, i) => (
         <Link to={`/reports/${report.id}`}>
           <Tile key={i}>
-            <FrontPage page={report.frontPage} />
+            <Page.Page page={report.pages[0]} />
           </Tile>
         </Link>
       ))}
     </Main>
-  </Page>
+  </PageWrap>
 );

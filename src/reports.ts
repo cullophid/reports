@@ -1,4 +1,6 @@
+export type ReportTemplate = "TitlePage" | "TwoColumn";
 export type ReportPage = {
+  template: ReportTemplate;
   title: string;
   text: {
     [key: string]: string;
@@ -8,20 +10,23 @@ export type ReportPage = {
 export type Report = {
   id: number;
   title: string;
-  frontPage: ReportPage;
   pages: ReportPage[];
 };
 
 export const createReport = (): Report => ({
   id: Math.round(Math.random() * 10000),
   title: "Untitled",
-  frontPage: {
-    title: "Untitled",
-    text: {
-      subtitle: "Subtitle"
+  pages: [
+    {
+      template: "TitlePage",
+      title: "Untitled",
+      text: {
+        subtitle: "Subtitle",
+        primary: "Primary Text",
+        secondary: "Secondary Text"
+      }
     }
-  },
-  pages: []
+  ]
 });
 export const fetchReports = (): Promise<{ [id: string]: Report }> =>
   new Promise((resolve, reject) => {
