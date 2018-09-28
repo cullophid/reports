@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ReportPage } from "../reports";
+import { Slide } from "../reports";
 import styled from "styled-components";
 import plus from "../plus.svg";
 import AutoScale from "react-auto-scale";

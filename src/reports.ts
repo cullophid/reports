@@ -1,30 +1,28 @@
-export type ReportTemplate = "TitlePage" | "TwoColumn";
-export type ReportPage = {
+export type ReportTemplate = "TitleSlide" | "TwoColumn";
+export type Slide = {
   template: ReportTemplate;
   title: string;
-  text: {
-    [key: string]: string;
-  };
+  subtitle?: string;
+  primaryText?: string;
+  secondaryText?: string;
 };
 
 export type Report = {
   id: number;
   title: string;
-  pages: ReportPage[];
+  slides: Slide[];
 };
 
 export const createReport = (): Report => ({
   id: Math.round(Math.random() * 10000),
   title: "Untitled",
-  pages: [
+  slides: [
     {
-      template: "TitlePage",
+      template: "TitleSlide",
       title: "Untitled",
-      text: {
-        subtitle: "Subtitle",
-        primary: "Primary Text",
-        secondary: "Secondary Text"
-      }
+      subtitle: "Subtitle",
+      primaryText: "Primary Text",
+      secondaryText: "Secondary Text"
     }
   ]
 });

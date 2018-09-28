@@ -1,15 +1,14 @@
 import * as React from "react";
 import { Report } from "../reports";
 import styled, { keyframes } from "styled-components";
-import Spinner from "./Spinner";
-import * as Page from "./Pages/Page";
-import { dispatch } from "../store";
-import { ReportEditor } from "../app";
-import PageList from "./PageList";
+import * as BaseSlide from "./Slides/Slide";
+import PageList from "./SlideList";
 import Header from "./Header";
-import { ReportPage } from "../reports";
-import PageTemplates from "./PageTemplates";
+import { Slide } from "../reports";
+import PageTemplates from "./SlideTemplates";
 import { Column } from "./Layout";
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
 
 const slideOut = keyframes`
   from {
@@ -71,89 +70,87 @@ const Save = styled.button`
 `;
 
 type Props = {
-  reportEditor: ReportEditor | null;
+  reportId: number;
+};
+type State = {
+  selectedSlide: number;
+  selectSlideTemplate: boolean;
 };
 
-export default class Editor extends React.PureComponent<Props, {}> {
+const FETCH_REPORT = gql`
+  {
+    report(id: $id) @client {
+      id
+      title
+      slides {
+        id
+        template
+        title
+        subtitle
+        primaryText
+        secondaryText
+      }
+    }
+  }
+`;
+
+export default class Editor extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      selectedSlide: 0,
+      selectSlideTemplate: false
+    };
+  }
   render() {
-    if (this.props.reportEditor === null)
-      return <Spinner color="black" size={48} />;
-    const { reportEditor } = this.props;
-    const { report, unsavedChanges } = reportEditor;
-    const selectedPage = report.pages[reportEditor.selectedPage];
-    const update = (reportEditor: ReportEditor) =>
-      dispatch({
-        type: "ReportEditorUpdate",
-        reportEditor
-      });
-    const updateReport = (report: Report) =>
-      dispatch({
-        type: "ReportEditorUpdate",
-        reportEditor: {
-          ...reportEditor,
-          unsavedChanges: true,
-          report
-        }
-      });
+    const update = () => {};
+    const updateReport = (report: Report) => {};
     return (
-      <PageWrap>
-        <Aside>
-          <Header title={report.title} />
-          <PageList
-            report={report}
-            show={!reportEditor.showNewSlideModal}
-            updateReport={updateReport}
-            onNewSlide={() =>
-              update({ ...reportEditor, showNewSlideModal: true })
-            }
-            onSelect={(page: number) =>
-              update({ ...reportEditor, selectedPage: page })
-            }
-          />
-          <PageTemplates
-            show={reportEditor.showNewSlideModal}
-            selectPageTemplate={(page: ReportPage) =>
-              update({
-                ...reportEditor,
-                selectedPage: report.pages.length,
-                report: { ...report, pages: [...report.pages, page] },
-                showNewSlideModal: false
-              })
-            }
-          />
-        </Aside>
-        <Stage
-          spacing="15px"
-          style={
-            reportEditor.showNewSlideModal
-              ? { animationPlayState: "running" }
-              : {
-                  animationPlayState: "running",
-                  animationDirection: "reverse",
-                  animationDelay: "400ms"
+      <Query query={FETCH_REPORT} variables={{ id: this.props.reportId }}>
+        {({ loading, error, data }) => {
+          if (loading) return <h1>Loading</h1>;
+          if (error) return <h1>error</h1>;
+          const report: Report = data.report;
+          console.log(report);
+          return (
+            <PageWrap>
+              <Aside>
+                <Header title={report.title} />
+                <PageList
+                  report={report}
+                  show={!this.state.selectSlideTemplate}
+                  updateReport={updateReport}
+                  onNewSlide={() => {}}
+                  onSelect={(slide: number) =>
+                    this.setState({ selectedSlide: slide })
+                  }
+                />
+                <PageTemplates
+                  show={this.state.selectSlideTemplate}
+                  selectSlideTemplate={(page: Slide) => {}}
+                />
+              </Aside>
+              <Stage
+                spacing="15px"
+                style={
+                  this.state.selectedSlide
+                    ? { animationPlayState: "running" }
+                    : {
+                        animationPlayState: "running",
+                        animationDirection: "reverse",
+                        animationDelay: "400ms"
+                      }
                 }
-          }
-        >
-          {selectedPage ? (
-            <Page.Editor
-              page={selectedPage}
-              onChange={(page) =>
-                updateReport({
-                  ...report,
-                  pages: report.pages.map(
-                    (p, i) => (i === reportEditor.selectedPage ? page : p)
-                  )
-                })
-              }
-            />
-          ) : null}
-        </Stage>
-        {unsavedChanges ? (
-          <Save onClick={() => dispatch({ type: "ReportSave", report })}>
-            SAVE
-          </Save>
-        ) : null}
-      </PageWrap>
+              >
+                <BaseSlide.Editor
+                  slide={report.slides[this.state.selectedSlide]}
+                  onChange={(slide: Slide) => {}}
+                />
+              </Stage>
+            </PageWrap>
+          );
+        }}
+      </Query>
     );
   }
 }

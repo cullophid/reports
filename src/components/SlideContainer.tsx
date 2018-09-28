@@ -21,7 +21,6 @@ type Props = {
 
 export default class Slide extends React.PureComponent<Props, {}> {
   update = () => {
-    console.log("UPDATE");
     this.forceUpdate();
   };
   componentDidMount() {

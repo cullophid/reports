@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import Header from "./Header";
-import * as TitlePage from "./Pages/TitlePage";
-import * as twoColum from "./Pages/TwoColumn";
+import * as TitleSlide from "./Slides/TitleSlide";
+import * as twoColum from "./Slides/TwoColumn";
 import { Row } from "./Layout";
-import { ReportPage, ReportTemplate } from "../reports";
+import { Slide, ReportTemplate } from "../reports";
 
 const TemplateList = styled.div`
   opacity: 0;
@@ -32,11 +32,11 @@ const Template = styled.div`
 
 type Props = {
   show: boolean;
-  selectPageTemplate: (page: ReportPage) => void;
+  selectSlideTemplate: (page: Slide) => void;
 };
 export default (props: Props) => {
   const select = (template: ReportTemplate) =>
-    props.selectPageTemplate({ template, title: "Untitled", text: {} });
+    props.selectSlideTemplate({ template, title: "Untitled" });
   return (
     <Templates
       style={
@@ -46,8 +46,8 @@ export default (props: Props) => {
       <Header title="Choose a template" />
       <TemplateList style={props.show ? { opacity: 1 } : {}}>
         <Row spacing="15px" justify="center">
-          <Template onClick={() => select("TitlePage")}>
-            <TitlePage.Template />
+          <Template onClick={() => select("TitleSlide")}>
+            <TitleSlide.Template />
           </Template>
           <Template onClick={() => select("TwoColumn")}>
             <twoColum.Template />

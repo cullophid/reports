@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ReportPage } from "../../reports";
+import * as Reports from "../../reports";
 import styled from "styled-components";
-import PageContainer from "../PageContainer";
+import PageContainer from "../SlideContainer";
 import TextField from "../TextField";
 import TextArea from "../TextArea";
 import { Row, Column } from "../Layout";
@@ -54,57 +54,45 @@ const ColumnEditor = styled(TextArea)`
   align-self: stretch;
 `;
 type Props = {
-  page: ReportPage;
+  slide: Reports.Slide;
   onClick?: () => void;
 };
-export const Page = (props: Props) => (
+export const Slide = (props: Props) => (
   <PageContainer>
     <Content onClick={props.onClick} spacing="30px" align="center">
-      <Title>{props.page.title}</Title>
+      <Title>{props.slide.title}</Title>
       <Columns spacing="60px">
-        <TextColumn>{props.page.text.primary}</TextColumn>
-        <TextColumn>{props.page.text.secondary}</TextColumn>
+        <TextColumn>{props.slide.primaryText}</TextColumn>
+        <TextColumn>{props.slide.secondaryText}</TextColumn>
       </Columns>
     </Content>
   </PageContainer>
 );
 type EditorProps = {
-  page: ReportPage;
-  onChange: (page: ReportPage) => void;
+  slide: Reports.Slide;
+  onChange: (slide: Reports.Slide) => void;
   onClick?: () => void;
 };
 export const Editor = (props: EditorProps) => (
   <PageContainer>
     <Content onClick={props.onClick} spacing="30px">
       <TitleEditor
-        value={props.page.title}
+        value={props.slide.title}
         onChange={(e) =>
-          props.onChange({ ...props.page, title: e.target.value })
+          props.onChange({ ...props.slide, title: e.target.value })
         }
       />
       <Columns justify="center" spacing="60px">
         <ColumnEditor
-          value={props.page.text.primary}
+          value={props.slide.primaryText}
           onChange={(e) =>
-            props.onChange({
-              ...props.page,
-              text: {
-                ...props.page.text,
-                primary: e.target.value
-              }
-            })
+            props.onChange({ ...props.slide, primaryText: e.target.value })
           }
         />
         <ColumnEditor
-          value={props.page.text.secondary}
+          value={props.slide.secondaryText}
           onChange={(e) =>
-            props.onChange({
-              ...props.page,
-              text: {
-                ...props.page.text,
-                secondary: e.target.value
-              }
-            })
+            props.onChange({ ...props.slide, secondaryText: e.target.value })
           }
         />
       </Columns>

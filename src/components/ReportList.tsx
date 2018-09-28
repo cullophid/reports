@@ -3,9 +3,11 @@ import styled from "styled-components";
 import Header from "./Header";
 import Link from "./Link";
 import { Report } from "../reports";
-import { dispatch } from "../store";
-import * as Page from "./Pages/Page";
-import NewPage from "./NewPage";
+import * as Slide from "./Slides/Slide";
+import NewPage from "./NewSlide";
+import { Query, QueryResult } from "react-apollo";
+import gql from "graphql-tag";
+import { OperationVariables } from "apollo-boost";
 
 const PageWrap = styled.div`
   display: flex;
@@ -30,24 +32,42 @@ const Tile = styled.div`
   height: 138px;
 `;
 
-type Props = {
-  reports: Report[];
-};
+const FETCH_REPORTS = gql`
+  {
+    reports @client {
+      id
+      title
+      slides {
+        id
+        template
+        title
+        subtitle
+      }
+    }
+  }
+`;
 
-export default (props: Props) => (
+export default () => (
   <PageWrap>
     <Header title="Choose a report or create a new  " />
     <Main>
       <Tile>
-        <NewPage onClick={() => dispatch({ type: "ReportCreate" })} />
+        <NewPage onClick={() => {}} />
       </Tile>
-      {props.reports.map((report, i) => (
-        <Link to={`/reports/${report.id}`}>
-          <Tile key={i}>
-            <Page.Page page={report.pages[0]} />
-          </Tile>
-        </Link>
-      ))}
+      <Query query={FETCH_REPORTS}>
+        {({ loading, error, data }) => {
+          console.log("RES", loading, error, data);
+          if (loading) return <h1>Loading</h1>;
+          if (error) return <h1>Error</h1>;
+          return data.reports.map((report: Report, i: number) => (
+            <Link to={`/reports/${report.id}`} key={i}>
+              <Tile>
+                <Slide.Slide slide={report.slides[0]} />
+              </Tile>
+            </Link>
+          ));
+        }}
+      </Query>
     </Main>
   </PageWrap>
 );

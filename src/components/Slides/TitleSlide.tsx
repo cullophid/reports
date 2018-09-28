@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ReportPage } from "../../reports";
+import * as Reports from "../../reports";
 import styled from "styled-components";
-import PageContainer from "../PageContainer";
+import SlideContainer from "../SlideContainer";
 import TextField from "../TextField";
 
 const Content = styled.div`
@@ -40,49 +40,49 @@ const SubTitleEditor = styled(TextField)`
   font-size: 24px;
 `;
 type Props = {
-  page: ReportPage;
+  slide: Reports.Slide;
   onClick?: () => void;
 };
-export const Page = (props: Props) => (
-  <PageContainer>
+export const Slide = (props: Props) => (
+  <SlideContainer>
     <Content onClick={props.onClick}>
-      <Title>{props.page.title}</Title>
-      <SubTitle>{props.page.text.subtitle}</SubTitle>
+      <Title>{props.slide.title}</Title>
+      <SubTitle>{props.slide.subtitle}</SubTitle>
     </Content>
-  </PageContainer>
+  </SlideContainer>
 );
 type EditorProps = {
-  page: ReportPage;
-  onChange: (page: ReportPage) => void;
+  slide: Reports.Slide;
+  onChange: (slide: Reports.Slide) => void;
   onClick?: () => void;
 };
 export const Editor = (props: EditorProps) => (
-  <PageContainer>
+  <SlideContainer>
     <Content onClick={props.onClick}>
       <TitleEditor
-        value={props.page.title}
+        value={props.slide.title}
         onChange={(e) =>
-          props.onChange({ ...props.page, title: e.target.value })
+          props.onChange({ ...props.slide, title: e.target.value })
         }
       />
       <SubTitleEditor
-        value={props.page.text.subtitle}
+        value={props.slide.subtitle}
         onChange={(e) =>
           props.onChange({
-            ...props.page,
-            text: { ...props.page.text, subtitle: e.target.value }
+            ...props.slide,
+            subtitle: e.target.value
           })
         }
       />
     </Content>
-  </PageContainer>
+  </SlideContainer>
 );
 
 export const Template = () => (
-  <PageContainer>
+  <SlideContainer>
     <Content>
       <Title>Title</Title>
       <SubTitle>Subtitle</SubTitle>
     </Content>
-  </PageContainer>
+  </SlideContainer>
 );

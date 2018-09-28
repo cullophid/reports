@@ -1,9 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
-import NewPage from "./NewPage";
-import * as Page from "./Pages/Page";
+import NewSlide from "./NewSlide";
+import * as BaseSlide from "./Slides/Slide";
 import { Column } from "./Layout";
-import { Report, ReportPage } from "../reports";
+import { Report, Slide } from "../reports";
 
 const Slides = styled.div`
   transition: opacity 200ms;
@@ -23,10 +23,14 @@ export default (props: Props) => {
   return (
     <Slides style={show ? { transitionDelay: "600ms" } : { opacity: 0 }}>
       <Column spacing="15px">
-        {report.pages.map((page: ReportPage, i: number) => (
-          <Page.Page page={page} onClick={() => props.onSelect(i)} />
+        {report.slides.map((slide: Slide, i: number) => (
+          <BaseSlide.Slide
+            key={i}
+            slide={slide}
+            onClick={() => props.onSelect(i)}
+          />
         ))}
-        <NewPage onClick={props.onNewSlide} />
+        <NewSlide onClick={props.onNewSlide} />
       </Column>
     </Slides>
   );
