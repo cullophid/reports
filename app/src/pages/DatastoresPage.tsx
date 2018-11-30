@@ -1,21 +1,10 @@
-import * as React from "react";
-import { css } from "emotion";
+import React, { useState } from "react";
+import styled from "react-emotion";
 import { column, columnSpacing, fill } from "../styles";
 import Menu from "../components/Menu";
 import gql from "graphql-tag";
 import { Spinner } from "../components/Spinner";
-import { Query, Mutation } from "react-apollo";
-
-const Styles = {
-  viewContainer: css`
-    ${column};
-  `,
-
-  dataStoreListItem: css`
-    ${column};
-    ${columnSpacing(5)};
-  `
-};
+import { useQuery } from "../hooks";
 
 const FETCH_DATASTORES = gql`
   {
@@ -41,26 +30,44 @@ type Datastore = {
   database: string;
 };
 
+const DatastoresPage = () => {
+  const [selectedDatastore, setSelectedDatastore] = useState<Datastore | null>(
+    null
+  );
+
+  return (
+    <ViewContainer>
+      <Menu />
+      <DatastoreList onClick={setSelectedDatastore} />
+    </ViewContainer>
+  );
+};
+export default DatastoresPage;
+
 const DatastoreItem = ({ datastore }: any) => (
-  <li css={Styles.dataStoreListItem}>
+  <DatastoreListItem>
     <span>{datastore.type}</span>
     <span>{datastore.name}</span>
-  </li>
+  </DatastoreListItem>
 );
 
 type DatastoreListProps = {
   onClick: (datastore: Datastore) => void;
 };
-const DatastoreList = ({ onClick }: DatastoreListProps) => (
-  <Query query={FETCH_DATASTORES}>
-    {(res) => {
-      if (res.loading) return <Spinner color="primary" size={24} />;
-      if (res.error) {
-        return <p> Error fetching data stores </p>;
-      }
+
+const DatastoreList = ({ onClick }: DatastoreListProps) => {
+  const result = useQuery<{ datastores: Datastore[] }>({
+    query: FETCH_DATASTORES
+  });
+  switch (result.status) {
+    case "Loading":
+      return <Spinner color="primary" size={24} />;
+    case "Error":
+      return <p> Error fetching data stores </p>;
+    case "Ready":
       return (
         <ul>
-          {res.data.datastores.map((datastore: Datastore) => (
+          {result.data.datastores.map((datastore: Datastore) => (
             <DatastoreItem
               key={datastore.id}
               datastore={datastore}
@@ -69,25 +76,14 @@ const DatastoreList = ({ onClick }: DatastoreListProps) => (
           ))}
         </ul>
       );
-    }}
-  </Query>
-);
-
-type State = {
-  selectedDatastore: Datastore | null;
-};
-export default class DatastoresPage extends React.PureComponent<{}, State> {
-  state: State = {
-    selectedDatastore: null
-  };
-  render() {
-    return (
-      <div css={Styles.viewContainer}>
-        <Menu />
-        <DatastoreList
-          onClick={(selectedDatastore) => this.setState({ selectedDatastore })}
-        />
-      </div>
-    );
   }
-}
+};
+
+const ViewContainer = styled.div`
+  ${column};
+`;
+
+const DatastoreListItem = styled.li`
+  ${column};
+  ${columnSpacing(5)};
+`;

@@ -1,29 +1,12 @@
 import * as React from "react";
-import { css, keyframes } from "emotion";
+import styled, { keyframes } from "react-emotion";
 import Menu from "../components/Menu";
-import { Query, QueryResult, Mutation, MutationResult } from "react-apollo";
 import gql from "graphql-tag";
 import ReportEditor from "../components/ReportEditor/ReportEditor";
 import { Spinner } from "../components/Spinner";
-import { report, cleanReport, reportQuery } from "../reports";
+import { report, cleanReport, reportQuery } from "../models/reports";
 import { debounce } from "../util";
-
-const Styles = {
-  pageWrap: css`
-    background: #eee;
-    height: 100vh;
-    padding-top: 80px;
-  `,
-
-  saving: css`
-    position: fixed;
-    top: 40px;
-    right: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `
-};
+import { useQuery, useMutation } from "../hooks";
 
 const FETCH_REPORT = gql`
   query FetchReport($reportId: ID!) {
@@ -36,6 +19,7 @@ const UPDATE_REPORT = gql`
     updateReport(report: $report) ${reportQuery}
   }
 `;
+
 type Props = {
   reportId: string;
   slideId: string | null;
@@ -43,48 +27,55 @@ type Props = {
 
 const ReportEditorPage = (props: Props) => {
   const { reportId, slideId } = props;
+  const reportResult = useQuery<{ report: report }>({
+    query: FETCH_REPORT,
+    variables: { reportId }
+  });
+  const report = reportResult.status === "Ready" && reportResult.data.report;
+  const [updateReport, updateReportResult] = useMutation<
+    { updateReport: report },
+    { report: report }
+  >({
+    mutation: UPDATE_REPORT
+  });
+  const saveReport = debounce(
+    (report: report) => updateReport({ report: cleanReport(report) }),
+    500
+  );
   return (
-    <Query query={FETCH_REPORT} variables={{ reportId }}>
-      {(reportRes: QueryResult<{ report: report }>) => {
-        const report = reportRes.data && reportRes.data.report;
-        return (
-          <Mutation mutation={UPDATE_REPORT}>
-            {(
-              updateReport,
-              updateRes: MutationResult<{ updateReport: report }>
-            ) => {
-              const saveReport = debounce(
-                (report: report) =>
-                  updateReport({
-                    variables: { report: cleanReport(report) }
-                  }),
-                500
-              );
-              return (
-                <React.Fragment>
-                  {updateRes.loading && (
-                    <div css={Styles.saving}>
-                      <Spinner />
-                    </div>
-                  )}
-                  <div css={Styles.pageWrap}>
-                    <Menu />
-                    {reportRes.loading && <Spinner />}
-                    {report && (
-                      <ReportEditor
-                        report={report}
-                        slideId={slideId}
-                        saveReport={saveReport}
-                      />
-                    )}
-                  </div>
-                </React.Fragment>
-              );
-            }}
-          </Mutation>
-        );
-      }}
-    </Query>
+    <React.Fragment>
+      {updateReportResult.status === "Loading" && (
+        <Saving>
+          <Spinner />
+        </Saving>
+      )}
+      <Page>
+        <Menu />
+        {reportResult.status === "Loading" && <Spinner />}
+        {report && (
+          <ReportEditor
+            report={report}
+            slideId={slideId}
+            updateReport={saveReport}
+          />
+        )}
+      </Page>
+    </React.Fragment>
   );
 };
 export default ReportEditorPage;
+
+const Page = styled.div`
+  background: #eee;
+  height: 100vh;
+  padding-top: 80px;
+`;
+
+const Saving = styled.div`
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

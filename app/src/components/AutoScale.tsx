@@ -1,44 +1,42 @@
-import * as React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-type Props = {
+type props = {
   width: number;
   style?: any;
   render: (scale: number) => React.ReactChild;
 };
 
-type State = {
+type state = {
   scale: number | null;
 };
-export default class AutoSize extends React.PureComponent<Props, State> {
-  state: State = {
-    scale: null
-  };
-  wrapperRef = React.createRef<HTMLDivElement>();
-  componentDidMount() {
-    window.addEventListener("resize", this.calculateScale);
-    this.calculateScale();
-  }
-  componentWillUnmount() {
-    if (this.wrapperRef.current === null) return;
-    window.removeEventListener("resize", this.calculateScale);
-  }
-  calculateScale = () => {
+
+const AutoScale = (props: props) => {
+  const [scale, setScale] = useState<number | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const calculateScale = () => {
     window.requestAnimationFrame(() => {
-      if (this.wrapperRef.current === null)
+      if (wrapperRef.current === null)
         throw new Error("Cound not find wrapper");
-      let { width } = this.wrapperRef.current.getBoundingClientRect();
-      this.setState({ scale: width / this.props.width });
+      let { width } = wrapperRef.current.getBoundingClientRect();
+      setScale(width / props.width);
     });
   };
 
-  render() {
-    return (
-      <div
-        style={this.props.style || { width: "100%", overflowX: "visible" }}
-        ref={this.wrapperRef}
-      >
-        {this.state.scale !== null && this.props.render(this.state.scale)}
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    window.addEventListener("resize", calculateScale);
+    calculateScale();
+    return () => window.removeEventListener("resize", calculateScale);
+  }, []);
+
+  return (
+    <div
+      style={props.style || { width: "100%", overflowX: "visible" }}
+      ref={wrapperRef}
+    >
+      {scale !== null && props.render(scale)}
+    </div>
+  );
+};
+
+export default AutoScale;

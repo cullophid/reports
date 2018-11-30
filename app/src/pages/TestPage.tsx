@@ -1,35 +1,29 @@
-import * as React from "react";
-import { css } from "emotion";
+import React, { useState } from "react";
+import styled from "react-emotion";
 
 import TextEditor from "../components/TextEditor";
-import { render } from "react-dom";
-const Styles = {
-  page: css`
-    width: 100%;
-    height: 100%;
-  `,
-
-  box: css`
-    width: 200px;
-    height: 150px;
-  `
-};
-
 type State = {
   value: string;
 };
-class TestPage extends React.Component<{}, State> {
-  state = {
-    value: "hello"
-  };
-  render() {
-    return (
-      <div css={Styles.page}>
-        <div css={Styles.box} id="box">
-          <TextEditor defaultValue="hello world" onSave={console.log} />
-        </div>
-      </div>
-    );
-  }
-}
+
+const TestPage = () => {
+  const [value, setValue] = useState<string>("");
+  return (
+    <Page>
+      <Box id="box">
+        <TextEditor defaultValue="hello world" onSave={console.log} />
+      </Box>
+    </Page>
+  );
+};
 export default TestPage;
+
+const Page = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const Box = styled.div`
+  width: 200px;
+  height: 150px;
+`;

@@ -1,174 +1,112 @@
-import * as React from "react";
-import { css } from "emotion";
-import { row, column, rowSpacing, columnSpacing, center } from "../../styles";
-import {
-  report,
-  slide,
-  newTextElement,
-  slideElement,
-  newSlide
-} from "../../reports";
-import { debounce } from "../../util";
+import React, { useState, useReducer, useEffect, useCallback } from "react";
+import styled from "react-emotion";
+import { report, slide, newSlide } from "../../models/reports";
+import { column } from "../../styles";
 import { SlideEditor } from "./SlideEditor";
-import SlideView from "../Slide";
-import { Button } from "../Button";
-import { editorSelection } from "../../editorSelection";
-
-const Styles = {
-  newButton: css`
-    ${center};
-    width: 240px;
-    height: 135px;
-    box-sizing: border-box;
-    border: 8px dashed #88bc32;
-  `,
-  main: css`
-    height: 100%;
-    display: grid;
-    grid-template-columns: 300px auto;
-    padding: 0 30px;
-    grid-column-gap: 30px;
-    min-height: 0;
-  `,
-  aside: css`
-    ${column};
-    ${columnSpacing(15)};
-    padding: 30px;
-    box-sizing: border-box;
-    overflow: auto;
-    &::-webkit-scrollbar {
-      width: 0px; /* remove scrollbar space */
-      background: transparent; /* optional: just make scrollbar invisible */
-    }
-  `,
-  stage: css`
-    flex: 1;
-    ${column};
-    box-sizing: border-box;
-    padding: 30px 0;
-    align-items: center;
-    overflow: visible;
-  `
-};
+import { editorSelection } from "../../models/editorSelection";
+import SlideList from "./SlideList";
 
 type Props = {
   report: report;
   slideId: string | null;
-  saveReport: (report: report) => void;
+  updateReport: (report: report) => void;
 };
 
 type State = {
   report: report;
+  currentSlideId: string;
   selection: editorSelection;
   showTemplates: boolean;
   unsavedChanges: boolean;
 };
 
-export default class ReportEditor extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    let slide = props.report.slides.find((s) => s.id === props.slideId);
-    this.state = {
-      selection: slide
-        ? { type: "Slide", slideId: slide.id }
-        : { type: "None", slideId: props.report.slides[0].id },
-      report: props.report,
-      showTemplates: false,
-      unsavedChanges: false
-    };
-  }
+const ReportEditor = (props: Props) => {
+  const currentSlide =
+    props.report.slides.find((s) => s.id === props.slideId) ||
+    props.report.slides[0];
 
-  deselect = () => {
-    this.setState({
-      selection: { type: "None", slideId: this.state.selection.slideId }
-    });
+  const [state, setState] = useState<State>({
+    report: props.report,
+    currentSlideId: currentSlide.id,
+    selection: { type: "None" },
+    showTemplates: false,
+    unsavedChanges: false
+  });
+
+  const { report } = state;
+
+  const updateReport = (report: report) => {
+    setState({ ...state, report });
+    props.updateReport(report);
   };
 
-  saveReport = debounce((report: report) => {
-    this.props.saveReport(report);
-    this.setState({ unsavedChanges: false });
-  }, 500);
+  const deselect = () => setState({ ...state, selection: { type: "None" } });
 
-  updateReport = (report: report) => {
-    this.props.saveReport(report);
-    this.setState({ report });
+  const updateSelection = (selection: editorSelection) => {
+    setState({ ...state, selection });
   };
 
-  updateSlide = (slide: slide) => {
-    const { report } = this.state;
-    this.updateReport({
+  const addSlide = (slide: slide) => {
+    updateReport({ ...report, slides: [...report.slides, slide] });
+  };
+
+  const updateSlide = (slide: slide) => {
+    updateReport({
       ...report,
-      slides: report.slides.map((s) => (s.id === slide.id ? slide : s))
+      slides: report.slides.map((s: slide) => (s.id === slide.id ? slide : s))
     });
   };
 
-  addSlide = () => {
-    const { report } = this.state;
-    this.updateReport({
-      ...report,
-      slides: [...report.slides, newSlide()]
-    });
-  };
+  const selectedSlide = report.slides.find(
+    (s: slide) => s.id === state.currentSlideId
+  );
+  return (
+    <Main
+      style={state.showTemplates ? { display: "none" } : {}}
+      onMouseDown={deselect}
+    >
+      <SlideList
+        currentSlideId={state.currentSlideId}
+        slides={report.slides}
+        selection={state.selection}
+        selectSlide={(slide: slide) => {
+          setState({
+            ...state,
+            selection: { type: "Slide", slideId: slide.id },
+            currentSlideId: slide.id
+          });
+        }}
+        newSlide={() => addSlide(newSlide())}
+      />
+      <Stage>
+        {selectedSlide && (
+          <SlideEditor
+            slide={selectedSlide}
+            selection={state.selection}
+            updateSlide={updateSlide}
+            updateSelection={updateSelection}
+          />
+        )}
+      </Stage>
+    </Main>
+  );
+};
+export default ReportEditor;
 
-  updateSelection = (selection: editorSelection) => {
-    this.setState({ selection });
-  };
+const Main = styled.main`
+  height: 100%;
+  display: grid;
+  grid-template-columns: 300px auto;
+  padding: 0 30px;
+  grid-column-gap: 30px;
+  min-height: 0;
+`;
 
-  selectSlide = (slide: slide) => {
-    this.setState({ selection: { type: "Slide", slideId: slide.id } });
-  };
-
-  deleteSlide = (id: string) => {
-    const { report, selection } = this.state;
-    if (report.slides.length <= 1) return;
-    this.updateReport({
-      ...report,
-      slides: report.slides.filter((slide) => slide.id !== id)
-    });
-    if (selection.slideId === id) {
-      this.setState({
-        selection: {
-          ...this.state.selection,
-          slideId: report.slides[0].id
-        }
-      });
-    }
-  };
-
-  render() {
-    let { report, selection } = this.state;
-    const selectedSlide = report.slides.find((s) => s.id === selection.slideId);
-    return (
-      <main
-        css={Styles.main}
-        style={this.state.showTemplates ? { display: "none" } : {}}
-        onMouseDown={this.deselect}
-      >
-        <aside css={Styles.aside}>
-          {report.slides.map((slide: slide) => (
-            <SlideView
-              key={slide.id}
-              onClick={this.selectSlide}
-              active={selection.slideId === slide.id}
-              highlight={
-                selection.type === "Slide" && slide.id === selection.slideId
-              }
-              slide={slide}
-            />
-          ))}
-          <Button onClick={this.addSlide}> ADD SLIDE </Button>
-        </aside>
-        <div css={Styles.stage}>
-          {selectedSlide && (
-            <SlideEditor
-              slide={selectedSlide}
-              selection={selection}
-              updateSlide={this.updateSlide}
-              updateSelection={this.updateSelection}
-            />
-          )}
-        </div>
-      </main>
-    );
-  }
-}
+const Stage = styled.div`
+  flex: 1;
+  ${column};
+  box-sizing: border-box;
+  padding: 30px 0;
+  align-items: center;
+  overflow: visible;
+`;

@@ -1,8 +1,7 @@
 import React from "react";
-import { css } from "emotion";
-import { HTMLAttributes } from "react";
+import styled from "react-emotion";
 
-const styles = css`
+export const Button = styled.button`
   display: block;
   width: 100%;
   height: 40px;
@@ -17,6 +16,3 @@ const styles = css`
   text-align: center;
   color: #ffffff;
 `;
-
-type Props = HTMLAttributes<HTMLButtonElement>;
-export const Button = (props: Props) => <button css={styles} {...props} />;

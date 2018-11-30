@@ -1,5 +1,5 @@
 import React from "react";
-import { css, keyframes } from "emotion";
+import styled, { keyframes } from "react-emotion";
 
 const spin = keyframes`
   from {
@@ -10,26 +10,29 @@ const spin = keyframes`
   }
 `;
 
-const Styles = {
-  spinner: ({ color, size }: Props) => css`
-    border: 2px solid transparent;
-    border-bottom-color: ${color || "rgba(0, 0, 0, 0.6)"};
-    border-right-color: ${color || "rgba(0, 0 ,0, 0.6)"};
-    border-top-color: ${color || "rgba(255, 255, 255, 0.3)"};
-    border-left-color: ${color || "rgba(255, 255, 255, 0.3)"};
-    border-radius: 1000px;
-    animation-timing-function: linear;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-name: ${spin};
-    width: ${`${size || 24}px`};
-    height: ${`${size || 24}px`};
-  `
-};
+const StyledSpinner = styled.div`
+  border: 2px solid transparent;
+  border-radius: 1000px;
+  animation-timing-function: linear;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-name: ${spin};
+`;
 
 type Props = {
   size?: number;
   color?: string;
 };
 
-export const Spinner = (props: Props) => <div css={Styles.spinner(props)} />;
+export const Spinner = ({ color, size = 24 }: Props) => (
+  <StyledSpinner
+    style={{
+      borderBottomColor: color || "rgba(0, 0, 0, 0.6)",
+      borderRightColor: color || "rgba(0, 0 ,0, 0.6)",
+      borderTopColor: color || "rgba(255, 255, 255, 0.3)",
+      borderLeftColor: color || "rgba(255, 255, 255, 0.3)",
+      width: size || 24,
+      height: size || 24
+    }}
+  />
+);

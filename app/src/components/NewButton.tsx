@@ -1,9 +1,20 @@
 import * as React from "react";
-import { css } from "emotion";
+import styled from "react-emotion";
 import plus from "../plus.svg";
 import * as Theme from "../theme";
 
-const styles = css`
+type Props = {
+  onClick?: (e: React.MouseEvent<Element>) => void;
+};
+const NewButton = (props: Props) => (
+  <StyledButton onClick={props.onClick}>
+    <img src={plus} />
+  </StyledButton>
+);
+
+export default NewButton;
+
+const StyledButton = styled.button`
   margin: 15px;
   width: 230px;
   height: 140px;
@@ -19,14 +30,3 @@ const styles = css`
   cursor: pointer;
   box-sizing: border-box;
 `;
-
-type Props = {
-  onClick?: (e: React.MouseEvent<Element>) => void;
-};
-const NewButton = (props: Props) => (
-  <button css={styles} onClick={props.onClick}>
-    <img src={plus} />
-  </button>
-);
-
-export default NewButton;

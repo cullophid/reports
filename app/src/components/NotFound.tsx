@@ -1,17 +1,19 @@
 import * as React from "react";
-import { css } from "emotion";
-import { Center } from "./Layout";
+import styled from "react-emotion";
+import { center } from "../styles";
 
-const Styles = {
-  text: css`
-    color: #bababa;
-    font-size: 36px;
-  `
-};
 const NotFound = () => (
-  <Center>
-    <h1 css={Styles.text}>Page Not Found</h1>
-  </Center>
+  <Wrapper>
+    <Text>Text>Page Not Found</Text>
+  </Wrapper>
 );
 
 export default NotFound;
+
+const Text = styled.h1`
+  color: #bababa;
+  font-size: 36px;
+`;
+const Wrapper = styled.div`
+  ${center}
+`;

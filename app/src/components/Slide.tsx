@@ -1,10 +1,11 @@
 import * as React from "react";
-import { css } from "emotion";
-import { slide, textElement, chartElement } from "../reports";
+import styled from "react-emotion";
+import { slide, textElement, chartElement } from "../models/reports";
 import AutoScale from "./AutoScale";
 import * as Theme from "../theme";
 
 type TextAlign = "left" | "center" | "right" | "justify";
+
 const textAlign = (align: string): TextAlign => {
   switch (align) {
     case "Right":
@@ -22,7 +23,19 @@ type TextElementProps = textElement;
 
 const TextElement = (props: TextElementProps) => {
   const style = {};
-  return <span css={Styles.text(props)}>{props.text.value}</span>;
+  return (
+    <Text
+      style={{
+        left: props.x,
+        top: props.y,
+        width: props.width,
+        fontSize: props.text.fontSize,
+        textAlign: textAlign(props.text.align)
+      }}
+    >
+      {props.text.value}
+    </Text>
+  );
 };
 
 type Props = {
@@ -47,13 +60,12 @@ const Slide = (props: Props) => {
             overflow: "visible"
           }}
         >
-          <div
-            css={Styles.slideBackground({
-              active: props.active,
-              highlight: props.highlight,
-              scale
-            })}
+          <SlideBackground
+            {...props}
             onClick={() => props.onClick && props.onClick(props.slide)}
+            style={{
+              transform: `scale(${scale}`
+            }}
           >
             <React.Fragment>
               {props.slide.elements.map((elem, i) => {
@@ -65,7 +77,7 @@ const Slide = (props: Props) => {
                 }
               })}
             </React.Fragment>
-          </div>
+          </SlideBackground>
         </div>
       )}
     />
@@ -74,36 +86,29 @@ const Slide = (props: Props) => {
 
 export default Slide;
 
-const Styles = {
-  slideBackground: (props: {
-    active?: boolean;
-    highlight?: boolean;
-    scale: number;
-  }) => css`
-    position: relative;
-    background: white;
-    overflow: hidden;
-    box-shadow: ${props.active
+const SlideBackground = styled.div<{
+  active?: boolean;
+  highlight?: boolean;
+}>`
+  position: relative;
+  background: white;
+  overflow: hidden;
+  box-shadow: ${(props) =>
+    props.active
       ? "0 10px 20px rgba(0, 0, 0, 0.4)"
       : "0 3px 10px rgba(0, 0, 0, 0.4)"};
-    border: 5px solid transparent;
-    border-color: ${props.highlight ? Theme.primary : "transparent"};
-    transform-origin: top left;
-    transform: scale(${props.scale});
-    width: 800px;
-    height: 450px;
-  `,
-  text: (props: TextElementProps) => css`
-    left: ${props.x}px;
-    top: ${props.y}px;
-    width: ${props.width}px;
-    font-size: ${props.text.fontSize}px;
-    text-align: ${textAlign(props.text.align)};
-    position: absolute;
-    display: block;
-    color: black;
-    text-decoration: none;
-  `
-};
+  border: 5px solid transparent;
+  border-color: ${(props) => (props.highlight ? Theme.primary : "transparent")};
+  transform-origin: top left;
+  width: 800px;
+  height: 450px;
+`;
+
+const Text = styled.span`
+  position: absolute;
+  display: block;
+  color: black;
+  text-decoration: none;
+`;
 
 const ChartElement = (props: chartElement) => null;

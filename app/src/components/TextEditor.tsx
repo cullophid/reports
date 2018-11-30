@@ -1,36 +1,28 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { Editor } from "slate-react";
 import Plain from "slate-plain-serializer";
 import { Change, Value } from "slate";
 import { debounce } from "../util";
-type Props = {
+type props = {
   defaultValue: string;
   onSave?: (value: string) => void;
 };
 
-type State = {
-  value: Value;
-};
+const TextEditor = (props: props) => {
+  const [value, setValue] = useState<Value>(
+    Plain.deserialize(props.defaultValue)
+  );
 
-class TextEditor extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      value: Plain.deserialize(props.defaultValue)
-    };
-  }
-  onChange = ({ value }: Change) => {
-    this.setState({ value });
-    this.save(value);
-  };
-  save = debounce((value: Value) => {
-    this.props.onSave && this.props.onSave(Plain.serialize(value));
+  const save = debounce((value: Value) => {
+    props.onSave && props.onSave(Plain.serialize(value));
   }, 500);
-  render = () => {
-    return (
-      <Editor autoFocus value={this.state.value} onChange={this.onChange} />
-    );
+
+  const onChange = ({ value }: Change) => {
+    setValue(value);
+    save(value);
   };
-}
+
+  return <Editor autoFocus value={value} onChange={onChange} />;
+};
 
 export default TextEditor;
