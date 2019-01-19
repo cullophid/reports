@@ -2,12 +2,22 @@
   "name": "reports-app",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "apollo-server-lambda": "^2.3.1",
+    "email-validator": "^2.0.4",
+    "mongodb": "^3.1.12"
+  },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.html",
+    "serve:lambda": "netlify-lambda serve src/api/lambdas",
+    "build:lambda": "netlify-lambda build src/api/lambdas"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/preset-typescript": "^7.1.0",
+    "@types/graphql": "^14.0.5",
+    "@types/mongodb": "^3.1.19",
     "@types/node": "10.12.1",
     "@types/ramda": "^0.25.40",
     "@types/react": "^16.7.7",
@@ -22,8 +32,9 @@
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
     "emotion": "^9.2.12",
-    "graphql": "^14.0.2",
+    "graphql": "^14.1.1",
     "graphql-tag": "^2.10.0",
+    "netlify-lambda": "^1.2.0",
     "parcel-bundler": "^1.11.0",
     "ramda": "^0.25.0",
     "react": "^16.8.0-alpha.1",
@@ -37,15 +48,5 @@
     "slate-react": "^0.20.2",
     "typescript": "3.1.4",
     "uuid": "^3.3.2"
-  },
-  "babel": {
-    "plugins": [
-      [
-        "emotion",
-        {
-          "autoLabel": true
-        }
-      ]
-    ]
   }
 }
