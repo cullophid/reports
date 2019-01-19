@@ -9,11 +9,22 @@ import history from "./history";
 import { report } from "./models/reports";
 import { client } from "./apollo";
 type State = {
-  reports: report[];
+  message?: string;
+  loading: boolean;
 };
 
 export default class App extends React.Component<{}, State> {
+  state: State = {
+    loading: false
+  };
+  async componentDidMount() {
+    this.setState({ loading: true });
+    let res = await fetch(".netlify/functions/hello.js");
+    let message = await res.text();
+    this.setState({ message, loading: false });
+  }
   render() {
+    if (this.state.message) return <pre>{this.state.message}</pre>;
     return (
       <Router history={history}>
         <React.Fragment>
