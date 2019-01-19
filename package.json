@@ -8,8 +8,9 @@
     "mongodb": "^3.1.12"
   },
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build src/index.html",
+    "parcel": "parcel src/index.html",
+    "build:parcel": "parcel build src/index.html",
+    "build": "echo build",
     "serve:lambda": "netlify-lambda serve src/api/lambdas",
     "build:lambda": "netlify-lambda build src/api/lambdas"
   },
