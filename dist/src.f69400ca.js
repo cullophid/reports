@@ -225,7 +225,7 @@ module.exports = ReactPropTypesSecret;
 
 var printWarning = function () {};
 
-if ("development" !== 'production') {
+if (undefined !== 'production') {
   var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
 
   var loggedTypeFailures = {};
@@ -259,7 +259,7 @@ if ("development" !== 'production') {
 
 
 function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
-  if ("development" !== 'production') {
+  if (undefined !== 'production') {
     for (var typeSpecName in typeSpecs) {
       if (typeSpecs.hasOwnProperty(typeSpecName)) {
         var error; // Prop type validation may throw. In case they do, we don't want to
@@ -308,7 +308,7 @@ module.exports = checkPropTypes;
  */
 'use strict';
 
-if ("development" !== "production") {
+if (undefined !== "production") {
   (function () {
     'use strict';
 
@@ -2225,7 +2225,7 @@ if ("development" !== "production") {
 },{"object-assign":"../node_modules/object-assign/index.js","prop-types/checkPropTypes":"../node_modules/prop-types/checkPropTypes.js"}],"../node_modules/react/index.js":[function(require,module,exports) {
 'use strict';
 
-if ("development" === 'production') {
+if (undefined === 'production') {
   module.exports = require('./cjs/react.production.min.js');
 } else {
   module.exports = require('./cjs/react.development.js');
@@ -2242,7 +2242,7 @@ var global = arguments[3];
  */
 'use strict';
 
-if ("development" !== "production") {
+if (undefined !== "production") {
   (function () {
     'use strict';
 
@@ -2913,7 +2913,7 @@ if ("development" !== "production") {
 },{}],"../node_modules/scheduler/index.js":[function(require,module,exports) {
 'use strict';
 
-if ("development" === 'production') {
+if (undefined === 'production') {
   module.exports = require('./cjs/scheduler.production.min.js');
 } else {
   module.exports = require('./cjs/scheduler.development.js');
@@ -2929,7 +2929,7 @@ if ("development" === 'production') {
  */
 'use strict';
 
-if ("development" !== "production") {
+if (undefined !== "production") {
   (function () {
     'use strict';
 
@@ -3309,7 +3309,7 @@ if ("development" !== "production") {
 },{}],"../node_modules/scheduler/tracing.js":[function(require,module,exports) {
 'use strict';
 
-if ("development" === 'production') {
+if (undefined === 'production') {
   module.exports = require('./cjs/scheduler-tracing.production.min.js');
 } else {
   module.exports = require('./cjs/scheduler-tracing.development.js');
@@ -3325,7 +3325,7 @@ if ("development" === 'production') {
  */
 'use strict';
 
-if ("development" !== "production") {
+if (undefined !== "production") {
   (function () {
     'use strict';
 
@@ -24447,7 +24447,7 @@ function checkDCE() {
     return;
   }
 
-  if ("development" !== 'production') {
+  if (undefined !== 'production') {
     // This branch is unreachable because this function is only called
     // in production, but the condition is true only in development.
     // Therefore if the branch is still here, dead code elimination wasn't
@@ -24468,7 +24468,7 @@ function checkDCE() {
   }
 }
 
-if ("development" === 'production') {
+if (undefined === 'production') {
   // DCE check should happen before ReactDOM bundle executes so that
   // DevTools can report bad minification during injection.
   checkDCE();
@@ -24491,7 +24491,7 @@ if ("development" === 'production') {
  * same logic and follow the same code paths.
  */
 
-var __DEV__ = "development" !== 'production';
+var __DEV__ = undefined !== 'production';
 
 var warning = function () {};
 
@@ -24557,7 +24557,7 @@ var checkPropTypes = require('./checkPropTypes');
 
 var printWarning = function () {};
 
-if ("development" !== 'production') {
+if (undefined !== 'production') {
   printWarning = function (text) {
     var message = 'Warning: ' + text;
 
@@ -24713,7 +24713,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
   PropTypeError.prototype = Error.prototype;
 
   function createChainableTypeChecker(validate) {
-    if ("development" !== 'production') {
+    if (undefined !== 'production') {
       var manualPropTypeCallCache = {};
       var manualPropTypeWarningCount = 0;
     }
@@ -24728,7 +24728,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
           var err = new Error('Calling PropTypes validators directly is not supported by the `prop-types` package. ' + 'Use `PropTypes.checkPropTypes()` to call them. ' + 'Read more at http://fb.me/use-check-prop-types');
           err.name = 'Invariant Violation';
           throw err;
-        } else if ("development" !== 'production' && typeof console !== 'undefined') {
+        } else if (undefined !== 'production' && typeof console !== 'undefined') {
           // Old behavior for people using React.PropTypes
           var cacheKey = componentName + ':' + propName;
 
@@ -24842,7 +24842,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
 
   function createEnumTypeChecker(expectedValues) {
     if (!Array.isArray(expectedValues)) {
-      "development" !== 'production' ? printWarning('Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
+      undefined !== 'production' ? printWarning('Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
       return emptyFunctionThatReturnsNull;
     }
 
@@ -24893,7 +24893,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
 
   function createUnionTypeChecker(arrayOfTypeCheckers) {
     if (!Array.isArray(arrayOfTypeCheckers)) {
-      "development" !== 'production' ? printWarning('Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
+      undefined !== 'production' ? printWarning('Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
       return emptyFunctionThatReturnsNull;
     }
 
@@ -25150,7 +25150,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-if ("development" !== 'production') {
+if (undefined !== 'production') {
   var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element') || 0xeac7;
 
   var isValidElement = function (object) {
@@ -25185,7 +25185,7 @@ if ("development" !== 'production') {
 
 var warning = function () {};
 
-if ("development" !== 'production') {
+if (undefined !== 'production') {
   warning = function (condition, format, args) {
     var len = arguments.length;
     args = new Array(len > 2 ? len - 2 : 0);
@@ -25242,7 +25242,7 @@ module.exports = warning;
  */
 
 var invariant = function (condition, format, a, b, c, d, e, f) {
-  if ("development" !== 'production') {
+  if (undefined !== 'production') {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
@@ -29848,7 +29848,7 @@ var processStyleValue = function processStyleValue(key, value) {
   return value;
 };
 
-if ("development" !== 'production') {
+if (undefined !== 'production') {
   var contentValuePattern = /(attr|calc|counters?|url)\(/;
   var contentValues = ['normal', 'none', 'counter', 'open-quote', 'close-quote', 'no-open-quote', 'no-close-quote', 'initial', 'inherit', 'unset'];
   var oldProcessStyleValue = processStyleValue;
@@ -29879,7 +29879,7 @@ var classnames = function classnames(args) {
         break;
 
       case 'function':
-        if ("development" !== 'production') {
+        if (undefined !== 'production') {
           console.error('Passing functions to cx is deprecated and will be removed in the next major version of Emotion.\n' + 'Please call the function before passing it to cx.');
         }
 
@@ -29978,7 +29978,7 @@ var StyleSheet =
 /*#__PURE__*/
 function () {
   function StyleSheet(options) {
-    this.isSpeedy = "development" === 'production'; // the big drawback here is that the css won't be editable in devtools
+    this.isSpeedy = undefined === 'production'; // the big drawback here is that the css won't be editable in devtools
 
     this.tags = [];
     this.ctr = 0;
@@ -30014,7 +30014,7 @@ function () {
       try {
         sheet.insertRule(rule, sheet.cssRules.length);
       } catch (e) {
-        if ("development" !== 'production') {
+        if (undefined !== 'production') {
           console.warn('illegal rule', rule); // eslint-disable-line no-console
         }
       }
@@ -30055,7 +30055,7 @@ function createEmotion(context, options) {
   if (options === undefined) options = {};
   var key = options.key || 'css';
 
-  if ("development" !== 'production') {
+  if (undefined !== 'production') {
     if (/[^a-z-]/.test(key)) {
       throw new Error("Emotion key must only contain lower case alphabetical characters and - but \"" + key + "\" was passed");
     }
@@ -30110,14 +30110,14 @@ function createEmotion(context, options) {
         if (interpolation.__emotion_styles !== undefined) {
           var selector = interpolation.toString();
 
-          if (selector === 'NO_COMPONENT_SELECTOR' && "development" !== 'production') {
+          if (selector === 'NO_COMPONENT_SELECTOR' && undefined !== 'production') {
             throw new Error('Component selectors can only be used in conjunction with babel-plugin-emotion.');
           }
 
           return selector;
         }
 
-        if (this === undefined && "development" !== 'production') {
+        if (this === undefined && undefined !== 'production') {
           console.error('Interpolating functions in css calls is deprecated and will be removed in the next major version of Emotion.\n' + 'If you want to have a css call based on props, create a function that returns a css call like this\n' + 'let dynamicStyle = (props) => css`color: ${props.color}`\n' + 'It can be called directly with props or interpolated in a styled call like this\n' + "let SomeComponent = styled('div')`${dynamicStyle}`");
         }
 
@@ -30156,7 +30156,7 @@ function createEmotion(context, options) {
             string += processStyleName(key) + ":" + processStyleValue(key, obj[key]) + ";";
           }
         } else {
-          if (key === 'NO_COMPONENT_SELECTOR' && "development" !== 'production') {
+          if (key === 'NO_COMPONENT_SELECTOR' && undefined !== 'production') {
             throw new Error('Component selectors can only be used in conjunction with babel-plugin-emotion.');
           }
 
@@ -30183,7 +30183,7 @@ function createEmotion(context, options) {
     return (0, _hash.default)(styles + identifierName) + identifierName;
   };
 
-  if ("development" !== 'production') {
+  if (undefined !== 'production') {
     var oldCreateClassName = createClassName;
     var sourceMappingUrlPattern = /\/\*#\ssourceMappingURL=data:application\/json;\S+\s+\*\//g;
 
@@ -30228,7 +30228,7 @@ function createEmotion(context, options) {
     return styles;
   };
 
-  if ("development" !== 'production') {
+  if (undefined !== 'production') {
     var oldStylis = stylis;
 
     stylis = function stylis(selector, styles) {
@@ -30464,7 +30464,7 @@ var warnedAboutExtractStatic = false;
 
 function createEmotionStyled(emotion, view) {
   var _createStyled = function createStyled(tag, options) {
-    if ("development" !== 'production') {
+    if (undefined !== 'production') {
       if (tag === undefined) {
         throw new Error('You are trying to create a styled element with an undefined component.\nYou may have forgotten to import it.');
       }
@@ -30512,7 +30512,7 @@ function createEmotionStyled(emotion, view) {
             styles.push(args[i], args[0][i]);
           }
         }
-      } else if ("development" !== 'production' && !warnedAboutExtractStatic) {
+      } else if (undefined !== 'production' && !warnedAboutExtractStatic) {
         console.warn('extractStatic is deprecated and will be removed in emotion@10. We recommend disabling extractStatic or using other libraries like linaria or css-literal-loader');
         warnedAboutExtractStatic = true;
       }
@@ -30591,7 +30591,7 @@ function createEmotionStyled(emotion, view) {
       Styled.__emotion_forwardProp = shouldForwardProp;
       Object.defineProperty(Styled, 'toString', {
         value: function value() {
-          if ("development" !== 'production' && stableClassName === undefined) {
+          if (undefined !== 'production' && stableClassName === undefined) {
             return 'NO_COMPONENT_SELECTOR';
           } // $FlowFixMe
 
@@ -30609,7 +30609,7 @@ function createEmotionStyled(emotion, view) {
     };
   };
 
-  if ("development" !== 'production' && typeof Proxy !== 'undefined') {
+  if (undefined !== 'production' && typeof Proxy !== 'undefined') {
     _createStyled = new Proxy(_createStyled, {
       get: function get(target, property) {
         switch (property) {
@@ -36687,7 +36687,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var isProduction = "development" === 'production';
+var isProduction = undefined === 'production';
 
 var index = function (condition, message) {
   if (!isProduction) {
@@ -36708,7 +36708,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var isProduction = "development" === 'production';
+var isProduction = undefined === 'production';
 var prefix = 'Invariant failed';
 
 function invariant(condition, message) {
@@ -85118,8 +85118,8 @@ exports.isDevelopment = isDevelopment;
 exports.isTest = isTest;
 
 function getEnv() {
-  if (typeof process !== 'undefined' && "development") {
-    return "development";
+  if (typeof process !== 'undefined' && undefined) {
+    return undefined;
   }
 
   return 'development';
@@ -93135,7 +93135,7 @@ exports.default = void 0;
  */
 // See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
 // See: https://webpack.js.org/guides/production/
-var _default = "development" === 'production' ? // eslint-disable-next-line no-shadow
+var _default = undefined === 'production' ? // eslint-disable-next-line no-shadow
 function instanceOf(value, constructor) {
   return value instanceof constructor;
 } : // eslint-disable-next-line no-shadow
@@ -114790,7 +114790,7 @@ var resolvers = {
   }
 };
 var client = new _apolloBoost.default({
-  uri: "http://localhost:4000/graphql",
+  uri: "/.netlify/functions/graphql",
   clientState: {
     defaults: defaults,
     typeDefs: typeDefs,
@@ -115998,194 +115998,16 @@ var __extends = void 0 && (void 0).__extends || function () {
   };
 }();
 
-var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-var __generator = void 0 && (void 0).__generator || function (thisArg, body) {
-  var _ = {
-    label: 0,
-    sent: function sent() {
-      if (t[0] & 1) throw t[1];
-      return t[1];
-    },
-    trys: [],
-    ops: []
-  },
-      f,
-      y,
-      t,
-      g;
-  return g = {
-    next: verb(0),
-    "throw": verb(1),
-    "return": verb(2)
-  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-
-    while (_) {
-      try {
-        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-        if (y = 0, t) op = [op[0] & 2, t.value];
-
-        switch (op[0]) {
-          case 0:
-          case 1:
-            t = op;
-            break;
-
-          case 4:
-            _.label++;
-            return {
-              value: op[1],
-              done: false
-            };
-
-          case 5:
-            _.label++;
-            y = op[1];
-            op = [0];
-            continue;
-
-          case 7:
-            op = _.ops.pop();
-
-            _.trys.pop();
-
-            continue;
-
-          default:
-            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-              _ = 0;
-              continue;
-            }
-
-            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-              _.label = op[1];
-              break;
-            }
-
-            if (op[0] === 6 && _.label < t[1]) {
-              _.label = t[1];
-              t = op;
-              break;
-            }
-
-            if (t && _.label < t[2]) {
-              _.label = t[2];
-
-              _.ops.push(op);
-
-              break;
-            }
-
-            if (t[2]) _.ops.pop();
-
-            _.trys.pop();
-
-            continue;
-        }
-
-        op = body.call(thisArg, _);
-      } catch (e) {
-        op = [6, e];
-        y = 0;
-      } finally {
-        f = t = 0;
-      }
-    }
-
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
-
 var App =
 /** @class */
 function (_super) {
   __extends(App, _super);
 
   function App() {
-    var _this = _super !== null && _super.apply(this, arguments) || this;
-
-    _this.state = {
-      loading: false
-    };
-    return _this;
+    return _super !== null && _super.apply(this, arguments) || this;
   }
 
-  App.prototype.componentDidMount = function () {
-    return __awaiter(this, void 0, void 0, function () {
-      var res, message;
-      return __generator(this, function (_a) {
-        switch (_a.label) {
-          case 0:
-            this.setState({
-              loading: true
-            });
-            return [4
-            /*yield*/
-            , fetch(".netlify/functions/hello.js")];
-
-          case 1:
-            res = _a.sent();
-            return [4
-            /*yield*/
-            , res.text()];
-
-          case 2:
-            message = _a.sent();
-            this.setState({
-              message: message,
-              loading: false
-            });
-            return [2
-            /*return*/
-            ];
-        }
-      });
-    });
-  };
-
   App.prototype.render = function () {
-    if (this.state.message) return React.createElement("pre", null, this.state.message);
     return React.createElement(_reactRouterDom.Router, {
       history: _history.default
     }, React.createElement(React.Fragment, null, React.createElement(_reactRouterDom.Route, {
@@ -116281,7 +116103,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55145" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63050" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

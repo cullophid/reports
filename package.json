@@ -5,12 +5,12 @@
   "dependencies": {
     "apollo-server-lambda": "^2.3.1",
     "email-validator": "^2.0.4",
-    "mongodb": "^3.1.12"
+    "mongodb": "^3.1.10"
   },
   "scripts": {
     "parcel": "parcel src/index.html",
     "build:parcel": "parcel build src/index.html",
-    "build": "echo build",
+    "build": "npm run build:lambda && npm run build:parcel",
     "serve:lambda": "netlify-lambda serve src/api/lambdas",
     "build:lambda": "netlify-lambda build src/api/lambdas"
   },
@@ -18,7 +18,7 @@
     "@babel/core": "^7.0.0-0",
     "@babel/preset-typescript": "^7.1.0",
     "@types/graphql": "^14.0.5",
-    "@types/mongodb": "^3.1.19",
+    "@types/mongodb": "^3.1.10",
     "@types/node": "10.12.1",
     "@types/ramda": "^0.25.40",
     "@types/react": "^16.7.7",
@@ -33,8 +33,10 @@
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
     "emotion": "^9.2.12",
+    "express": "^4.16.4",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.0",
+    "http-proxy-middleware": "^0.19.1",
     "netlify-lambda": "^1.2.0",
     "parcel-bundler": "^1.11.0",
     "ramda": "^0.25.0",
