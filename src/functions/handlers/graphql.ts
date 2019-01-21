@@ -1,6 +1,5 @@
 import { ApolloServer } from "apollo-server-lambda";
 import { typeDefs, resolvers } from "../schema";
-console.log("ENV", process.env);
 
 const graphqlServer = new ApolloServer({
   typeDefs,
@@ -9,4 +8,5 @@ const graphqlServer = new ApolloServer({
   introspection: true
 });
 
+console.log("ENV", process.env);
 export const handler = graphqlServer.createHandler();
