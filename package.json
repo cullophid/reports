@@ -9,6 +9,7 @@
   },
   "scripts": {
     "parcel": "parcel src/index.html",
+    "start": "node serve.js",
     "build:parcel": "parcel build src/index.html",
     "build": "npm run build:lambda && npm run build:parcel",
     "serve:lambda": "netlify-lambda serve src/functions/handlers",

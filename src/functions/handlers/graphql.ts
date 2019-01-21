@@ -1,5 +1,6 @@
 import { ApolloServer } from "apollo-server-lambda";
 import { typeDefs, resolvers } from "../schema";
+console.log("ENV", process.env);
 
 const graphqlServer = new ApolloServer({
   typeDefs,

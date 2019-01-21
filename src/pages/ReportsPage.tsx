@@ -31,16 +31,14 @@ const ReportsList = () => {
       return <p> Could not fetch reports</p>;
     case "Ready":
       return (
-        <React.Fragment>
+        <>
           <NewReport />
           {result.data.reports.map((report: report) => (
             <Link to={`/reports/${report.id}`} key={report.id}>
-              <Tile>
-                <Slide slide={report.slides[0]} />
-              </Tile>
+              <Slide slide={report.slides[0]} />
             </Link>
           ))}
-        </React.Fragment>
+        </>
       );
   }
 };
@@ -63,11 +61,9 @@ const NewReport = () => {
       console.log(result.error);
     default:
       return (
-        <Tile>
-          <NewButton onClick={() => create({})}>
-            <img style={{ height: 50 }} src={plus} />
-          </NewButton>
-        </Tile>
+        <NewButton onClick={() => create({})}>
+          <img style={{ height: 50 }} src={plus} />
+        </NewButton>
       );
   }
 };
@@ -86,25 +82,17 @@ const ReportsPage = () => {
 export default ReportsPage;
 
 const Page = styled.div`
-  display: flex;
+  display: grid;
   min-height: 100vh;
-  flex-direction: column;
-  align-items: stretch;
+  grid-template-rows: 150px auto;
   background: #eee;
 `;
 const Main = styled.main`
-  flex: 1;
-  padding: 80px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-`;
-
-const Tile = styled.div`
-  margin: 15px;
-  width: 228px;
-  height: 128.25px;
+  box-sizing: border-box;
+  padding: 64px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 32px;
 `;
 
 const NewButton = styled.button`
