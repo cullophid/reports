@@ -11,6 +11,7 @@ import { client } from "./apollo";
 
 export default class App extends React.Component<{}, {}> {
   render() {
+    console.log("LIVE");
     return (
       <Router history={history}>
         <React.Fragment>

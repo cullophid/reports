@@ -5,7 +5,8 @@ import {
   ApolloQueryResult,
   MutationOptions,
   ApolloCurrentResult,
-  ApolloError
+  ApolloError,
+  FetchResult
 } from "apollo-boost";
 
 export type QueryResult<T> =
@@ -62,11 +63,12 @@ export const useMutation = <T, Vars = { [key: string]: any }>(
     const variables = Object.assign({}, options.variables || {}, vars);
     setResponse({ status: "Loading" });
     client.mutate<T, Vars>({ ...options, variables }).then(
-      ({ data }: { data: T }) => {
-        setResponse({
-          status: "Ready",
-          data
-        });
+      ({ data }: FetchResult<T>) => {
+        data &&
+          setResponse({
+            status: "Ready",
+            data
+          });
       },
       (error: ApolloError) => {
         setResponse({

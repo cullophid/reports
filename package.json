@@ -11,8 +11,8 @@
     "parcel": "parcel src/index.html",
     "build:parcel": "parcel build src/index.html",
     "build": "npm run build:lambda && npm run build:parcel",
-    "serve:lambda": "netlify-lambda serve src/api/lambdas",
-    "build:lambda": "netlify-lambda build src/api/lambdas"
+    "serve:lambda": "netlify-lambda serve src/functions/handlers",
+    "build:lambda": "netlify-lambda build src/functions/handlers"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
