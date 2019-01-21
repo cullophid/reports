@@ -11,7 +11,7 @@
     "parcel": "parcel src/index.html",
     "start": "node serve.js",
     "build:parcel": "parcel build src/index.html",
-    "build": "npm run build:lambda && npm run build:parcel",
+    "build": "npm run build:lambda && npm run build:parcel && cp _redirects dist/_redirects",
     "serve:lambda": "netlify-lambda serve src/functions/handlers",
     "build:lambda": "netlify-lambda build src/functions/handlers"
   },
