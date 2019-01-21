@@ -5,6 +5,7 @@ node_modules/
 
 dist/
 functions/
+
 server/node_modules/
 server/build/
 server/.env

@@ -5,7 +5,7 @@
   "dependencies": {
     "apollo-server-lambda": "^2.3.1",
     "email-validator": "^2.0.4",
-    "mongodb": "^3.1.10"
+    "mongodb": "3.1.10"
   },
   "scripts": {
     "parcel": "parcel src/index.html",
