@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "{\"MONGODB_URL\":\"$MONGODB_URL\"}" > config.json

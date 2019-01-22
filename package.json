@@ -11,9 +11,10 @@
     "parcel": "parcel src/index.html",
     "start": "node serve.js",
     "build:parcel": "parcel build src/index.html",
+    "prebuild": "scripts/load_env_vars",
     "build": "npm run build:lambda && npm run build:parcel && cp _redirects dist/_redirects",
-    "serve:lambda": "netlify-lambda serve src/functions/handlers",
-    "build:lambda": "netlify-lambda build src/functions/handlers"
+    "serve:lambda": "netlify-lambda serve src/functions",
+    "build:lambda": "netlify-lambda build src/functions"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
