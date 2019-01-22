@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect, useCallback } from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import { report, slide, newSlide } from "../../models/reports";
 import { column } from "../../styles";
 import { SlideEditor } from "./SlideEditor";

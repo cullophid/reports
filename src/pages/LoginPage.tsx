@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import { Spinner } from "../components/Spinner";
 import history from "../history";
 import { center } from "../styles";

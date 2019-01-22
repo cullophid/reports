@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { center, column, columnSpacing } from "../styles";
 import * as Theme from "../theme";

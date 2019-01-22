@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import AutoScale from "../AutoScale";
 import { TextElement } from "./TextElement";
 import { ChartElement } from "./ChartElement";

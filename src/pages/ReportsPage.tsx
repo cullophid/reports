@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import Menu from "../components/Menu";
 import { Link } from "react-router-dom";
 import { report, reportQuery } from "../models/reports";

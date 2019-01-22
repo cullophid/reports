@@ -6,35 +6,45 @@ import ReportsPage from "./pages/ReportsPage";
 import DatastoresPage from "./pages/DatastoresPage";
 import ReportEditorPage from "./pages/ReportEditorPage";
 import history from "./history";
-import { report } from "./models/reports";
-import { client } from "./apollo";
+import { createGlobalStyle, css } from "styled-components";
 
-export default class App extends React.Component<{}, {}> {
-  render() {
-    console.log("LIVE");
-    return (
-      <Router history={history}>
-        <React.Fragment>
-          <Route path="/" exact render={() => <Redirect to="/reports" />} />
-          <Route path="/login" exact render={() => <LoginPage />} />
-          <Route path="/test" exact render={() => <TestPage />} />
-          <Route path="/datastores" exact render={() => <DatastoresPage />} />
-          <Route path="/reports" exact render={() => <ReportsPage />} />
-          <Route
-            path="/reports/:reportId"
-            exact
-            render={({ match, location }) => {
-              const slideId = location.hash.substring(1);
-              return (
-                <ReportEditorPage
-                  reportId={match.params.reportId}
-                  slideId={slideId}
-                />
-              );
-            }}
-          />
-        </React.Fragment>
-      </Router>
-    );
+const GlobalStyles = createGlobalStyle`
+  html,
+  body {
+    margin: 0;
+    padding: 0;
   }
-}
+  * {
+    box-sizing: border-box;
+  }
+`;
+
+const App = () => {
+  return (
+    <Router history={history}>
+      <>
+        <GlobalStyles />
+        <Route path="/" exact render={() => <Redirect to="/reports" />} />
+        <Route path="/login" exact render={() => <LoginPage />} />
+        <Route path="/test" exact render={() => <TestPage />} />
+        <Route path="/datastores" exact render={() => <DatastoresPage />} />
+        <Route path="/reports" exact render={() => <ReportsPage />} />
+        <Route
+          path="/reports/:reportId"
+          exact
+          render={({ match, location }) => {
+            const slideId = location.hash.substring(1);
+            return (
+              <ReportEditorPage
+                reportId={match.params.reportId}
+                slideId={slideId}
+              />
+            );
+          }}
+        />
+      </>
+    </Router>
+  );
+};
+
+export default App;

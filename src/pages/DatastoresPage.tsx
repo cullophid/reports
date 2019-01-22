@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import { column, columnSpacing, fill } from "../styles";
 import Menu from "../components/Menu";
 import gql from "graphql-tag";

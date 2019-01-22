@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 
 import TextEditor from "../components/TextEditor";
 type State = {

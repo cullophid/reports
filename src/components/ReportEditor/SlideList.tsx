@@ -1,7 +1,7 @@
 import React from "react";
 import { column, columnSpacing } from "../../styles";
 import { slide } from "../../models/reports";
-import styled from "react-emotion";
+import styled from "styled-components";
 import { editorSelection } from "../../models/editorSelection";
 
 import Slide from "../Slide";

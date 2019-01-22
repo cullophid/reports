@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { keyframes } from "react-emotion";
+import styled from "styled-components";
 import Menu from "../components/Menu";
 import gql from "graphql-tag";
 import ReportEditor from "../components/ReportEditor/ReportEditor";

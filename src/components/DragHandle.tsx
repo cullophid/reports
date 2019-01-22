@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "react-emotion";
+import styled from "styled-components";
 import * as Theme from "../theme";
 
 type props = {
