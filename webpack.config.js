@@ -6,7 +6,6 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".mjs", ".js"]
   },
-  devtool: "source-map ",
   module: {
     rules: [
       {
@@ -45,11 +44,10 @@ module.exports = {
   devServer: {
     contentBase: Path.join(__dirname, "dist"),
     port: 1234,
-    historyApiFallback: {
-      index: "index.html"
-    },
+    historyApiFallback: true,
     proxy: {
       "/.netlify": "http://localhost:9000"
-    }
+    },
+    open: true
   }
 };

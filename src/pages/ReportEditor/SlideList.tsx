@@ -39,7 +39,7 @@ const Aside = styled.aside`
   box-sizing: border-box;
   overflow: auto;
   &::-webkit-scrollbar {
-    width: 0px; /* remove scrollbar space */
+    width: 0px !important; /* remove scrollbar space */
     background: transparent; /* optional: just make scrollbar invisible */
   }
 `;

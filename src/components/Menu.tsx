@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -9,17 +9,41 @@ type Props = {
 };
 export const Menu = (props: Props) => {
   const [showMenu, toggleMenu] = useState(false);
+  const documentClick = useCallback(() => toggleMenu(false), []);
+
+  useEffect(() => {
+    document.addEventListener("click", documentClick);
+    () => document.removeEventListener("click", documentClick);
+  }, []);
+
   return (
     <SideMenu show={showMenu}>
-      <MenuButton active={showMenu} onClick={() => toggleMenu(!showMenu)}>
+      <MenuButton
+        active={showMenu}
+        onClick={(e: React.MouseEvent<any>) => {
+          e.nativeEvent.stopImmediatePropagation();
+          e.stopPropagation();
+          toggleMenu(!showMenu);
+        }}
+      >
         AM
       </MenuButton>
       <MenuNav>
         <Pages>
-          <Link to="/reports">
+          <Link
+            to="/reports"
+            onClick={(e: React.MouseEvent<any>) =>
+              e.nativeEvent.stopPropagation()
+            }
+          >
             <Page active={props.page == "Reports"}>Reports</Page>
           </Link>
-          <Link to="/datasources">
+          <Link
+            to="/datasources"
+            onClick={(e: React.MouseEvent<any>) =>
+              e.nativeEvent.stopPropagation()
+            }
+          >
             <Page active={props.page == "Datasources"}>Datasources</Page>
           </Link>
         </Pages>
