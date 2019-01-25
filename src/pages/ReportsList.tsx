@@ -1,6 +1,5 @@
-import * as React from "react";
-import styled from "styled-components";
-import Menu from "../components/Menu";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { report, reportQuery } from "../models/reports";
 import { Spinner } from "../components/Spinner";
@@ -8,9 +7,12 @@ import { Redirect } from "react-router";
 import * as Remote from "../models/remote";
 import gql from "graphql-tag";
 import Slide from "../components/Slide";
+import { Page } from "../components/Page";
 import plus from "../plus.svg";
 import { center } from "../styles";
 import { useQuery, useMutation } from "../hooks";
+import * as Theme from "../theme";
+import { Menu } from "../components/Menu";
 
 type State = {
   reports: Remote.t<report[], string>;
@@ -22,7 +24,19 @@ const FETCH_REPORTS = gql`
   }
 `;
 
-const ReportsList = () => {
+export const ReportsList = () => {
+  return (
+    <Page>
+      <Menu page="Reports" />
+      <Main>
+        <H1>Select a report or create a new</H1>
+        <Reports />
+      </Main>
+    </Page>
+  );
+};
+
+const Reports = () => {
   const result = useQuery<{ reports: report[] }>({ query: FETCH_REPORTS });
   switch (result.status) {
     case "Loading":
@@ -31,14 +45,14 @@ const ReportsList = () => {
       return <p> Could not fetch reports</p>;
     case "Ready":
       return (
-        <>
+        <ReportList>
           <NewReport />
           {result.data.reports.map((report: report) => (
             <Link to={`/reports/${report.id}`} key={report.id}>
               <Slide slide={report.slides[0]} />
             </Link>
           ))}
-        </>
+        </ReportList>
       );
   }
 };
@@ -68,31 +82,24 @@ const NewReport = () => {
   }
 };
 
-const ReportsPage = () => {
-  return (
-    <Page>
-      <Menu />
-      <Main>
-        <ReportsList />
-      </Main>
-    </Page>
-  );
-};
-
-export default ReportsPage;
-
-const Page = styled.div`
-  display: grid;
-  min-height: 100vh;
-  grid-template-rows: 150px auto;
-  background: #eee;
+const H1 = styled.h1`
+  justify-self: center;
+  align-self: center;
+  color: #656466;
 `;
-const Main = styled.main`
+
+const ReportList = styled.ul`
   box-sizing: border-box;
-  padding: 64px;
+  padding: 0 64px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 32px;
+`;
+
+const Main = styled.main`
+  display: grid;
+  grid-template-rows: 140px auto;
+  min-height: 100%;
 `;
 
 const NewButton = styled.button`

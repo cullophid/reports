@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import Menu from "../components/Menu";
+import { Menu } from "../components/Menu";
 import gql from "graphql-tag";
 import ReportEditor from "../components/ReportEditor/ReportEditor";
 import { Spinner } from "../components/Spinner";
@@ -25,7 +25,7 @@ type Props = {
   slideId: string | null;
 };
 
-const ReportEditorPage = (props: Props) => {
+export const ReportEditorPage = (props: Props) => {
   const { reportId, slideId } = props;
   const reportResult = useQuery<{ report: report }>({
     query: FETCH_REPORT,
@@ -43,14 +43,14 @@ const ReportEditorPage = (props: Props) => {
     500
   );
   return (
-    <React.Fragment>
+    <>
       {updateReportResult.status === "Loading" && (
         <Saving>
           <Spinner />
         </Saving>
       )}
       <Page>
-        <Menu />
+        <Menu page="Reports" />
         {reportResult.status === "Loading" && <Spinner />}
         {report && (
           <ReportEditor
@@ -60,15 +60,18 @@ const ReportEditorPage = (props: Props) => {
           />
         )}
       </Page>
-    </React.Fragment>
+    </>
   );
 };
-export default ReportEditorPage;
 
 const Page = styled.div`
-  background: #eee;
-  height: 100vh;
-  padding-top: 80px;
+  background: #f5f5f5;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-column-gap: 32px;
+  grid-template-areas: "sidebar main";
+  min-height: 100vh;
+  padding-right: 32px;
 `;
 
 const Saving = styled.div`

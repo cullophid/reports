@@ -97,7 +97,7 @@ const Main = styled.main`
   height: 100%;
   display: grid;
   grid-template-columns: 300px auto;
-  padding: 0 30px;
+  padding: 0 16px;
   grid-column-gap: 30px;
   min-height: 0;
 `;

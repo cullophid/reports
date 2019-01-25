@@ -109,6 +109,8 @@ const Text = styled.span`
   display: block;
   color: black;
   text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  white-space: pre-line;
 `;
 
 const ChartElement = (props: chartElement) => null;

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { column, columnSpacing, fill } from "../styles";
-import Menu from "../components/Menu";
+import { Menu } from "../components/Menu";
 import gql from "graphql-tag";
 import { Spinner } from "../components/Spinner";
 import { useQuery } from "../hooks";
+import { Page } from "../components/Page";
 
-const FETCH_DATASTORES = gql`
+const FETCH_DATASOURCES = gql`
   {
-    datastores {
+    datasources {
       id
       type
       name
@@ -20,7 +21,7 @@ const FETCH_DATASTORES = gql`
   }
 `;
 
-type Datastore = {
+type Datasource = {
   id: string;
   type: "MySQL";
   name: string;
@@ -30,34 +31,34 @@ type Datastore = {
   database: string;
 };
 
-const DatastoresPage = () => {
-  const [selectedDatastore, setSelectedDatastore] = useState<Datastore | null>(
-    null
-  );
+export const Datasources = () => {
+  const [
+    selectedDatasource,
+    setSelectedDatasource
+  ] = useState<Datasource | null>(null);
 
   return (
-    <ViewContainer>
-      <Menu />
-      <DatastoreList onClick={setSelectedDatastore} />
-    </ViewContainer>
+    <Page>
+      <Menu page="Datasources" />
+      <DatasourceList onClick={setSelectedDatasource} />
+    </Page>
   );
 };
-export default DatastoresPage;
 
 const DatastoreItem = ({ datastore }: any) => (
-  <DatastoreListItem>
+  <DatasourceListItem>
     <span>{datastore.type}</span>
     <span>{datastore.name}</span>
-  </DatastoreListItem>
+  </DatasourceListItem>
 );
 
-type DatastoreListProps = {
-  onClick: (datastore: Datastore) => void;
+type DatasourceListProps = {
+  onClick: (datastore: Datasource) => void;
 };
 
-const DatastoreList = ({ onClick }: DatastoreListProps) => {
-  const result = useQuery<{ datastores: Datastore[] }>({
-    query: FETCH_DATASTORES
+const DatasourceList = ({ onClick }: DatasourceListProps) => {
+  const result = useQuery<{ datastores: Datasource[] }>({
+    query: FETCH_DATASOURCES
   });
   switch (result.status) {
     case "Loading":
@@ -67,7 +68,7 @@ const DatastoreList = ({ onClick }: DatastoreListProps) => {
     case "Ready":
       return (
         <ul>
-          {result.data.datastores.map((datastore: Datastore) => (
+          {result.data.datastores.map((datastore: Datasource) => (
             <DatastoreItem
               key={datastore.id}
               datastore={datastore}
@@ -79,11 +80,7 @@ const DatastoreList = ({ onClick }: DatastoreListProps) => {
   }
 };
 
-const ViewContainer = styled.div`
-  ${column};
-`;
-
-const DatastoreListItem = styled.li`
+const DatasourceListItem = styled.li`
   ${column};
   ${columnSpacing(5)};
 `;

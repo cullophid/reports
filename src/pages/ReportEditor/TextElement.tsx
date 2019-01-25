@@ -174,4 +174,5 @@ const Text = styled.div`
   &:focus {
     outline: none;
   }
+  white-space: pre-line;
 `;

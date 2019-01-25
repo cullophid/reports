@@ -8,7 +8,7 @@ type State = {
   email: string;
 };
 
-const LoginPage = () => {
+export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const login = () => history.push("/");
   return (
@@ -28,8 +28,6 @@ const LoginPage = () => {
     </Page>
   );
 };
-
-export default LoginPage;
 
 const Page = styled.div`
   ${center};
