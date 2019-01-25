@@ -1,42 +1,83 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import styled from "styled-components";
+import resizeEvent from "element-resize-event";
 
-type props = {
-  width: number;
-  style?: any;
-  render: (scale: number) => React.ReactChild;
+type Props = {
+  children: React.ReactNode;
 };
+export const AutoScale = (props: Props) => {
+  const [wrapperSize, setWrapperSize] = useState({ width: 0, height: 0 });
+  const [contentSize, setContentSize] = useState({ width: 0, height: 0 });
+  const [scale, setScale] = useState(1);
 
-type state = {
-  scale: number | null;
-};
-
-const AutoScale = (props: props) => {
-  const [scale, setScale] = useState<number | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const calculateScale = () => {
-    window.requestAnimationFrame(() => {
-      if (wrapperRef.current === null)
-        throw new Error("Cound not find wrapper");
-      let { width } = wrapperRef.current.getBoundingClientRect();
-      setScale(width / props.width);
-    });
-  };
-
+  const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    window.addEventListener("resize", calculateScale);
-    calculateScale();
-    return () => window.removeEventListener("resize", calculateScale);
+    const content = contentRef.current && contentRef.current.children[0];
+
+    const wrapper = wrapperRef.current;
+    if (!content || !wrapper) throw new Error("Actual content not loaded");
+
+    setContentSize({
+      width: content.getBoundingClientRect().width,
+      height: content.getBoundingClientRect().height
+    });
+    setWrapperSize({
+      width: wrapper.getBoundingClientRect().width,
+      height: wrapper.getBoundingClientRect().height
+    });
+
+    setScale(
+      wrapper.getBoundingClientRect().width /
+        content.getBoundingClientRect().width
+    );
+
+    resizeEvent(contentRef.current as Element, () => {
+      setContentSize({
+        width: content.getBoundingClientRect().width,
+        height: content.getBoundingClientRect().height
+      });
+      setScale(
+        wrapper.getBoundingClientRect().width /
+          content.getBoundingClientRect().width
+      );
+    });
+
+    resizeEvent(wrapperRef.current as Element, () => {
+      setWrapperSize({
+        width: wrapper.getBoundingClientRect().width,
+        height: wrapper.getBoundingClientRect().height
+      });
+      setScale(
+        wrapper.getBoundingClientRect().width /
+          content.getBoundingClientRect().width
+      );
+    });
   }, []);
 
   return (
-    <div
-      style={props.style || { width: "100%", overflowX: "visible" }}
-      ref={wrapperRef}
-    >
-      {scale !== null && props.render(scale)}
-    </div>
+    <Wrapper ref={wrapperRef}>
+      <Container
+        style={{
+          height: contentSize.height * scale,
+          width: contentSize.width * scale
+        }}
+      >
+        <Content ref={contentRef} style={{ transform: `scale(${scale})` }}>
+          {props.children}
+        </Content>
+      </Container>
+    </Wrapper>
   );
 };
 
-export default AutoScale;
+const Wrapper = styled.div``;
+
+const Container = styled.div`
+  max-width: 100%;
+  overflow: visible;
+`;
+
+const Content = styled.div`
+  transform-origin: 0 0 0;
+`;

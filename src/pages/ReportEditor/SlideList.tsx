@@ -4,8 +4,8 @@ import { slide } from "../../models/reports";
 import styled from "styled-components";
 import { editorSelection } from "../../models/editorSelection";
 
-import Slide from "../Slide";
-import { Button } from "../Button";
+import Slide from "../../components/Slide";
+import { Button } from "../../components/Button";
 type Props = {
   selection: editorSelection;
   currentSlideId: string;

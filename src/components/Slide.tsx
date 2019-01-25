@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { slide, textElement, chartElement } from "../models/reports";
-import AutoScale from "./AutoScale";
+import { AutoScale } from "./AutoScale";
 import * as Theme from "../theme";
 
 type TextAlign = "left" | "center" | "right" | "justify";
@@ -49,38 +49,23 @@ type Props = {
 
 const Slide = (props: Props) => {
   return (
-    <AutoScale
-      style={{ width: props.width, height: props.height }}
-      width={800}
-      render={(scale) => (
-        <div
-          style={{
-            width: 800 * scale,
-            height: 450 * scale,
-            overflow: "visible"
-          }}
-        >
-          <SlideBackground
-            {...props}
-            onClick={() => props.onClick && props.onClick(props.slide)}
-            style={{
-              transform: `scale(${scale}`
-            }}
-          >
-            <React.Fragment>
-              {props.slide.elements.map((elem, i) => {
-                switch (elem.type) {
-                  case "text":
-                    return <TextElement key={i} {...elem} />;
-                  case "chart":
-                    return <ChartElement key={i} {...elem} />;
-                }
-              })}
-            </React.Fragment>
-          </SlideBackground>
-        </div>
-      )}
-    />
+    <AutoScale>
+      <SlideBackground
+        {...props}
+        onClick={() => props.onClick && props.onClick(props.slide)}
+      >
+        <React.Fragment>
+          {props.slide.elements.map((elem, i) => {
+            switch (elem.type) {
+              case "text":
+                return <TextElement key={i} {...elem} />;
+              case "chart":
+                return <ChartElement key={i} {...elem} />;
+            }
+          })}
+        </React.Fragment>
+      </SlideBackground>
+    </AutoScale>
   );
 };
 

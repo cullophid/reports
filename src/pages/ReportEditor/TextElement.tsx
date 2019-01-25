@@ -2,13 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { textElement } from "../../models/reports";
 import * as Theme from "../../theme";
-import TextEditor from "../TextEditor";
-import { DragHandle } from "../DragHandle";
-
-type pos = {
-  x: number;
-  y: number;
-};
+import TextEditor from "../../components/TextEditor";
+import { DragHandle } from "../../components/DragHandle";
 
 type BoundingBox = {
   selected: boolean;

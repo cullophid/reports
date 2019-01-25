@@ -6,7 +6,7 @@ config.json
 node_modules/
 
 dist/
-./functions/
+functions/
 
 server/node_modules/
 server/build/

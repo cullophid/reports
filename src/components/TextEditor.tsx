@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Editor } from "slate-react";
 import Plain from "slate-plain-serializer";
-import { Change, Value } from "slate";
+import { Value } from "slate";
 import { debounce } from "../util";
 type props = {
   defaultValue: string;
@@ -17,7 +17,7 @@ const TextEditor = (props: props) => {
     props.onSave && props.onSave(Plain.serialize(value));
   }, 500);
 
-  const onChange = ({ value }: Change) => {
+  const onChange = ({ value }: any) => {
     setValue(value);
     save(value);
   };

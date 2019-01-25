@@ -1,12 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Menu } from "../components/Menu";
+import { Menu } from "../../components/Menu";
 import gql from "graphql-tag";
-import ReportEditor from "../components/ReportEditor/ReportEditor";
-import { Spinner } from "../components/Spinner";
-import { report, cleanReport, reportQuery } from "../models/reports";
-import { debounce } from "../util";
-import { useQuery, useMutation } from "../hooks";
+import ReportEditor from "./Editor";
+import { Spinner } from "../../components/Spinner";
+import { report, cleanReport, reportQuery } from "../../models/reports";
+import { debounce } from "../../util";
+import { useQuery, useMutation } from "../../hooks";
 
 const FETCH_REPORT = gql`
   query FetchReport($reportId: ID!) {

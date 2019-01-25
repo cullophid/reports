@@ -10,8 +10,8 @@ type SlideElement = {
   y: number;
   width: number;
   height: number;
-  text: SlideText;
-  chart: SlideChart;
+  text?: SlideText;
+  chart?: SlideChart;
 };
 
 type SlideText = {
@@ -29,7 +29,7 @@ type SlideChart = {
 
 type Slide = {
   id: string;
-  elements: Element[];
+  elements: SlideElement[];
 };
 
 type Report = {
@@ -72,7 +72,6 @@ export const createReport = async (title: string) => {
             id: uuid(),
             x: 50,
             y: 130,
-            type: "text",
             width: 700,
             height: 0,
             text: {
