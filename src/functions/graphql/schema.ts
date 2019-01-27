@@ -1,39 +1,43 @@
-import { gql } from "apollo-server-lambda";
+import { gql, IResolvers } from "apollo-server-lambda";
 import { EmailScalar, ObjectIDScalar } from "./scalars";
 import * as Reports from "./data/reports";
 import * as Datastores from "./data/datastores";
 import * as Users from "./data/users";
 import * as Organisations from "./data/organisations";
+import { ObjectID } from "bson";
+import { Context } from "./Types";
 
 export const typeDefs = gql`
   type Query {
     organisations: [Organisation]
     organisation(id: ID!): Organisation
     reports: [Report]
-    report(id: ObjectID!): Report
+    report(id: ID!): Report
     datastores: [Datastore]
-    datastore(id: ObjectID!): Datastore
+    datastore(id: ID!): Datastore
   }
 
   type Mutation {
     createReport(title: String): Report
     updateReport(report: ReportUpdate!): Report
-    deleteReport(id: ObjectID!): ObjectID
-    deleteAllReports: String
+    deleteReport(id: ID!): ID
+    deleteAllReports: Int
 
     createDatastore(datastore: DatastoreCreate!): Datastore
     updateDatastore(datastore: DatastoreUpdate!): Datastore
-    deleteDatastore(id: ObjectID!): ObjectID
+    deleteDatastore(id: ID!): ID
 
     createOrganisation(organisation: OrganisationCreate!): Organisation
     updateOrganisation(organisation: OrganisationUpdate!): Organisation
-    deleteOrganisation(id: ObjectID!): ObjectID
+    deleteOrganisation(id: ID!): ID
 
     createUser(user: UserCreate!): User
+
+    authenticate(email: Email): Boolean
   }
 
   type Organisation {
-    id: ObjectID!
+    id: ID!
     name: String!
     users: [User]!
   }
@@ -43,12 +47,12 @@ export const typeDefs = gql`
   }
 
   input OrganisationUpdate {
-    id: ObjectID!
+    id: ID!
     name: String
   }
 
   type User {
-    id: ObjectID!
+    id: ID!
     firstname: String!
     lastname: String!
     email: String!
@@ -80,7 +84,7 @@ export const typeDefs = gql`
   }
 
   input DatastoreUpdate {
-    id: ObjectID!
+    id: ID!
     type: DatastoreType
     name: String
     host: String
@@ -91,7 +95,7 @@ export const typeDefs = gql`
   }
 
   type Datastore {
-    id: ObjectID!
+    id: ID!
     type: DatastoreType!
     name: String!
     host: String!
@@ -105,28 +109,28 @@ export const typeDefs = gql`
   }
 
   type Report {
-    id: ObjectID!
+    id: ID!
     title: String!
     slides: [Slide!]!
   }
 
   input ReportUpdate {
-    id: ObjectID!
+    id: ID!
     title: String!
     slides: [SlideUpdate!]!
   }
 
   type Slide {
-    id: ObjectID!
+    id: ID!
     elements: [SlideElement!]!
   }
   input SlideUpdate {
-    id: ObjectID!
+    id: ID!
     elements: [SlideElementUpdate!]!
   }
 
   type SlideElement {
-    id: ObjectID!
+    id: ID!
     x: Float!
     y: Float!
     type: SlideElementType!
@@ -137,7 +141,7 @@ export const typeDefs = gql`
   }
 
   input SlideElementUpdate {
-    id: ObjectID!
+    id: ID!
     x: Float!
     y: Float!
     type: SlideElementType!
@@ -179,54 +183,58 @@ export const typeDefs = gql`
   }
 
   input SlideChartUpdate {
-    dataStore: ObjectID!
+    dataStore: ID!
     query: String!
     xAxis: String!
     yAxis: String!
   }
 
   scalar Email
-  scalar ObjectID
 `;
-export const resolvers = {
+const convertId = ({ _id }: { _id: ObjectID }) => _id;
+export const resolvers: any = {
   Email: EmailScalar,
+  ID: ObjectIDScalar,
   Report: {
-    id: ({ _id }: Reports.Report) => _id
+    id: convertId
   },
+
   Datastore: {
-    id: ({ _id }: Datastores.Datastore) => _id
+    id: convertId
   },
   User: {
-    id: ({ _id }: Users.User) => _id
+    id: convertId
   },
   Organisation: {
-    id: ({ _id }: Reports.Report) => _id,
-    users: ({ _id }: Organisations.Organisation) => Users.fetchInOrg(_id)
+    id: convertId,
+    users: ({ _id }: Organisations.Organisation, _: {}, ctx: Context) =>
+      Users.fetchInOrg(ctx, { organisation: _id })
   },
   SlideChart: {
-    dataStore: ({ dataStore }: Reports.SlideChart) =>
-      Datastores.fetch(dataStore)
+    dataStore: ({ dataStore }: Reports.SlideChart, _: {}, ctx: any) =>
+      Datastores.fetch(ctx, { id: dataStore })
   },
-
   Query: {
-    reports: () => Reports.fetchAll(),
-    report: (_: any, { id }: any) => Reports.fetch(id),
-    datastores: () => Datastores.fetchAll(),
-    datastore: (_: any, { id }: any) => Datastores.fetch(id)
+    datastores: Datastores.fetchAll,
+    datastore: Datastores.fetch,
+    reports: Reports.fetchAll,
+    report: Reports.fetch,
+    organisations: Organisations.fetchAll
   },
   Mutation: {
-    createReport: (_: any, { title }: any) =>
-      Reports.create(title || "Untitled"),
-    deleteReport: (_: any, { id }: any) => Reports.remove(id),
-    deleteAllReports: () => Reports.removeAll(),
-    updateReport: (_: any, { report }: any) => Reports.update(report),
+    createReport: Reports.create,
+    deleteReport: Reports.remove,
+    deleteAllReports: Reports.removeAll,
+    updateReport: Reports.update,
 
-    createDatastore: (_: any, { datastore }: any) =>
-      Datastores.create(datastore),
-    deleteDatastore: (_: any, { id }: any) => Datastores.remove(id),
-    updateDatastore: (_: any, { datastore }: any) =>
-      Datastores.update(datastore),
+    createDatastore: Datastores.create,
+    deleteDatastore: Datastores.remove,
+    updateDatastore: Datastores.update,
+    // users
+    createUser: Users.create,
+    authenticate: Users.authenticate,
 
-    createUser: (_: any, { user }: any) => Users.create(user)
+    // organistations
+    createOrganisation: Organisations.create
   }
 };

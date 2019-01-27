@@ -1,5 +1,6 @@
 import { collection } from "../mongo";
 import { ObjectID } from "bson";
+import { Resolver } from "../Types";
 
 const run = collection("datastores");
 
@@ -36,25 +37,36 @@ export const Datastore = {
   id: (datastore: Datastore) => datastore._id.toHexString()
 };
 
-export const fetchAll = () =>
+export const fetchAll: Resolver<Datastore[]> = () =>
   run((datastores) => datastores.find({}).toArray());
 
-export const fetch = (_id: ObjectID) =>
-  run((datastores) => datastores.findOne({ _id }));
+export const fetch: Resolver<Datastore | null, { id: ObjectID }> = (
+  ctx,
+  { id }
+) => run((datastores) => datastores.findOne({ _id: id }));
 
-export const create = async (datastore: DatastoreCreate) => {
+export const create: Resolver<
+  Datastore,
+  { datastore: DatastoreCreate }
+> = async (ctx, { datastore }) => {
   let res = await run((datastores) => datastores.insertOne(datastore));
   return { ...datastore, _id: res.insertedId };
 };
 
-export const remove = async (_id: ObjectID) => {
-  await run((datastores) => datastores.deleteOne({ _id }));
-  return _id;
+export const remove: Resolver<ObjectID, { id: ObjectID }> = async (
+  ctx,
+  { id }
+) => {
+  await run((datastores) => datastores.deleteOne({ _id: id }));
+  return id;
 };
 
-export const update = async (datastore: DatastoreUpdate) => {
+export const update: Resolver<
+  Datastore | null,
+  { datastore: DatastoreUpdate }
+> = async (ctx, { datastore }) => {
   await run((datastores) =>
     datastores.updateOne({ _id: datastore.id }, { $set: datastore })
   );
-  return datastore;
+  return run((datastores) => datastores.findOne({ _id: datastore.id }));
 };

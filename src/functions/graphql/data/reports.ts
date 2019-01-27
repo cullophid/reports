@@ -1,6 +1,6 @@
 import { collection } from "../mongo";
 import { ObjectID } from "bson";
-import uuid from "uuid/v4";
+import { Resolver } from "../Types";
 const run = collection("reports");
 
 export type Report = {
@@ -10,7 +10,7 @@ export type Report = {
 };
 
 type ReportUpdate = {
-  id: string;
+  id: ObjectID;
   title: string;
   slides: Slide[];
 };
@@ -21,7 +21,7 @@ type ReportCreate = {
 };
 
 export type SlideElement = {
-  id: string;
+  _id: ObjectID;
   x: number;
   y: number;
   width: number;
@@ -44,24 +44,28 @@ export type SlideChart = {
 };
 
 type Slide = {
-  id: string;
+  _id: ObjectID;
   elements: SlideElement[];
 };
 
-export const fetchAll = () => run((reports) => reports.find({}).toArray());
+export const fetchAll: Resolver<Report[]> = () =>
+  run((reports) => reports.find({}).toArray());
 
-export const fetch = (id: string) =>
-  run((reports) => reports.findOne({ _id: new ObjectID(id) }));
+export const fetch: Resolver<Report | null, { id: ObjectID }> = (ctx, { id }) =>
+  run((reports) => reports.findOne({ _id: id }));
 
-export const create = async (title: string) => {
+export const create: Resolver<Report | null, { title: string }> = async (
+  ctx,
+  { title }
+) => {
   const report: ReportCreate = {
     title,
     slides: [
       {
-        id: uuid(),
+        _id: new ObjectID(),
         elements: [
           {
-            id: uuid(),
+            _id: new ObjectID(),
             x: 50,
             y: 130,
             width: 700,
@@ -77,21 +81,28 @@ export const create = async (title: string) => {
     ]
   };
   let res = await run((reports) => reports.insertOne(report));
-  return { ...report, _id: res.insertedId };
+  return run((reports) => reports.findOne({ _id: res.insertedId }));
 };
 
-export const remove = async (id: string) => {
-  await run((reports) => reports.deleteOne({ _id: new ObjectID(id) }));
+export const remove: Resolver<ObjectID, { id: ObjectID }> = async (
+  ctx,
+  { id }
+) => {
+  await run((reports) => reports.deleteOne({ _id: id }));
   return id;
 };
-export const removeAll = async () => {
-  await run((reports) => reports.deleteMany({}));
-  return "Ok";
+
+export const removeAll: Resolver<number | null> = async () => {
+  let res = await run((reports) => reports.deleteMany({}));
+  return res.result.ok ? (res.result.n as number) : null;
 };
 
-export const update = async (report: ReportUpdate) => {
+export const update: Resolver<Report | null, { report: ReportUpdate }> = async (
+  ctx,
+  { report }
+) => {
   await run((reports) =>
-    reports.updateOne({ _id: new ObjectID(report.id) }, { $set: report })
+    reports.updateOne({ _id: report.id }, { $set: report })
   );
-  return { ...report, _id: new ObjectID(report.id) };
+  return run((reports) => reports.findOne({ _id: report.id }));
 };

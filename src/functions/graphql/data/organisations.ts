@@ -1,5 +1,6 @@
 import { collection } from "../mongo";
 import { ObjectID } from "bson";
+import { Resolver } from "../Types";
 
 const run = collection("organisations");
 
@@ -12,10 +13,18 @@ type OrganisationCreate = {
   name: string;
 };
 
-export const fetch = (id: ObjectID): Promise<Organisation | null> =>
-  run((orgs) => orgs.findOne({ _id: id }));
+export const fetch: Resolver<Organisation | null, { id: ObjectID }> = (
+  ctx,
+  { id }
+) => run((orgs) => orgs.findOne({ _id: id }));
 
-export const create = async (org: OrganisationCreate) => {
-  let res = await run((orgs) => orgs.insertOne(org));
-  return { ...org, _id: res.insertedId };
+export const fetchAll: Resolver<Organisation[], {}> = () =>
+  run((orgs) => orgs.find({}).toArray());
+
+export const create: Resolver<
+  Organisation,
+  { organisation: OrganisationCreate }
+> = async (ctx, { organisation }): Promise<Organisation> => {
+  let res = await run((orgs) => orgs.insertOne(organisation));
+  return { ...organisation, _id: res.insertedId };
 };

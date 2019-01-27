@@ -19,8 +19,9 @@
     "webpack": "webpack",
     "build:lambda": "netlify-lambda build src/functions",
     "prebuild": "scripts/load_env_vars",
-    "build": "npm run build:lambda && npm run webpack && cp _redirects dist/_redirects",
-    "start:lambda": "netlify-lambda serve src/functions",
+    "build": "npm run build:lambda && npm run webpack && cp src/_redirects dist/_redirects && gzip -9 dist/main.js",
+    "clean": "rm -rf functions dist",
+    "start:lambda": "npm run clean:lambda && netlify-lambda serve src/functions",
     "start:webpack": "webpack-dev-server",
     "start": "concurrently --kill-others 'npm run start:lambda' 'npm run start:webpack'"
   },
