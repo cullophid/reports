@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { client } from "./apollo";
 import {
   QueryOptions,
@@ -8,6 +8,7 @@ import {
   ApolloError,
   FetchResult
 } from "apollo-boost";
+import { SessionContext } from "./Session";
 
 export type QueryResult<T> =
   | { status: "Loading" }
@@ -25,6 +26,7 @@ const queryResult = <T>({
 };
 
 export const useQuery = <T>(options: QueryOptions): QueryResult<T> => {
+  const session = useContext(SessionContext);
   const [response, setResponse] = useState<ApolloCurrentResult<T>>({
     networkStatus: 1,
     data: {},

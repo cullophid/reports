@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Router, Route, Redirect } from "react-router-dom";
+import { Router, Route, Redirect, Switch } from "react-router-dom";
 import { LoginPage } from "./pages/Login";
 import TestPage from "./pages/TestPage";
 import { ReportsList } from "./pages/ReportsList";
@@ -7,6 +7,8 @@ import { Datasources } from "./pages/Datasources";
 import { ReportEditorPage } from "./pages/ReportEditor";
 import history from "./history";
 import { createGlobalStyle, css } from "styled-components";
+import { SessionContext, Session } from "./Session";
+import { CheckYourEmail } from "./pages/CheckYourEmail";
 
 const GlobalStyles = createGlobalStyle`
   html,
@@ -25,28 +27,37 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const App = () => {
+type Props = {
+  session: Session | null;
+};
+const App = ({ session }: Props) => {
   return (
-    <Router history={history}>
-      <>
-        <GlobalStyles />
-        <Route path="/" exact render={() => <Redirect to="/reports" />} />
-        <Route path="/login" exact render={() => <LoginPage />} />
-        <Route path="/test" exact render={() => <TestPage />} />
-        <Route path="/datasources" exact render={() => <Datasources />} />
-        <Route path="/reports" exact render={() => <ReportsList />} />
-        <Route
-          path="/reports/:reportId"
-          exact
-          render={({ match, location }) => (
-            <ReportEditorPage
-              reportId={match.params.reportId}
-              slideId={location.hash.substring(1)}
-            />
-          )}
-        />
-      </>
-    </Router>
+    <SessionContext.Provider value={session}>
+      <GlobalStyles />
+      <Router history={history}>
+        <Switch>
+          <Route path="/login" exact component={LoginPage} />
+          <Route path="/check-your-email" exact component={CheckYourEmail} />
+
+          {!session && <Redirect to="/login" />}
+
+          <Redirect exact from="/" to="/reports" />
+          <Route path="/test" exact component={TestPage} />
+          <Route path="/datasources" exact component={Datasources} />
+          <Route path="/reports" exact render={() => <ReportsList />} />
+          <Route
+            path="/reports/:reportId"
+            exact
+            render={({ match, location }) => (
+              <ReportEditorPage
+                reportId={match.params.reportId}
+                slideId={location.hash.substring(1)}
+              />
+            )}
+          />
+        </Switch>
+      </Router>
+    </SessionContext.Provider>
   );
 };
 

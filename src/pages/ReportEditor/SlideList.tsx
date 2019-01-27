@@ -1,5 +1,4 @@
 import React from "react";
-import { column, columnSpacing } from "../../styles";
 import { slide } from "../../models/reports";
 import styled from "styled-components";
 import { editorSelection } from "../../models/editorSelection";
@@ -33,8 +32,11 @@ export default (props: Props) => (
 );
 
 const Aside = styled.aside`
-  ${column};
-  ${columnSpacing(15)};
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+  grid-auto-flow: row;
+  grid-gap: 15px;
   padding: 30px;
   box-sizing: border-box;
   overflow: auto;

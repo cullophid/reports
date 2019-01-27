@@ -9,7 +9,6 @@ import gql from "graphql-tag";
 import Slide from "../components/Slide";
 import { Page } from "../components/Page";
 import plus from "../plus.svg";
-import { center } from "../styles";
 import { useQuery, useMutation } from "../hooks";
 import * as Theme from "../theme";
 import { Menu } from "../components/Menu";
@@ -103,7 +102,8 @@ const Main = styled.main`
 `;
 
 const NewButton = styled.button`
-  ${center};
+  display: grid;
+  place-content: center center;
   width: 100%;
   height: 100%;
   box-sizing: border-box;

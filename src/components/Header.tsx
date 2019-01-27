@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { center, column, columnSpacing } from "../styles";
 import * as Theme from "../theme";
 
 type State = {
@@ -29,7 +28,8 @@ const StyledHeader = styled.header`
 `;
 
 const MenuButton = styled.button`
-  ${center};
+  display: grid;
+  place-content: center center;
   width: 50px;
   height: 50px;
   line-height: 1;
@@ -44,8 +44,11 @@ const MenuButton = styled.button`
   z-index: 100;
 `;
 const Menu = styled.nav`
-  ${column};
-  ${columnSpacing(15)};
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+  grid-auto-flow: row;
+  grid-gap: 15px;
   padding: 30px;
   position: fixed;
   height: 100%;

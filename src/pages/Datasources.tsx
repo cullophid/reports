@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { column, columnSpacing, fill } from "../styles";
 import { Menu } from "../components/Menu";
 import gql from "graphql-tag";
 import { Spinner } from "../components/Spinner";
@@ -81,6 +80,9 @@ const DatasourceList = ({ onClick }: DatasourceListProps) => {
 };
 
 const DatasourceListItem = styled.li`
-  ${column};
-  ${columnSpacing(5)};
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-flow: row;
+  grid-auto-rows: auto;
+  grid-gap: 5px;
 `;

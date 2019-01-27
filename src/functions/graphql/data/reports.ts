@@ -1,10 +1,26 @@
 import { collection } from "../mongo";
-import { ObjectId, ObjectID } from "bson";
-import { fetchDatastore } from "./datastores";
+import { ObjectID } from "bson";
 import uuid from "uuid/v4";
 const run = collection("reports");
 
-type SlideElement = {
+export type Report = {
+  _id: ObjectID;
+  title: string;
+  slides: SlideElement[];
+};
+
+type ReportUpdate = {
+  id: string;
+  title: string;
+  slides: Slide[];
+};
+
+type ReportCreate = {
+  title: string;
+  slides: Slide[];
+};
+
+export type SlideElement = {
   id: string;
   x: number;
   y: number;
@@ -20,7 +36,7 @@ type SlideText = {
   align: "Left" | "Right" | "Center" | "Justify";
 };
 
-type SlideChart = {
+export type SlideChart = {
   dataStore: ObjectID;
   query: string;
   xAxis: string;
@@ -32,36 +48,12 @@ type Slide = {
   elements: SlideElement[];
 };
 
-type Report = {
-  _id: ObjectID;
-  title: string;
-};
+export const fetchAll = () => run((reports) => reports.find({}).toArray());
 
-type ReportUpdate = {
-  id: string;
-  title: string;
-  slides: Slide[];
-};
+export const fetch = (id: string) =>
+  run((reports) => reports.findOne({ _id: new ObjectID(id) }));
 
-type ReportCreate = {
-  title: string;
-  slides: Slide[];
-};
-
-export const reportResolver = {
-  id: ({ _id }: Report) => _id.toHexString()
-};
-export const slideChartResolver = {
-  dataStore: ({ dataStore }: SlideChart) =>
-    fetchDatastore(dataStore.toHexString())
-};
-
-export const fetchReports = () => run((reports) => reports.find({}).toArray());
-
-export const fetchReport = (id: string) =>
-  run((reports) => reports.findOne({ _id: new ObjectId(id) }));
-
-export const createReport = async (title: string) => {
+export const create = async (title: string) => {
   const report: ReportCreate = {
     title,
     slides: [
@@ -88,18 +80,18 @@ export const createReport = async (title: string) => {
   return { ...report, _id: res.insertedId };
 };
 
-export const deleteReport = async (id: string) => {
-  await run((reports) => reports.deleteOne({ _id: new ObjectId(id) }));
+export const remove = async (id: string) => {
+  await run((reports) => reports.deleteOne({ _id: new ObjectID(id) }));
   return id;
 };
-export const deleteAllReports = async () => {
+export const removeAll = async () => {
   await run((reports) => reports.deleteMany({}));
   return "Ok";
 };
 
-export const updateReport = async (report: ReportUpdate) => {
+export const update = async (report: ReportUpdate) => {
   await run((reports) =>
-    reports.updateOne({ _id: new ObjectId(report.id) }, { $set: report })
+    reports.updateOne({ _id: new ObjectID(report.id) }, { $set: report })
   );
-  return { ...report, _id: new ObjectId(report.id) };
+  return { ...report, _id: new ObjectID(report.id) };
 };

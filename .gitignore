@@ -4,4 +4,4 @@
 config.json
 node_modules/
 dist/
-functions/
+functions/sendgrid.env

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Spinner } from "../components/Spinner";
-import history from "../history";
-import { center } from "../styles";
+import { Spinner } from "../../components/Spinner";
+import history from "../../history";
+import * as Auth0 from "../../auth0";
 
 type State = {
   email: string;
@@ -10,7 +10,12 @@ type State = {
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
-  const login = () => history.push("/");
+  const login = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let res = await Auth0.passwordLess(email);
+    console.log(res);
+    history.push("/check-your-email");
+  };
   return (
     <Page>
       <LoginForm onSubmit={login}>
@@ -30,7 +35,9 @@ export const LoginPage = () => {
 };
 
 const Page = styled.div`
-  ${center};
+  display: grid;
+  align-content: center;
+  justify-content: center;
   height: 100vh;
   background: #eee;
 `;

@@ -1,9 +1,9 @@
 import { collection } from "../mongo";
-import { ObjectId, ObjectID } from "bson";
+import { ObjectID } from "bson";
 
 const run = collection("datastores");
 
-type Datastore = {
+export type Datastore = {
   _id: ObjectID;
   name: string;
   host: string;
@@ -36,28 +36,25 @@ export const Datastore = {
   id: (datastore: Datastore) => datastore._id.toHexString()
 };
 
-export const fetchDatastores = () =>
+export const fetchAll = () =>
   run((datastores) => datastores.find({}).toArray());
 
-export const fetchDatastore = (id: string) =>
-  run((datastores) => datastores.findOne({ _id: new ObjectId(id) }));
+export const fetch = (_id: ObjectID) =>
+  run((datastores) => datastores.findOne({ _id }));
 
-export const createDatastore = async (datastore: DatastoreCreate) => {
+export const create = async (datastore: DatastoreCreate) => {
   let res = await run((datastores) => datastores.insertOne(datastore));
   return { ...datastore, _id: res.insertedId };
 };
 
-export const deleteDatastore = async (id: string) => {
-  await run((datastores) => datastores.deleteOne({ _id: new ObjectId(id) }));
-  return id;
+export const remove = async (_id: ObjectID) => {
+  await run((datastores) => datastores.deleteOne({ _id }));
+  return _id;
 };
 
-export const updateDatastore = async (datastore: DatastoreUpdate) => {
+export const update = async (datastore: DatastoreUpdate) => {
   await run((datastores) =>
-    datastores.updateOne(
-      { _id: new ObjectId(datastore.id) },
-      { $set: datastore }
-    )
+    datastores.updateOne({ _id: datastore.id }, { $set: datastore })
   );
   return datastore;
 };

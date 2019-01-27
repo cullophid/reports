@@ -1,6 +1,5 @@
 import * as React from "react";
 import styled from "styled-components";
-import { center } from "../styles";
 
 const NotFound = () => (
   <Wrapper>
@@ -15,5 +14,6 @@ const Text = styled.h1`
   font-size: 36px;
 `;
 const Wrapper = styled.div`
-  ${center}
+  display: grid;
+  place-content: center center;
 `;

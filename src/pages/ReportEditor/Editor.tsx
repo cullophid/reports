@@ -1,7 +1,6 @@
 import React, { useState, useReducer, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { report, slide, newSlide } from "../../models/reports";
-import { column } from "../../styles";
 import { SlideEditor } from "./SlideEditor";
 import { editorSelection } from "../../models/editorSelection";
 import SlideList from "./SlideList";
@@ -104,7 +103,10 @@ const Main = styled.main`
 
 const Stage = styled.div`
   flex: 1;
-  ${column};
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+  grid-auto-flow: row;
   box-sizing: border-box;
   padding: 30px 0;
   align-items: center;
