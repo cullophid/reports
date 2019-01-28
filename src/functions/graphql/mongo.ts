@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection } from "mongodb";
-import { MONGODB_URL } from "../../../config.json";
+const MONGODB_URL = process.env.MONGODB_URL;
 export const run = async <T>(f: (db: Db) => Promise<T>): Promise<T> => {
   console.log("MONGODB_URL", MONGODB_URL);
   if (!MONGODB_URL) throw new Error("Missing env var MONGODB_URL");

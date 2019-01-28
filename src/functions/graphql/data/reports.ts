@@ -1,12 +1,14 @@
 import { collection } from "../mongo";
 import { ObjectID } from "bson";
 import { Resolver } from "../Types";
+import { NotAuthenticatedError } from "../errors";
 const run = collection("reports");
 
 export type Report = {
   _id: ObjectID;
   title: string;
   slides: SlideElement[];
+  organisation: ObjectID;
 };
 
 type ReportUpdate = {
@@ -17,11 +19,13 @@ type ReportUpdate = {
 
 type ReportCreate = {
   title: string;
+  organisation: ObjectID;
   slides: Slide[];
 };
 
 export type SlideElement = {
   _id: ObjectID;
+  type: "TEXT" | "CHART";
   x: number;
   y: number;
   width: number;
@@ -48,18 +52,33 @@ type Slide = {
   elements: SlideElement[];
 };
 
-export const fetchAll: Resolver<Report[]> = () =>
-  run((reports) => reports.find({}).toArray());
+export const fetchAll: Resolver<Report[]> = (parent, args, { user }) => {
+  if (!user) throw new NotAuthenticatedError();
+  return run((reports) =>
+    reports.find({ organisation: user.organisation }).toArray()
+  );
+};
 
-export const fetch: Resolver<Report | null, { id: ObjectID }> = (ctx, { id }) =>
-  run((reports) => reports.findOne({ _id: id }));
+export const fetch: Resolver<Report | null, { id: ObjectID }> = (
+  parent,
+  { id },
+  { user }
+) => {
+  if (!user) throw new NotAuthenticatedError();
+  return run((reports) =>
+    reports.findOne({ _id: id, organisation: user.organisation })
+  );
+};
 
 export const create: Resolver<Report | null, { title: string }> = async (
-  ctx,
-  { title }
+  parent,
+  { title },
+  { user }
 ) => {
+  if (!user) throw new NotAuthenticatedError();
   const report: ReportCreate = {
     title,
+    organisation: user.organisation,
     slides: [
       {
         _id: new ObjectID(),
@@ -68,6 +87,7 @@ export const create: Resolver<Report | null, { title: string }> = async (
             _id: new ObjectID(),
             x: 50,
             y: 130,
+            type: "TEXT",
             width: 700,
             height: 0,
             text: {
@@ -85,9 +105,11 @@ export const create: Resolver<Report | null, { title: string }> = async (
 };
 
 export const remove: Resolver<ObjectID, { id: ObjectID }> = async (
-  ctx,
-  { id }
+  parent,
+  { id },
+  { user }
 ) => {
+  if (!user) throw new NotAuthenticatedError();
   await run((reports) => reports.deleteOne({ _id: id }));
   return id;
 };
@@ -98,7 +120,7 @@ export const removeAll: Resolver<number | null> = async () => {
 };
 
 export const update: Resolver<Report | null, { report: ReportUpdate }> = async (
-  ctx,
+  parent,
   { report }
 ) => {
   await run((reports) =>

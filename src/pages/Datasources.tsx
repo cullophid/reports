@@ -61,7 +61,7 @@ const DatasourceList = ({ onClick }: DatasourceListProps) => {
   });
   switch (result.status) {
     case "Loading":
-      return <Spinner color="primary" size={24} />;
+      return <Spinner size={24} />;
     case "Error":
       return <p> Error fetching data stores </p>;
     case "Ready":

@@ -1,44 +1,62 @@
 import * as React from "react";
 
 import * as ReactDOM from "react-dom";
-import * as Auth0 from "./auth0";
 import App from "./App";
 import * as Storage from "./storage";
-import { Auth0UserProfile } from "auth0-js";
 import { Session } from "./Session";
+import parseUrl from "url-parse";
 
-const getSession = async (): Promise<Session | null> => {
-  let storedSession = Storage.getItem<Session>("session");
-  if (storedSession && storedSession.expires > Date.now()) return storedSession;
+const getSessionFromUrl = () => {
+  const url = parseUrl(window.location.href, true);
 
-  console.log("no session localStorage, parseing urlhash");
+  const accessToken = url.query.accessToken;
 
-  console.log(window.location.hash);
-  const decodedHash = await Auth0.parseHash(window.location.hash);
-  console.log(decodedHash);
-  if (!decodedHash || !decodedHash.accessToken || !decodedHash.idToken) {
-    console.log("could not retrieve data from decoded hash", decodedHash);
-    return null;
-  }
+  if (!accessToken) return null;
 
-  let user = await Auth0.userInfo(decodedHash.accessToken);
-  console.log(user);
-  if (!user) return null;
+  const tokenData = parseJWT(accessToken);
+
+  if (!tokenData) return null;
 
   const session = {
-    user,
-    accessToken: decodedHash.accessToken,
-    idToken: decodedHash.idToken || "",
-    expires: Date.now() + (decodedHash.expiresIn || 0) * 1000
+    user: tokenData.user,
+    accessToken,
+    expires: Date.now() + 86000
   };
+  console.log("session", session);
   Storage.setItem("session", session);
+
   return session;
 };
 
-const bootstrap = async () => {
-  const session = await getSession();
-  ReactDOM.render(<App session={session} />, document.getElementById(
-    "root"
-  ) as HTMLElement);
+const parseJWT = (jwt: string) => {
+  const b64Decode = (str: string) => {
+    return decodeURIComponent(
+      atob(str)
+        .split("")
+        .map(function(c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+  };
+  let [header, payload] = jwt.split(/\./);
+  try {
+    return JSON.parse(b64Decode(payload));
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 };
-bootstrap();
+
+const getSavedSession = () => {
+  const savedSession = Storage.getItem<Session>("session");
+  if (savedSession && savedSession.expires > Date.now()) {
+    return savedSession;
+  }
+  return null;
+};
+
+ReactDOM.render(
+  <App session={getSessionFromUrl() || getSavedSession()} />,
+  document.getElementById("root") as HTMLElement
+);

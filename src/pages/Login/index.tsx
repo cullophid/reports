@@ -1,24 +1,36 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Spinner } from "../../components/Spinner";
-import history from "../../history";
-import * as Auth0 from "../../auth0";
+import { useMutation } from "../../hooks";
+import gql from "graphql-tag";
+import { Redirect } from "react-router";
+import { Icon } from "../../components/Icon";
 
+const AUTH_MUTATION = gql`
+  mutation Authenticate($email: Email!) {
+    authenticate(email: $email)
+  }
+`;
 type State = {
   email: string;
 };
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
-  const login = async (e: React.FormEvent) => {
+  const [login, loginResponse] = useMutation({
+    mutation: AUTH_MUTATION
+  });
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let res = await Auth0.passwordLess(email);
-    console.log(res);
-    history.push("/check-your-email");
+    login({ email });
   };
+
+  if (loginResponse.status === "Ready") {
+    return <Redirect push to="/check-your-email" />;
+  }
   return (
     <Page>
-      <LoginForm onSubmit={login}>
+      <LoginForm onSubmit={submit}>
         <Input
           value={email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -26,8 +38,12 @@ export const LoginPage = () => {
           }
           placeholder="Email"
         />
-        <Submit onClick={login}>
-          <Spinner size={20} color="white" />
+        <Submit onClick={submit}>
+          {loginResponse.status === "Loading" ? (
+            <Spinner size={36} inverse />
+          ) : (
+            <Icon name="email" size={36} color="white" />
+          )}
         </Submit>
       </LoginForm>
     </Page>

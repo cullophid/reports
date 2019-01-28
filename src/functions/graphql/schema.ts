@@ -1,11 +1,12 @@
-import { gql, IResolvers } from "apollo-server-lambda";
+import { gql, ApolloError } from "apollo-server-lambda";
 import { EmailScalar, ObjectIDScalar } from "./scalars";
 import * as Reports from "./data/reports";
 import * as Datastores from "./data/datastores";
 import * as Users from "./data/users";
 import * as Organisations from "./data/organisations";
 import { ObjectID } from "bson";
-import { Context } from "./Types";
+import { Context, Resolver } from "./Types";
+import { Data } from "slate";
 
 export const typeDefs = gql`
   type Query {
@@ -102,6 +103,7 @@ export const typeDefs = gql`
     port: Int!
     user: String!
     database: String!
+    organisation: Organisation!
   }
 
   enum DatastoreType {
@@ -112,6 +114,7 @@ export const typeDefs = gql`
     id: ID!
     title: String!
     slides: [Slide!]!
+    organisation: Organisation!
   }
 
   input ReportUpdate {
@@ -152,8 +155,8 @@ export const typeDefs = gql`
   }
 
   enum SlideElementType {
-    text
-    chart
+    TEXT
+    CHART
   }
 
   type SlideText {
@@ -192,13 +195,21 @@ export const typeDefs = gql`
   scalar Email
 `;
 const convertId = ({ _id }: { _id: ObjectID }) => _id;
+
 export const resolvers: any = {
   Email: EmailScalar,
   ID: ObjectIDScalar,
   Report: {
+    id: convertId,
+    organisation: ({ organisation }: Reports.Report, {}, ctx: Context) =>
+      Organisations.fetch({}, { id: organisation }, ctx)
+  },
+  Slide: {
     id: convertId
   },
-
+  SlideElement: {
+    id: convertId
+  },
   Datastore: {
     id: convertId
   },
@@ -207,12 +218,12 @@ export const resolvers: any = {
   },
   Organisation: {
     id: convertId,
-    users: ({ _id }: Organisations.Organisation, _: {}, ctx: Context) =>
-      Users.fetchInOrg(ctx, { organisation: _id })
+    users: (org: Organisations.Organisation, _: {}, ctx: Context) =>
+      Users.fetchInOrg(org, { organisation: org._id }, ctx)
   },
   SlideChart: {
-    dataStore: ({ dataStore }: Reports.SlideChart, _: {}, ctx: any) =>
-      Datastores.fetch(ctx, { id: dataStore })
+    dataStore: (chart: Reports.SlideChart, _: {}, ctx: any) =>
+      Datastores.fetch(chart, { id: chart.dataStore }, ctx)
   },
   Query: {
     datastores: Datastores.fetchAll,

@@ -39,7 +39,7 @@ const Reports = () => {
   const result = useQuery<{ reports: report[] }>({ query: FETCH_REPORTS });
   switch (result.status) {
     case "Loading":
-      return <Spinner size={24} color="primary" />;
+      return <Spinner size={24} />;
     case "Error":
       return <p> Could not fetch reports</p>;
     case "Ready":

@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { keyframes } from "styled-components";
 
 const spin = keyframes`
@@ -11,8 +11,25 @@ const spin = keyframes`
   }
 `;
 
-const StyledSpinner = styled.div`
-  border: 2px solid transparent;
+export const Spinner = styled.div<Props>`
+  width: ${(p) => p.size || 24}px;
+  height: ${(p) => p.size || 24}px;
+  border-width: 3px;
+  border-style: solid;
+  ${(p) =>
+    p.inverse
+      ? css`
+          border-bottom-color: rgba(255, 255, 255, 0.8);
+          border-right-color: rgba(255, 255, 255, 0.8);
+          border-top-color: rgba(255, 255, 255, 0.1);
+          border-left-color: rgba(255, 255, 255, 0.1);
+        `
+      : css`
+          border-bottom-color: rgba(0, 0, 0, 0.8);
+          border-right-color: rgba(0, 0, 0, 0.8);
+          border-top-color: rgba(0, 0, 0, 0.1);
+          border-left-color: rgba(0, 0, 0, 0.1);
+        `}
   border-radius: 1000px;
   animation-timing-function: linear;
   animation-duration: 1s;
@@ -22,18 +39,5 @@ const StyledSpinner = styled.div`
 
 type Props = {
   size?: number;
-  color?: string;
+  inverse?: boolean;
 };
-
-export const Spinner = ({ color, size = 24 }: Props) => (
-  <StyledSpinner
-    style={{
-      borderBottomColor: color || "rgba(0, 0, 0, 0.6)",
-      borderRightColor: color || "rgba(0, 0 ,0, 0.6)",
-      borderTopColor: color || "rgba(255, 255, 255, 0.3)",
-      borderLeftColor: color || "rgba(255, 255, 255, 0.3)",
-      width: size || 24,
-      height: size || 24
-    }}
-  />
-);

@@ -33,9 +33,15 @@ export const useQuery = <T>(options: QueryOptions): QueryResult<T> => {
     loading: true
   });
 
+  const context = {
+    headers: {
+      Authorization: session && `Bearer ${session.accessToken}`
+    }
+  };
+
   useEffect(
     () => {
-      const observable = client.watchQuery<T>(options);
+      const observable = client.watchQuery<T>({ ...options, context });
       const subscription = observable.subscribe((res: ApolloQueryResult<T>) => {
         if (res.data !== response.data) {
           setResponse(res);
@@ -58,13 +64,19 @@ export type MutationResult<T> =
 export const useMutation = <T, Vars = { [key: string]: any }>(
   options: MutationOptions<T, Vars>
 ): [(vars: Vars) => void, MutationResult<T>] => {
+  const session = useContext(SessionContext);
   const [response, setResponse] = useState<MutationResult<T>>({
     status: "Idle"
   });
+  const context = {
+    headers: {
+      Authorization: session && `Bearer ${session.accessToken}`
+    }
+  };
   const run = (vars: Vars) => {
     const variables = Object.assign({}, options.variables || {}, vars);
     setResponse({ status: "Loading" });
-    client.mutate<T, Vars>({ ...options, variables }).then(
+    client.mutate<T, Vars>({ ...options, variables, context }).then(
       ({ data }: FetchResult<T>) => {
         data &&
           setResponse({
