@@ -1,9 +1,9 @@
 import sgMail from "@sendgrid/mail";
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-if (!SENDGRID_API_KEY) throw new Error("Missing Env Var SENDGRID_API_KEY");
 
 export const sendAuth = async (email: string, token: string) => {
+  if (!SENDGRID_API_KEY) throw new Error("Missing Env Var SENDGRID_API_KEY");
   sgMail.setApiKey(SENDGRID_API_KEY);
   const msg = {
     to: email,

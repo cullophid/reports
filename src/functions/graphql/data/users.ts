@@ -40,6 +40,7 @@ export const unsafeFetchByEmail: Resolver<User | null, { email: string }> = (
   { email },
   { user }
 ) => {
+  console.log("unsafe FETCH", email);
   return run((users) => users.findOne({ email }));
 };
 
@@ -70,7 +71,10 @@ export const authenticate: Resolver<boolean, { email: string }> = async (
   ctx
 ) => {
   console.log("AUTHENTICATE");
+
   let user = await unsafeFetchByEmail(parent, { email }, ctx);
+
+  console.log("User", user);
   if (!user) return true;
   const payload = {
     user: {
@@ -82,8 +86,11 @@ export const authenticate: Resolver<boolean, { email: string }> = async (
       isAdmin: true
     }
   };
+  console.log("Payload", payload);
   const token = await JWT.sign(payload, { expiresIn: TOKEN_EXPIRY });
+  console.log("token", token);
 
   await Email.sendAuth(email, token);
+  console.log("SENT!");
   return true;
 };

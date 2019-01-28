@@ -25,6 +25,7 @@ const graphqlServer = new ApolloServer({
         }
       };
     } catch (e) {
+      console.log("Error caught");
       console.log(e.stack);
       return { user: null };
     }
