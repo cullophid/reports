@@ -8,9 +8,8 @@ import * as Remote from "../models/remote";
 import gql from "graphql-tag";
 import Slide from "../components/Slide";
 import { Page } from "../components/Page";
-import plus from "../plus.svg";
+import plus from "../assets/plus.svg";
 import { useQuery, useMutation } from "../hooks";
-import * as Theme from "../theme";
 import { Menu } from "../components/Menu";
 
 type State = {

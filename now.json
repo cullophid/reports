@@ -11,8 +11,8 @@
       "src": "^/manifest.webmanifest",
       "dest": "client/dist/manifest.webmanifest"
     },
-    { "src": "^/main.js", "dest": "client/dist/main.js" },
-    { "src": "^/static/(.*)", "dest": "client/dist/static/$1" },
+    { "src": "^/(.*)[.]([a-zA-Z0-9]{2,4})$", "dest": "client/dist/$1.$2" },
+
     { "src": "^/(.*)", "dest": "client/dist/index.html" }
   ],
   "env": {
