@@ -8,7 +8,7 @@ import {
   ApolloError,
   FetchResult
 } from "apollo-boost";
-import { SessionContext } from "./Session";
+import { SessionContext } from "./models/session";
 
 export type QueryResult<T> =
   | { status: "Loading" }

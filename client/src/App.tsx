@@ -7,7 +7,7 @@ import { Datasources } from "./pages/Datasources";
 import { ReportEditorPage } from "./pages/ReportEditor";
 import history from "./history";
 import { createGlobalStyle, css } from "styled-components";
-import { SessionContext, Session } from "./Session";
+import { SessionContext, Session } from "./models/session";
 import { CheckYourEmail } from "./pages/CheckYourEmail";
 
 const GlobalStyles = createGlobalStyle`

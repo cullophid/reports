@@ -3,7 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import App from "./App";
 import * as Storage from "./storage";
-import { Session } from "./Session";
+import { Session } from "./models/session";
 import parseUrl from "url-parse";
 
 const getSessionFromUrl = () => {

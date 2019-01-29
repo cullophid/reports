@@ -1,6 +1,4 @@
 import gql from "graphql-tag";
-import { omit } from "ramda";
-import uuid from "uuid/v4";
 
 export type textElement = {
   id: string;
@@ -17,7 +15,7 @@ export type textElement = {
 };
 
 export const newTextElement = (): textElement => ({
-  id: uuid(),
+  id: "Asdf",
   type: "text",
   x: 50,
   y: 130,
@@ -53,7 +51,7 @@ export type slide = {
 };
 
 export const newSlide = () => ({
-  id: uuid(),
+  id: "stuff",
   elements: []
 });
 
@@ -94,7 +92,7 @@ export type report = {
   slides: slide[];
 };
 
-const removeTypename = omit(["__typename"]);
+const removeTypename = ({ __typename, ...rest }: any) => rest;
 
 const cleanSlideElement = (elem: slideElement) => {
   switch (elem.type) {
