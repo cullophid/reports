@@ -11,9 +11,6 @@ const AUTH_MUTATION = gql`
     authenticate(email: $email)
   }
 `;
-type State = {
-  email: string;
-};
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -52,6 +49,7 @@ export const LoginPage = () => {
 
 const Page = styled.div`
   display: grid;
+  grid-auto-columns: auto;
   align-content: center;
   justify-content: center;
   height: 100vh;
@@ -60,18 +58,21 @@ const Page = styled.div`
 
 const LoginForm = styled.form`
   height: 56px;
-  width: 500px;
+  width: 80vw;
+  justify-self: center;
+  max-width: 500px;
   background: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr auto;
 `;
 
 const Input = styled.input`
   font-family: "Montserrat", sans-serif;
   background: none;
+  width: 100%;
+  display: block;
   border: none;
-  flex: 1;
   color: #656565;
   font-size: 24px;
   padding: 0 20px;
@@ -85,14 +86,12 @@ const Input = styled.input`
 
 const Submit = styled.button`
   font-family: "Montserrat", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-content: center center;
   background: #88bc32;
   border: none;
   color: white;
   font-size: 18px;
-  width: 70px;
   &:focus {
     outline: none;
   }
