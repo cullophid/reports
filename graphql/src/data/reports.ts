@@ -53,6 +53,7 @@ type Slide = {
 };
 
 export const fetchAll: Resolver<Report[]> = (parent, args, { user }) => {
+  console.log("reports");
   if (!user) throw new NotAuthenticatedError();
   return run((reports) =>
     reports.find({ organisation: user.organisation }).toArray()

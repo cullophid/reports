@@ -21,7 +21,7 @@ const resolvers = {
   }
 };
 export const client = new ApolloClient({
-  uri: "/.netlify/functions/graphql",
+  uri: "/graphql",
   clientState: {
     defaults,
     typeDefs,

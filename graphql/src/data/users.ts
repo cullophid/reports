@@ -70,11 +70,7 @@ export const authenticate: Resolver<boolean, { email: string }> = async (
   { email },
   ctx
 ) => {
-  console.log("AUTHENTICATE");
-
   let user = await unsafeFetchByEmail(parent, { email }, ctx);
-
-  console.log("User", user);
   if (!user) return true;
   const payload = {
     user: {

@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "name": "reports",
+  "builds": [
+    { "src": "client/dist/**/*", "use": "@now/static" },
+    { "src": "graphql/dist/index.js", "use": "@now/node-server" }
+  ],
+  "routes": [
+    { "src": "^/graphql", "dest": "graphql/dist/index.js" },
+    {
+      "src": "^/manifest.webmanifest",
+      "dest": "client/dist/manifest.webmanifest"
+    },
+    { "src": "^/main.js", "dest": "client/dist/main.js" },
+    { "src": "^/static/(.*)", "dest": "client/dist/static/$1" },
+    { "src": "^/(.*)", "dest": "client/dist/index.html" }
+  ],
+  "env": {
+    "MONGODB_URL": "@mongodb_url",
+    "SENDGRID_API_KEY": "@sendgrid_api_key",
+    "JWT_SECRET": "@jwt_secret"
+  }
+}

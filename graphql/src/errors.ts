@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-lambda";
+import { ApolloError } from "apollo-server";
 
 export class NotAuthenticatedError extends ApolloError {
   constructor(msg?: string) {

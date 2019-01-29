@@ -1,12 +1,11 @@
-import { gql, ApolloError } from "apollo-server-lambda";
+import { gql } from "apollo-server";
 import { EmailScalar, ObjectIDScalar } from "./scalars";
 import * as Reports from "./data/reports";
 import * as Datastores from "./data/datastores";
 import * as Users from "./data/users";
 import * as Organisations from "./data/organisations";
 import { ObjectID } from "bson";
-import { Context, Resolver } from "./Types";
-import { Data } from "slate";
+import { Context } from "./Types";
 
 export const typeDefs = gql`
   type Query {
@@ -193,6 +192,7 @@ export const typeDefs = gql`
   }
 
   scalar Email
+  scalar ID
 `;
 const convertId = ({ _id }: { _id: ObjectID }) => _id;
 

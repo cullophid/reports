@@ -46,7 +46,10 @@ module.exports = {
     port: 1234,
     historyApiFallback: true,
     proxy: {
-      "/.netlify": "http://localhost:9000"
+      "/graphql": {
+        target: "http://localhost:3000",
+        pathRewrite: { "^/graphql": "" }
+      }
     },
     headers: {
       "Access-Control-Allow-Origin": "*",

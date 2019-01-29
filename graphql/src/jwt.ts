@@ -1,5 +1,4 @@
 import jwt, { SignOptions } from "jsonwebtoken";
-import { reject } from "q";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const sign = (
@@ -16,7 +15,7 @@ export const sign = (
 
 export const verify = (token: string) => {
   if (!JWT_SECRET) throw new Error("Env var JWT_SECRET must be set");
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET, (err, res) =>
       err ? reject(err) : resolve(res)
     );
