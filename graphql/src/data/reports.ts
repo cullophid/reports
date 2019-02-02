@@ -1,30 +1,40 @@
 import { collection } from "../mongo";
-import { ObjectID } from "bson";
-import { Resolver } from "../Types";
-import { NotAuthenticatedError } from "../errors";
+import { Resolver, ID } from "../Types";
+import uuid from "uuid/v4";
 const run = collection("reports");
 
 export type Report = {
-  _id: ObjectID;
+  _id: ID;
+  createdAt: Date;
+  updatedAt: Date;
   title: string;
-  slides: SlideElement[];
-  organisation: ObjectID;
+  slides: Slide[];
+  owner: ID;
+};
+
+type Slide = {
+  _id: ID;
+  createdAt: Date;
+  updatedAt: Date;
+  elements: SlideElement[];
 };
 
 type ReportUpdate = {
-  id: ObjectID;
+  id: ID;
   title: string;
   slides: Slide[];
 };
 
 type ReportCreate = {
   title: string;
-  organisation: ObjectID;
+  organisation: ID;
   slides: Slide[];
 };
 
 export type SlideElement = {
-  _id: ObjectID;
+  _id: ID;
+  createdAt: Date;
+  updatedAt: Date;
   type: "TEXT" | "CHART";
   x: number;
   y: number;
@@ -41,34 +51,23 @@ type SlideText = {
 };
 
 export type SlideChart = {
-  dataStore: ObjectID;
+  dataStore: ID;
   query: string;
   xAxis: string;
   yAxis: string;
 };
 
-type Slide = {
-  _id: ObjectID;
-  elements: SlideElement[];
-};
-
 export const fetchAll: Resolver<Report[]> = (parent, args, { user }) => {
   console.log("reports");
-  if (!user) throw new NotAuthenticatedError();
-  return run((reports) =>
-    reports.find({ organisation: user.organisation }).toArray()
-  );
+  return run((reports) => reports.find({ owner: user!.id }).toArray());
 };
 
-export const fetch: Resolver<Report | null, { id: ObjectID }> = (
+export const fetch: Resolver<Report | null, { id: ID }> = (
   parent,
   { id },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
-  return run((reports) =>
-    reports.findOne({ _id: id, organisation: user.organisation })
-  );
+  return run((reports) => reports.findOne({ _id: id, owner: user!.id }));
 };
 
 export const create: Resolver<Report | null, { title: string }> = async (
@@ -76,16 +75,24 @@ export const create: Resolver<Report | null, { title: string }> = async (
   { title },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
-  const report: ReportCreate = {
+  const createdAt = new Date();
+  const updatedAt = new Date();
+  const newReport: Report = {
+    _id: uuid(),
     title,
-    organisation: user.organisation,
+    owner: user!.id,
+    createdAt,
+    updatedAt,
     slides: [
       {
-        _id: new ObjectID(),
+        _id: uuid(),
+        createdAt,
+        updatedAt,
         elements: [
           {
-            _id: new ObjectID(),
+            _id: uuid(),
+            createdAt,
+            updatedAt,
             x: 50,
             y: 130,
             type: "TEXT",
@@ -101,16 +108,16 @@ export const create: Resolver<Report | null, { title: string }> = async (
       }
     ]
   };
-  let res = await run((reports) => reports.insertOne(report));
-  return run((reports) => reports.findOne({ _id: res.insertedId }));
+  let res = await run((reports) => reports.insertOne(newReport));
+  console.log("Created new report", res);
+  return newReport;
 };
 
-export const remove: Resolver<ObjectID, { id: ObjectID }> = async (
+export const remove: Resolver<ID, { id: ID }> = async (
   parent,
   { id },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
   await run((reports) => reports.deleteOne({ _id: id }));
   return id;
 };
@@ -122,7 +129,8 @@ export const removeAll: Resolver<number | null> = async () => {
 
 export const update: Resolver<Report | null, { report: ReportUpdate }> = async (
   parent,
-  { report }
+  { report },
+  { user }
 ) => {
   await run((reports) =>
     reports.updateOne({ _id: report.id }, { $set: report })

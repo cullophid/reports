@@ -1,38 +1,28 @@
 import { collection } from "../mongo";
-import { ObjectID } from "bson";
 import { Resolver } from "../Types";
 import * as JWT from "../jwt";
 import * as Email from "../email";
-import { NotAuthenticatedError } from "../errors";
+import { ID } from "../Types";
+import uuid = require("uuid/v4");
 const TOKEN_EXPIRY = 2592000; // 30 days
 
 const run = collection("users");
 
 export type User = {
-  _id: ObjectID;
+  _id: ID;
+  createdAt: Date;
+  updatedAt: Date;
   firstname: string;
   lastname: string;
   email: string;
-  organisation: ObjectID;
 };
 
-type UserCreate = {
-  firstname: string;
-  lastname: string;
-  email: string;
-  organisation: ObjectID;
-  isAdmin: boolean;
-};
-
-export const fetch: Resolver<User | null, { id: ObjectID }> = (
+export const fetch: Resolver<User | null, { id: ID }> = (
   parent,
   { id },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
-  return run((users) =>
-    users.findOne({ _id: id, organisation: user.organisation })
-  );
+  return run((users) => users.findOne({ _id: id }));
 };
 
 export const unsafeFetchByEmail: Resolver<User | null, { email: string }> = (
@@ -44,25 +34,12 @@ export const unsafeFetchByEmail: Resolver<User | null, { email: string }> = (
   return run((users) => users.findOne({ email }));
 };
 
-export const fetchInOrg: Resolver<User[], { organisation: ObjectID }> = (
+export const fetchInOrg: Resolver<User[], { organisation: ID }> = (
   parent,
   { organisation },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
   return run((users) => users.find({ organisation }).toArray());
-};
-
-export const create: Resolver<User | null, { user: UserCreate }> = async (
-  parent,
-  { user: newUser },
-  { user }
-) => {
-  if (!user) throw new NotAuthenticatedError();
-  let res = await run((users) =>
-    users.insertOne({ ...newUser, organisation: user.organisation })
-  );
-  return { ...newUser, _id: res.insertedId, organisation: user.organisation };
 };
 
 export const authenticate: Resolver<boolean, { email: string }> = async (
@@ -71,15 +48,26 @@ export const authenticate: Resolver<boolean, { email: string }> = async (
   ctx
 ) => {
   let user = await unsafeFetchByEmail(parent, { email }, ctx);
-  if (!user) return true;
+  if (!user) {
+    user = {
+      _id: uuid(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      firstname: "",
+      lastname: "",
+      email: email
+    };
+    let res = await run((users) => users.insertOne(user));
+    console.log("Created new user", res);
+  }
   const payload = {
     user: {
       id: user._id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       firstname: user.firstname,
       lastname: user.lastname,
-      email: user.email,
-      organisation: user.organisation,
-      isAdmin: true
+      email: user.email
     }
   };
   console.log("Payload", payload);

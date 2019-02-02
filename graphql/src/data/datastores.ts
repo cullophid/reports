@@ -1,13 +1,15 @@
 import { collection } from "../mongo";
-import { ObjectID } from "bson";
-import { Resolver } from "../Types";
-import { NotAuthenticatedError } from "../errors";
+import { Resolver, ID } from "../Types";
+import uuid from "uuid/v4";
+import { AuthenticationError } from "apollo-server";
 
 const run = collection("datastores");
 
 export type Datastore = {
-  _id: ObjectID;
-  organisation: ObjectID;
+  _id: ID;
+  createdAt: Date;
+  updatedAt: Date;
+  owner: ID;
   name: string;
   host: string;
   port: number;
@@ -35,56 +37,41 @@ type DatastoreUpdate = {
   database: string;
 };
 
-export const Datastore = {
-  id: (datastore: Datastore) => datastore._id.toHexString()
-};
-
 export const fetchAll: Resolver<Datastore[]> = (parent, args, { user }) => {
-  if (!user) throw new NotAuthenticatedError();
-  return run((datastores) =>
-    datastores.find({ organisation: user.organisation }).toArray()
-  );
+  return run((datastores) => datastores.find({ owner: user!.id }).toArray());
 };
 
-export const fetch: Resolver<Datastore | null, { id: ObjectID }> = (
+export const fetch: Resolver<Datastore | null, { id: ID }> = (
   parent,
   { id },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
-  return run((datastores) =>
-    datastores.findOne({ _id: id, organisation: user.organisation })
-  );
+  if (!user) throw new AuthenticationError("You are not authenticated");
+  return run((datastores) => datastores.findOne({ _id: id, owner: user.id }));
 };
 
 export const create: Resolver<
   Datastore,
   { datastore: DatastoreCreate }
 > = async (parent, { datastore }, { user }) => {
-  if (!user) throw new NotAuthenticatedError();
-  let res = await run((datastores) =>
-    datastores.insertOne({
-      ...datastore,
-      organisation: user.organisation
-    })
-  );
-
-  return {
+  const newDatastore: Datastore = {
     ...datastore,
-    _id: res.insertedId,
-    organisation: user.organisation
+    _id: uuid(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    owner: user!.id
   };
+  let res = await run((datastores) => datastores.insertOne(newDatastore));
+  console.log("Created new datastore", res);
+  return newDatastore;
 };
 
-export const remove: Resolver<ObjectID, { id: ObjectID }> = async (
+export const remove: Resolver<ID, { id: ID }> = async (
   parent,
   { id },
   { user }
 ) => {
-  if (!user) throw new NotAuthenticatedError();
-  await run((datastores) =>
-    datastores.deleteOne({ _id: id, organisation: user.organisation })
-  );
+  await run((datastores) => datastores.deleteOne({ _id: id, owner: user!.id }));
   return id;
 };
 
@@ -92,14 +79,15 @@ export const update: Resolver<
   Datastore | null,
   { datastore: DatastoreUpdate }
 > = async (parent, { datastore }, { user }) => {
-  if (!user) throw new NotAuthenticatedError();
+  const { id, ...rest } = datastore;
+  const $set = {
+    ...rest,
+    updatedAt: new Date()
+  };
   await run((datastores) =>
-    datastores.updateOne(
-      { _id: datastore.id, organisation: user.organisation },
-      { $set: datastore }
-    )
+    datastores.updateOne({ _id: datastore.id, owner: user!.id }, { $set })
   );
   return run((datastores) =>
-    datastores.findOne({ _id: datastore.id, organisation: user.organisation })
+    datastores.findOne({ _id: datastore.id, owner: user!.id })
   );
 };

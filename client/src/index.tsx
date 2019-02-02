@@ -13,14 +13,15 @@ const getSessionFromUrl = () => {
 
   if (!accessToken) return null;
 
-  const tokenData = parseJWT(accessToken);
+  const payload = parseJWT(accessToken);
+  console.log(payload);
 
-  if (!tokenData) return null;
+  if (!payload) return null;
 
   const session = {
-    user: tokenData.user,
+    user: payload.user,
     accessToken,
-    expires: Date.now() + 86000
+    expires: Date.now() + payload.exp
   };
   console.log("session", session);
   Storage.setItem("session", session);
@@ -50,6 +51,7 @@ const parseJWT = (jwt: string) => {
 
 const getSavedSession = () => {
   const savedSession = Storage.getItem<Session>("session");
+  savedSession && console.log("expiry", savedSession.expires - Date.now());
   if (savedSession && savedSession.expires > Date.now()) {
     return savedSession;
   }

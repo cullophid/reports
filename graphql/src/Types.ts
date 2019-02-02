@@ -1,18 +1,17 @@
-import { ObjectID } from "bson";
-export type Context =
-  | { user: null }
-  | {
-      user: {
-        id: string;
-        firstname: string;
-        lastname: string;
-        email: string;
-        organisation: ObjectID;
-        isAdmin?: boolean;
-      };
-    };
+export type Session = {
+  host: string;
+  user?: {
+    id: ID;
+    firstname: string;
+    lastname: string;
+    email: string;
+    isAdmin?: boolean;
+  };
+};
 export type Resolver<Data, Input = {}, Parent = {}> = (
   parent: Parent,
   args: Input,
-  ctx: Context
+  ctx: Session
 ) => Promise<Data>;
+
+export type ID = string;

@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
 import { slide, textElement, chartElement } from "../models/reports";
-import { AutoScale } from "./AutoScale";
 import * as Theme from "../theme";
+import { AutoSizer } from "react-virtualized";
 
 type TextAlign = "left" | "center" | "right" | "justify";
 
@@ -49,30 +49,44 @@ type Props = {
 
 const Slide = (props: Props) => {
   return (
-    <AutoScale>
-      <SlideBackground
-        {...props}
-        onClick={() => props.onClick && props.onClick(props.slide)}
-      >
-        <React.Fragment>
-          {props.slide.elements.map((elem, i) => {
-            switch (elem.type) {
-              case "text":
-                return <TextElement key={i} {...elem} />;
-              case "chart":
-                return <ChartElement key={i} {...elem} />;
-            }
-          })}
-        </React.Fragment>
-      </SlideBackground>
-    </AutoScale>
+    <AutoSizer disableHeight>
+      {({ width }) => (
+        <SlideWrap width={width} className="slide-wrap">
+          <SlideBackground
+            scale={width / 800}
+            {...props}
+            onClick={() => props.onClick && props.onClick(props.slide)}
+          >
+            <>
+              {props.slide.elements.map((elem, i) => {
+                switch (elem.type) {
+                  case "text":
+                    return <TextElement key={i} {...elem} />;
+                  case "chart":
+                    return <ChartElement key={i} {...elem} />;
+                }
+              })}
+            </>
+          </SlideBackground>
+        </SlideWrap>
+      )}
+    </AutoSizer>
   );
 };
 
 export default Slide;
 
+const SLIDE_RATIO = 450 / 800;
+const SlideWrap = styled.div<{
+  width: number;
+}>`
+  width: ${(p) => p.width}px;
+  height: ${(p) => p.width * SLIDE_RATIO}px;
+  overflow: visible;
+`;
 const SlideBackground = styled.div<{
   active?: boolean;
+  scale?: number;
   highlight?: boolean;
 }>`
   position: relative;
@@ -87,6 +101,7 @@ const SlideBackground = styled.div<{
   transform-origin: top left;
   width: 800px;
   height: 450px;
+  transform: scale(${(p) => p.scale});
 `;
 
 const Text = styled.span`

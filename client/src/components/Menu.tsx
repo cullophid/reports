@@ -61,13 +61,17 @@ const MenuButton = styled.button<{ active: boolean }>`
   top: ${(p) => (p.active ? 40 : 30)}px;
   transition: all 300ms;
   transition-timing-function: ease-in-out;
+  background: linear-gradient(
+    139.94deg,
+    #ee32fe 9.3%,
+    rgba(233, 140, 0, 0.99) 92.57%
+  );
   width: 50px;
   height: 50px;
   line-height: 1;
   border-radius: 1000px;
   border: 4px solid white;
   box-sizing: border-box;
-  background: ${Theme.primary};
   color: white;
   font-family: "Montserrat", sans-serif;
   font-size: 14px;

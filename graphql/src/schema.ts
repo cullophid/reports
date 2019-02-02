@@ -1,54 +1,34 @@
 import { gql } from "apollo-server";
-import { EmailScalar, ObjectIDScalar } from "./scalars";
+import { EmailScalar } from "./scalars";
 import * as Reports from "./data/reports";
 import * as Datastores from "./data/datastores";
 import * as Users from "./data/users";
-import * as Organisations from "./data/organisations";
-import { ObjectID } from "bson";
-import { Context } from "./Types";
+import { Session, ID } from "./Types";
 
 export const typeDefs = gql`
+  directive @isAuthenticated on FIELD_DEFINITION
   type Query {
-    organisations: [Organisation]
-    organisation(id: ID!): Organisation
-    reports: [Report]
-    report(id: ID!): Report
-    datastores: [Datastore]
-    datastore(id: ID!): Datastore
+    reports: [Report] @isAuthenticated
+    report(id: ID!): Report @isAuthenticated
+    datastores: [Datastore] @isAuthenticated
+    datastore(id: ID!): Datastore @isAuthenticated
+    session: Session @isAuthenticated
   }
 
   type Mutation {
-    createReport(title: String): Report
-    updateReport(report: ReportUpdate!): Report
-    deleteReport(id: ID!): ID
-    deleteAllReports: Int
+    createReport(title: String): Report @isAuthenticated
+    updateReport(report: ReportUpdate!): Report @isAuthenticated
+    deleteReport(id: ID!): ID @isAuthenticated
+    deleteAllReports: Int @isAuthenticated
 
-    createDatastore(datastore: DatastoreCreate!): Datastore
-    updateDatastore(datastore: DatastoreUpdate!): Datastore
-    deleteDatastore(id: ID!): ID
-
-    createOrganisation(organisation: OrganisationCreate!): Organisation
-    updateOrganisation(organisation: OrganisationUpdate!): Organisation
-    deleteOrganisation(id: ID!): ID
-
-    createUser(user: UserCreate!): User
+    createDatastore(datastore: DatastoreCreate!): Datastore @isAuthenticated
+    updateDatastore(datastore: DatastoreUpdate!): Datastore @isAuthenticated
+    deleteDatastore(id: ID!): ID @isAuthenticated
 
     authenticate(email: Email): Boolean
   }
-
-  type Organisation {
-    id: ID!
-    name: String!
-    users: [User]!
-  }
-
-  input OrganisationCreate {
-    name: String!
-  }
-
-  input OrganisationUpdate {
-    id: ID!
-    name: String
+  type Session {
+    user: User!
   }
 
   type User {
@@ -56,15 +36,6 @@ export const typeDefs = gql`
     firstname: String!
     lastname: String!
     email: String!
-    organisation: Organisation!
-    isAdmin: Boolean!
-  }
-
-  input UserCreate {
-    firstname: String!
-    lastname: String!
-    email: String!
-    organisation: ID!
     isAdmin: Boolean!
   }
 
@@ -96,13 +67,13 @@ export const typeDefs = gql`
 
   type Datastore {
     id: ID!
+    owner: User!
     type: DatastoreType!
     name: String!
     host: String!
     port: Int!
     user: String!
     database: String!
-    organisation: Organisation!
   }
 
   enum DatastoreType {
@@ -113,7 +84,7 @@ export const typeDefs = gql`
     id: ID!
     title: String!
     slides: [Slide!]!
-    organisation: Organisation!
+    owner: User!
   }
 
   input ReportUpdate {
@@ -192,17 +163,15 @@ export const typeDefs = gql`
   }
 
   scalar Email
-  scalar ID
 `;
-const convertId = ({ _id }: { _id: ObjectID }) => _id;
+const convertId = ({ _id }: { _id: ID }) => _id;
 
 export const resolvers: any = {
   Email: EmailScalar,
-  ID: ObjectIDScalar,
   Report: {
     id: convertId,
-    organisation: ({ organisation }: Reports.Report, {}, ctx: Context) =>
-      Organisations.fetch({}, { id: organisation }, ctx)
+    owner: ({ owner }: Reports.Report, {}, ctx: Session) =>
+      Users.fetch({}, { id: owner }, ctx)
   },
   Slide: {
     id: convertId
@@ -211,15 +180,12 @@ export const resolvers: any = {
     id: convertId
   },
   Datastore: {
-    id: convertId
+    id: convertId,
+    owner: ({ owner }: Reports.Report, {}, ctx: Session) =>
+      Users.fetch({}, { id: owner }, ctx)
   },
   User: {
     id: convertId
-  },
-  Organisation: {
-    id: convertId,
-    users: (org: Organisations.Organisation, _: {}, ctx: Context) =>
-      Users.fetchInOrg(org, { organisation: org._id }, ctx)
   },
   SlideChart: {
     dataStore: (chart: Reports.SlideChart, _: {}, ctx: any) =>
@@ -230,7 +196,7 @@ export const resolvers: any = {
     datastore: Datastores.fetch,
     reports: Reports.fetchAll,
     report: Reports.fetch,
-    organisations: Organisations.fetchAll
+    session: (parent: any, args: {}, { user }: Session) => ({ user })
   },
   Mutation: {
     createReport: Reports.create,
@@ -242,10 +208,8 @@ export const resolvers: any = {
     deleteDatastore: Datastores.remove,
     updateDatastore: Datastores.update,
     // users
-    createUser: Users.create,
-    authenticate: Users.authenticate,
+    authenticate: Users.authenticate
 
     // organistations
-    createOrganisation: Organisations.create
   }
 };

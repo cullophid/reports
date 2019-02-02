@@ -1,38 +1,35 @@
 import { ApolloServer } from "apollo-server";
 import { typeDefs, resolvers } from "./schema";
 import * as JWT from "./jwt";
-import { Context } from "./Types";
-import { ObjectID } from "bson";
+import { Session } from "./Types";
+import { AuthenticatedDirective } from "./directives";
 
 const { PORT = 3000 } = process.env;
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  schemaDirectives: {
+    isAuthenticated: AuthenticatedDirective
+  },
   playground: true,
   introspection: true,
-  context: async ({ req }: any): Promise<Context> => {
+  context: async ({ req }: any): Promise<Session> => {
+    const host = `${req.protocol}://${req.hostname}:${process.env.PORT}`;
     try {
-      console.log("SET CONTEXT");
-      if (!req.headers.authorization) {
-        return { user: null };
-      }
+      if (!req.headers.authorization) throw new Error("Missing auth header");
 
       let [bearer, token] = req.headers.authorization.split(" ");
+      if (!token) throw new Error("Missing auth token");
       let session: any = await JWT.verify(token);
-
-      console.log("USER SESSION", session);
 
       return {
         ...session,
-        user: {
-          ...session.user,
-          organisation: new ObjectID(session.user.organisation)
-        }
+        host
       };
     } catch (e) {
       console.log(e.stack);
-      return { user: null };
+      return { host };
     }
   }
 });
