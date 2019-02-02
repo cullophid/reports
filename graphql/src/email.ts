@@ -2,7 +2,7 @@ import sgMail from "@sendgrid/mail";
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 
-export const sendAuth = async (email: string, token: string) => {
+export const sendAuth = async (email: string, url: string) => {
   if (!SENDGRID_API_KEY) throw new Error("Missing Env Var SENDGRID_API_KEY");
 
   const html = /*html*/ `
@@ -53,7 +53,7 @@ export const sendAuth = async (email: string, token: string) => {
   <body>
     <h1>Welcome to reports!</h1>
     <p>To log in click the button below!</p>
-    <a class="login" href="http://localhost:1234?accessToken=${token}"
+    <a class="login" href="${url}"
       >LOG IN</a
     >
   </body>
@@ -65,7 +65,7 @@ export const sendAuth = async (email: string, token: string) => {
     to: email,
     from: "test@example.com",
     subject: "Your Magic link to Reports",
-    text: `User this link to login to your reports account \n http://localhost:1234?accessToken=${token}`,
+    text: `User this link to login to your reports account \n ${url}`,
     html
   };
   let [response, other] = await sgMail.send(msg);

@@ -74,7 +74,7 @@ export const authenticate: Resolver<boolean, { email: string }> = async (
   const token = await JWT.sign(payload, { expiresIn: TOKEN_EXPIRY });
   console.log("token", token);
 
-  await Email.sendAuth(email, token);
+  await Email.sendAuth(email, `${ctx.host}?accessToke=${token}`);
   console.log("SENT!");
   return true;
 };
