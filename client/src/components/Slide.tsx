@@ -60,9 +60,9 @@ const Slide = (props: Props) => {
             <>
               {props.slide.elements.map((elem, i) => {
                 switch (elem.type) {
-                  case "text":
+                  case "TEXT":
                     return <TextElement key={i} {...elem} />;
-                  case "chart":
+                  case "CHART":
                     return <ChartElement key={i} {...elem} />;
                 }
               })}

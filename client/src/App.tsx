@@ -15,13 +15,13 @@ const GlobalStyles = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
-    color:#252525;
+    font-family: 'Raleway', sans-serif;
+    color:#333;
     background: #f5f5f5;
   }
   h1, h2, h3, h4 {
-    font-family: 'Poppins', sans-serif;
-    color:#252525;
+    font-family: 'Raleway', sans-serif;
+    color:#333;
     margin:0;
   }
   li {

@@ -1,6 +1,5 @@
 import * as React from "react";
 import styled from "styled-components";
-import { AutoScale } from "../../components/AutoScale";
 import { TextElement } from "./TextElement";
 import { ChartElement } from "./ChartElement";
 import { slide, slideElement, newTextElement } from "../../models/reports";
@@ -71,53 +70,51 @@ export const SlideEditor = (props: props) => {
 
   const { slide, selection, updateSelection } = props;
   return (
-    <AutoScale>
-      <Wrapper onKeyDown={keyDown} tabIndex={1}>
-        <Background id="slide">
-          <React.Fragment>
-            {slide.elements.map((elem, i) => {
-              switch (elem.type) {
-                case "text":
-                  return (
-                    <TextElement
-                      key={i}
-                      scale={1}
-                      selected={
-                        selection.type === "Element" &&
-                        selection.elementId === elem.id
-                      }
-                      edit={
-                        selection.type === "Element" &&
-                        selection.elementId === elem.id &&
-                        selection.edit
-                      }
-                      textElement={elem}
-                      onClick={() =>
-                        (selection.type === "Element" && selection.edit) ||
-                        updateSelection({
-                          type: "Element",
-                          elementId: elem.id,
-                          edit: false
-                        })
-                      }
-                      onDoubleClick={() =>
-                        updateSelection({
-                          type: "Element",
-                          elementId: elem.id,
-                          edit: true
-                        })
-                      }
-                      onUpdate={updateTextElement}
-                    />
-                  );
-                case "chart":
-                  return <ChartElement key={i} {...elem} />;
-              }
-            })}
-          </React.Fragment>
-        </Background>
-      </Wrapper>
-    </AutoScale>
+    <Wrapper onKeyDown={keyDown} tabIndex={1}>
+      <Background id="slide">
+        <React.Fragment>
+          {slide.elements.map((elem, i) => {
+            switch (elem.type) {
+              case "TEXT":
+                return (
+                  <TextElement
+                    key={i}
+                    scale={1}
+                    selected={
+                      selection.type === "Element" &&
+                      selection.elementId === elem.id
+                    }
+                    edit={
+                      selection.type === "Element" &&
+                      selection.elementId === elem.id &&
+                      selection.edit
+                    }
+                    textElement={elem}
+                    onClick={() =>
+                      (selection.type === "Element" && selection.edit) ||
+                      updateSelection({
+                        type: "Element",
+                        elementId: elem.id,
+                        edit: false
+                      })
+                    }
+                    onDoubleClick={() =>
+                      updateSelection({
+                        type: "Element",
+                        elementId: elem.id,
+                        edit: true
+                      })
+                    }
+                    onUpdate={updateTextElement}
+                  />
+                );
+              case "CHART":
+                return <ChartElement key={i} {...elem} />;
+            }
+          })}
+        </React.Fragment>
+      </Background>
+    </Wrapper>
   );
 };
 

@@ -6,28 +6,12 @@ import * as Theme from "../theme";
 
 type Props = {
   page: "Reports" | "Datasources";
+  showMenu: boolean;
 };
+
 export const Menu = (props: Props) => {
-  const [showMenu, toggleMenu] = useState(false);
-  const documentClick = useCallback(() => toggleMenu(false), []);
-
-  useEffect(() => {
-    document.addEventListener("click", documentClick);
-    () => document.removeEventListener("click", documentClick);
-  }, []);
-
   return (
-    <SideMenu show={showMenu}>
-      <MenuButton
-        active={showMenu}
-        onClick={(e: React.MouseEvent<any>) => {
-          e.nativeEvent.stopImmediatePropagation();
-          e.stopPropagation();
-          toggleMenu(!showMenu);
-        }}
-      >
-        AM
-      </MenuButton>
+    <SideMenu show={props.showMenu}>
       <MenuNav>
         <Pages>
           <Link
@@ -52,13 +36,39 @@ export const Menu = (props: Props) => {
   );
 };
 
-const MenuButton = styled.button<{ active: boolean }>`
+export const HamBurger = styled.div`
+  width: 20px;
+  height: 3px;
+  background: white;
+  &::before {
+    content: "";
+    transform: translateY(-5px);
+
+    display: block;
+    width: 20px;
+    height: 3px;
+    background: white;
+  }
+
+  &::after {
+    content: "";
+    transform: translateY(2px);
+
+    display: block;
+    width: 20px;
+    height: 3px;
+    background: white;
+  }
+`;
+
+export const MenuButton = styled.button<{ active: boolean }>`
   display: grid;
   justify-content: center;
   align-content: center;
   position: absolute;
   left: ${(p) => (p.active ? 75 : 30)}px;
   top: ${(p) => (p.active ? 40 : 30)}px;
+  transform: scale(${(p) => (p.active ? 1.5 : 1)});
   transition: all 300ms;
   transition-timing-function: ease-in-out;
   background: linear-gradient(
@@ -81,9 +91,11 @@ const MenuButton = styled.button<{ active: boolean }>`
 `;
 
 const SideMenu = styled.aside<{ show: boolean }>`
+  position: fixed;
+  width: 200px;
+  transform: translateX(-100%);
   grid-area: sidebar;
-  width: ${(p) => (p.show ? 200 : 0)}px;
-  transition: width 300ms;
+  transition: transform 300ms;
   transition-timing-function: ease-out;
   display: grid;
   grid-template-columns: 1fr;

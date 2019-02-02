@@ -8,7 +8,6 @@ import gql from "graphql-tag";
 import Slide from "../components/Slide";
 import { Page } from "../components/Page";
 import { useQuery, useMutation } from "../hooks";
-import { Menu } from "../components/Menu";
 
 const FETCH_REPORTS = gql`
   {
@@ -19,8 +18,7 @@ const FETCH_REPORTS = gql`
 export const ReportsList = () => {
   const res = useQuery<{ reports: report[] }>({ query: FETCH_REPORTS });
   return (
-    <Page>
-      <Menu page="Reports" />
+    <Page page="Reports">
       <Main>
         <Header>
           <Title>Reports</Title>
@@ -108,6 +106,7 @@ const Main = styled.main`
   grid-template-rows: 140px auto;
   min-height: 100%;
 `;
+
 const NewButton = styled.button`
   position: absolute;
   height: 33px;

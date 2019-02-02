@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 export type textElement = {
   id: string;
-  type: "text";
+  type: "TEXT";
   x: number;
   y: number;
   width: number;
@@ -16,7 +16,7 @@ export type textElement = {
 
 export const newTextElement = (): textElement => ({
   id: "Asdf",
-  type: "text",
+  type: "TEXT",
   x: 50,
   y: 130,
   width: 700,
@@ -29,7 +29,7 @@ export const newTextElement = (): textElement => ({
 });
 export type chartElement = {
   id: string;
-  type: "chart";
+  type: "CHART";
   x: number;
   y: number;
   width: number;
@@ -96,12 +96,12 @@ const removeTypename = ({ __typename, ...rest }: any) => rest;
 
 const cleanSlideElement = (elem: slideElement) => {
   switch (elem.type) {
-    case "text":
+    case "TEXT":
       return removeTypename({
         ...elem,
         text: removeTypename(elem.text)
       });
-    case "chart":
+    case "CHART":
       return removeTypename({
         ...elem,
         chart: removeTypename(elem.chart)
