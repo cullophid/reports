@@ -9,12 +9,12 @@ type Props = {
 };
 export const Page = (props: Props) => {
   const [showMenu, toggleMenu] = useState(false);
-  const documentClick = useCallback(() => toggleMenu(false), []);
+  const documentClick = () => toggleMenu(false);
 
   useEffect(() => {
     document.addEventListener("click", documentClick);
     () => document.removeEventListener("click", documentClick);
-  }, []);
+  });
 
   return (
     <>
@@ -41,4 +41,5 @@ export const PageWrap = styled.div<{ showMenu: boolean }>`
   transform: translateX(${(p) => (p.showMenu ? 200 : 0)}px);
   position: relative;
   background: #f5f5f5;
+  min-height: 100vh;
 `;

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { client } from "./apollo";
 import {
   QueryOptions,
@@ -39,18 +39,15 @@ export const useQuery = <T>(options: QueryOptions): QueryResult<T> => {
     }
   };
 
-  useEffect(
-    () => {
-      const observable = client.watchQuery<T>({ ...options, context });
-      const subscription = observable.subscribe((res: ApolloQueryResult<T>) => {
-        if (res.data !== response.data) {
-          setResponse(res);
-        }
-      });
-      return () => subscription.unsubscribe();
-    },
-    [options]
-  );
+  useEffect(() => {
+    const observable = client.watchQuery<T>({ ...options, context });
+    const subscription = observable.subscribe((res: ApolloQueryResult<T>) => {
+      if (res.data !== response.data) {
+        setResponse(res);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [options]);
 
   return queryResult(response);
 };
@@ -93,4 +90,21 @@ export const useMutation = <T, Vars = { [key: string]: any }>(
     );
   };
   return [run, response];
+};
+
+export const useWindowSize = () => {
+  let [size, setSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+  let cb = useCallback(
+    () => setSize({ width: window.innerWidth, height: window.innerHeight }),
+    []
+  );
+  useEffect(() => {
+    window.addEventListener("resize", cb);
+    () => window.removeEventListener("resize", cb);
+  }, []);
+
+  return size;
 };

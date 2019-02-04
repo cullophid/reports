@@ -37,8 +37,7 @@ export const Datasources = () => {
   ] = useState<Datasource | null>(null);
 
   return (
-    <Page>
-      <Menu page="Datasources" />
+    <Page page="Datasources">
       <DatasourceList onClick={setSelectedDatasource} />
     </Page>
   );

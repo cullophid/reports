@@ -13,7 +13,7 @@ export type Report = {
 };
 
 type Slide = {
-  _id: ID;
+  id: ID;
   createdAt: Date;
   updatedAt: Date;
   elements: SlideElement[];
@@ -32,7 +32,7 @@ type ReportCreate = {
 };
 
 export type SlideElement = {
-  _id: ID;
+  id: ID;
   createdAt: Date;
   updatedAt: Date;
   type: "TEXT" | "CHART";
@@ -83,30 +83,7 @@ export const create: Resolver<Report | null, { title: string }> = async (
     owner: user!.id,
     createdAt,
     updatedAt,
-    slides: [
-      {
-        _id: uuid(),
-        createdAt,
-        updatedAt,
-        elements: [
-          {
-            _id: uuid(),
-            createdAt,
-            updatedAt,
-            x: 50,
-            y: 130,
-            type: "TEXT",
-            width: 700,
-            height: 0,
-            text: {
-              value: "TitleSlide",
-              fontSize: 48,
-              align: "Center"
-            }
-          }
-        ]
-      }
-    ]
+    slides: []
   };
   let res = await run((reports) => reports.insertOne(newReport));
   console.log("Created new report", res);

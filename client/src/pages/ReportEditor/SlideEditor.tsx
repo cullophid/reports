@@ -1,19 +1,23 @@
 import * as React from "react";
 import styled from "styled-components";
-import { TextElement } from "./TextElement";
+import { TextEl } from "./TextElement";
 import { ChartElement } from "./ChartElement";
-import { slide, slideElement, newTextElement } from "../../models/reports";
-import { editorSelection } from "../../models/editorSelection";
+import {
+  SlideType,
+  SlideElementType,
+  newTextElement
+} from "../../models/reports";
+import { EditorSelectionType } from "../../models/editorSelection";
 
 type props = {
-  slide: slide;
-  selection: editorSelection;
-  updateSelection: (selection: editorSelection) => void;
-  updateSlide: (slide: slide) => void;
+  slide: SlideType;
+  selection: EditorSelectionType;
+  updateSelection: (selection: EditorSelectionType) => void;
+  updateSlide: (slide: SlideType) => void;
 };
 
 export const SlideEditor = (props: props) => {
-  const updateTextElement = (elem: slideElement) => {
+  const updateTextElement = (elem: SlideElementType) => {
     props.updateSlide({
       ...props.slide,
       elements: props.slide.elements.map((t) => (t.id === elem.id ? elem : t))
@@ -42,7 +46,7 @@ export const SlideEditor = (props: props) => {
 
   const keyDown = (e: React.KeyboardEvent) => {
     const { selection, updateSelection } = props;
-    const isEditing = selection.type === "Element" && selection.edit;
+    const isEditing = selection.type === "Element";
     switch (e.key) {
       case "Backspace":
         if (isEditing) return;
@@ -58,9 +62,7 @@ export const SlideEditor = (props: props) => {
         break;
       case "Escape":
         if (selection.type === "Element") {
-          selection.edit
-            ? updateSelection({ ...selection, edit: false })
-            : updateSelection({ type: "Slide", slideId: props.slide.id });
+          updateSelection({ type: "Slide", slideId: props.slide.id });
           e.stopPropagation();
           e.preventDefault();
         }
@@ -77,32 +79,19 @@ export const SlideEditor = (props: props) => {
             switch (elem.type) {
               case "TEXT":
                 return (
-                  <TextElement
+                  <TextEl
                     key={i}
                     scale={1}
                     selected={
                       selection.type === "Element" &&
                       selection.elementId === elem.id
                     }
-                    edit={
-                      selection.type === "Element" &&
-                      selection.elementId === elem.id &&
-                      selection.edit
-                    }
                     textElement={elem}
                     onClick={() =>
-                      (selection.type === "Element" && selection.edit) ||
+                      selection.type === "Element" ||
                       updateSelection({
                         type: "Element",
-                        elementId: elem.id,
-                        edit: false
-                      })
-                    }
-                    onDoubleClick={() =>
-                      updateSelection({
-                        type: "Element",
-                        elementId: elem.id,
-                        edit: true
+                        elementId: elem.id
                       })
                     }
                     onUpdate={updateTextElement}

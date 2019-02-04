@@ -1,8 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import { slide, textElement, chartElement } from "../models/reports";
+import {
+  SlideType,
+  TextElementType,
+  ChartElementType
+} from "../models/reports";
 import * as Theme from "../theme";
-import { AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 type TextAlign = "left" | "center" | "right" | "justify";
 
@@ -19,7 +23,7 @@ const textAlign = (align: string): TextAlign => {
   }
 };
 
-type TextElementProps = textElement;
+type TextElementProps = TextElementType;
 
 const TextElement = (props: TextElementProps) => {
   const style = {};
@@ -39,56 +43,57 @@ const TextElement = (props: TextElementProps) => {
 };
 
 type Props = {
-  slide: slide;
+  slide: SlideType;
   active?: boolean;
   highlight?: boolean;
-  width?: number;
-  height?: number;
-  onClick?: (slide: slide) => void;
+  width: number;
+  onClick?: (slide: SlideType) => void;
 };
 
 const Slide = (props: Props) => {
   return (
-    <AutoSizer disableHeight>
-      {({ width }) => (
-        <SlideWrap width={width} className="slide-wrap">
-          <SlideBackground
-            scale={width / 800}
-            {...props}
-            onClick={() => props.onClick && props.onClick(props.slide)}
-          >
-            <>
-              {props.slide.elements.map((elem, i) => {
-                switch (elem.type) {
-                  case "TEXT":
-                    return <TextElement key={i} {...elem} />;
-                  case "CHART":
-                    return <ChartElement key={i} {...elem} />;
-                }
-              })}
-            </>
-          </SlideBackground>
-        </SlideWrap>
-      )}
-    </AutoSizer>
+    <SlideBackground
+      width={props.width}
+      {...props}
+      onClick={() => props.onClick && props.onClick(props.slide)}
+    >
+      <SlideContent scale={props.width / 800}>
+        <>
+          {props.slide.elements.map((elem, i) => {
+            switch (elem.type) {
+              case "TEXT":
+                return <TextElement key={i} {...elem} />;
+              case "CHART":
+                return <ChartElement key={i} {...elem} />;
+            }
+          })}
+        </>
+      </SlideContent>
+    </SlideBackground>
   );
 };
 
 export default Slide;
 
 const SLIDE_RATIO = 450 / 800;
-const SlideWrap = styled.div<{
-  width: number;
+const SlideContent = styled.div<{
+  scale: number;
 }>`
-  width: ${(p) => p.width}px;
-  height: ${(p) => p.width * SLIDE_RATIO}px;
+  transform-origin: top left;
+  transform: scale(${(p) => p.scale});
+  width: 800px;
+  height: 450px;
   overflow: visible;
 `;
-const SlideBackground = styled.div<{
+
+const SlideBackground = styled.section<{
   active?: boolean;
-  scale?: number;
+  width: number;
   highlight?: boolean;
 }>`
+  display: block;
+  margin: 0;
+  list-style-type: none;
   position: relative;
   background: white;
   overflow: hidden;
@@ -99,9 +104,8 @@ const SlideBackground = styled.div<{
   border: 5px solid transparent;
   border-color: ${(props) => (props.highlight ? Theme.primary : "transparent")};
   transform-origin: top left;
-  width: 800px;
-  height: 450px;
-  transform: scale(${(p) => p.scale});
+  width: ${(p) => p.width}px;
+  height: ${(p) => p.width * SLIDE_RATIO}px;
 `;
 
 const Text = styled.span`
@@ -113,4 +117,4 @@ const Text = styled.span`
   white-space: pre-line;
 `;
 
-const ChartElement = (props: chartElement) => null;
+const ChartElement = (props: ChartElementType) => null;

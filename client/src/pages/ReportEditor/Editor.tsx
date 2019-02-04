@@ -1,63 +1,67 @@
 import React, { useState, useReducer, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { report, slide, newSlide } from "../../models/reports";
+import { ReportType, SlideType, newSlide } from "../../models/reports";
 import { SlideEditor } from "./SlideEditor";
-import { editorSelection } from "../../models/editorSelection";
+import { EditorSelectionType } from "../../models/editorSelection";
 import SlideList from "./SlideList";
 
 type Props = {
-  report: report;
+  report: ReportType;
   slideId: string | null;
-  updateReport: (report: report) => void;
+  updateReport: (report: ReportType) => void;
 };
 
 type State = {
-  report: report;
-  currentSlideId: string;
-  selection: editorSelection;
+  report: ReportType;
+  currentSlideId?: string;
+  selection: EditorSelectionType;
   showTemplates: boolean;
   unsavedChanges: boolean;
 };
 
-const ReportEditor = (props: Props) => {
+export const ReportEditor = (props: Props) => {
   const currentSlide =
     props.report.slides.find((s) => s.id === props.slideId) ||
     props.report.slides[0];
 
   const [state, setState] = useState<State>({
     report: props.report,
-    currentSlideId: currentSlide.id,
+    currentSlideId: currentSlide && currentSlide.id,
     selection: { type: "None" },
     showTemplates: false,
     unsavedChanges: false
   });
 
+  const [showTemplates, setShowTemplates] = useState(false);
+
   const { report } = state;
 
-  const updateReport = (report: report) => {
+  const updateReport = (report: ReportType) => {
     setState({ ...state, report });
     props.updateReport(report);
   };
 
   const deselect = () => setState({ ...state, selection: { type: "None" } });
 
-  const updateSelection = (selection: editorSelection) => {
+  const updateSelection = (selection: EditorSelectionType) => {
     setState({ ...state, selection });
   };
 
-  const addSlide = (slide: slide) => {
+  const addSlide = (slide: SlideType) => {
     updateReport({ ...report, slides: [...report.slides, slide] });
   };
 
-  const updateSlide = (slide: slide) => {
+  const updateSlide = (slide: SlideType) => {
     updateReport({
       ...report,
-      slides: report.slides.map((s: slide) => (s.id === slide.id ? slide : s))
+      slides: report.slides.map((s: SlideType) =>
+        s.id === slide.id ? slide : s
+      )
     });
   };
 
   const selectedSlide = report.slides.find(
-    (s: slide) => s.id === state.currentSlideId
+    (s: SlideType) => s.id === state.currentSlideId
   );
   return (
     <Main
@@ -65,19 +69,20 @@ const ReportEditor = (props: Props) => {
       onMouseDown={deselect}
     >
       <SlideList
+        show={!showTemplates}
         currentSlideId={state.currentSlideId}
         slides={report.slides}
         selection={state.selection}
-        selectSlide={(slide: slide) => {
+        selectSlide={(slide: SlideType) => {
           setState({
             ...state,
             selection: { type: "Slide", slideId: slide.id },
             currentSlideId: slide.id
           });
         }}
-        newSlide={() => addSlide(newSlide())}
+        newSlide={() => setShowTemplates(true)}
       />
-      <Stage>
+      <Stage show={!showTemplates}>
         {selectedSlide && (
           <SlideEditor
             slide={selectedSlide}
@@ -90,19 +95,25 @@ const ReportEditor = (props: Props) => {
     </Main>
   );
 };
-export default ReportEditor;
 
 const Main = styled.main`
   height: 100%;
   display: grid;
   grid-template-columns: 300px auto;
+  grid-template-rows: 120px 1fr;
+  grid-template-areas:
+    "header header"
+    "slide-list stage";
   padding: 0 16px;
   grid-column-gap: 30px;
   min-height: 0;
 `;
 
-const Stage = styled.div`
+const Stage = styled.div<{ show: boolean }>`
+  transition: transform 300ms;
+  transform: translatex(${(p) => (p.show ? "0" : "100%")});
   flex: 1;
+  grid-area: stage;
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: auto;

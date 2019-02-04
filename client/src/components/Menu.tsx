@@ -72,9 +72,9 @@ export const MenuButton = styled.button<{ active: boolean }>`
   transition: all 300ms;
   transition-timing-function: ease-in-out;
   background: linear-gradient(
-    139.94deg,
-    #ee32fe 9.3%,
-    rgba(233, 140, 0, 0.99) 92.57%
+    144.83deg,
+    #fdc500 15.27%,
+    rgba(233, 140, 0, 0.99) 94.1%
   );
   width: 50px;
   height: 50px;

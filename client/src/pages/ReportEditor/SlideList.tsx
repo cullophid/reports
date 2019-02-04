@@ -1,22 +1,24 @@
 import React from "react";
-import { slide } from "../../models/reports";
+import { SlideType } from "../../models/reports";
 import styled from "styled-components";
-import { editorSelection } from "../../models/editorSelection";
+import { EditorSelectionType } from "../../models/editorSelection";
 
-import Slide from "../../components/Slide";
-import { Button } from "../../components/Button";
+import SlideElement from "../../components/Slide";
 type Props = {
-  selection: editorSelection;
-  currentSlideId: string;
-  slides: slide[];
-  selectSlide: (slide: slide) => void;
+  show: boolean;
+  selection: EditorSelectionType;
+  currentSlideId?: string;
+  slides: SlideType[];
+  selectSlide: (slide: SlideType) => void;
   newSlide: () => void;
 };
 
 export default (props: Props) => (
-  <Aside>
-    {props.slides.map((slide: slide) => (
-      <Slide
+  <Aside show={props.show}>
+    <NewSlideButton onClick={props.newSlide}>NEW</NewSlideButton>
+    {props.slides.map((slide: SlideType) => (
+      <SlideElement
+        width={200}
         key={slide.id}
         onClick={() => props.selectSlide(slide)}
         active={props.currentSlideId === slide.id}
@@ -27,11 +29,13 @@ export default (props: Props) => (
         slide={slide}
       />
     ))}
-    <Button onClick={props.newSlide}> ADD SLIDE </Button>
   </Aside>
 );
 
-const Aside = styled.aside`
+const Aside = styled.aside<{ show: boolean }>`
+  transition: transform 300ms;
+  transform: translateX(${(p) => (p.show ? "0" : "-100%")});
+  grid-area: slide-list;
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: auto;
@@ -44,4 +48,19 @@ const Aside = styled.aside`
     width: 0px !important; /* remove scrollbar space */
     background: transparent; /* optional: just make scrollbar invisible */
   }
+`;
+
+const NewSlideButton = styled.button`
+  justify-self: end;
+  height: 24px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 40px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+
+  display: grid;
+  place-content: center center;
+  background: linear-gradient(312.29deg, #219205 -42.49%, #88bc32 85.05%);
+  color: white;
 `;

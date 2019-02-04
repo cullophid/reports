@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/Login";
 import TestPage from "./pages/TestPage";
 import { ReportsList } from "./pages/ReportsList";
 import { Datasources } from "./pages/Datasources";
+import { ReportPage } from "./pages/Report";
 import { ReportEditorPage } from "./pages/ReportEditor";
 import history from "./history";
 import { createGlobalStyle, css } from "styled-components";
@@ -62,9 +63,16 @@ const App = ({ session }: Props) => {
             path="/reports/:reportId"
             exact
             render={({ match, location }) => (
+              <ReportPage reportId={match.params.reportId} />
+            )}
+          />
+          <Route
+            path="/reports/:reportId/edit"
+            exact
+            render={({ match, location }) => (
               <ReportEditorPage
                 reportId={match.params.reportId}
-                slideId={location.hash.substring(1)}
+                slideId={location.hash}
               />
             )}
           />
