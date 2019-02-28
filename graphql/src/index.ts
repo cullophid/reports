@@ -1,17 +1,18 @@
 import { ApolloServer } from "apollo-server";
-import { typeDefs, resolvers } from "./schema";
-import * as JWT from "./jwt";
+import * as resolvers from "./resolvers";
+import * as JWT from "./auth";
+import fs from "fs";
+import Path from "path";
+import { gql } from "apollo-server";
 import { Session } from "./Types";
-import { AuthenticatedDirective } from "./directives";
 
 const { PORT = 3000 } = process.env;
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: gql`
+    ${fs.readFileSync(Path.join(__dirname, "schema.graphql"))}
+  `,
   resolvers,
-  schemaDirectives: {
-    isAuthenticated: AuthenticatedDirective
-  },
   playground: true,
   introspection: true,
   context: async ({ req }: any): Promise<Session> => {
@@ -28,7 +29,6 @@ const server = new ApolloServer({
         host
       };
     } catch (e) {
-      console.log(e.stack);
       return { host };
     }
   }

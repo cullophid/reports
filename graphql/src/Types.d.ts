@@ -8,10 +8,10 @@ export type Session = {
     isAdmin?: boolean;
   };
 };
-export type Resolver<Data, Input = {}, Parent = {}> = (
+export type Resolver<Parent, Args, Data> = (
   parent: Parent,
-  args: Input,
+  args: Args,
   ctx: Session
-) => Promise<Data>;
+) => Promise<Data> | Data;
 
 export type ID = string;

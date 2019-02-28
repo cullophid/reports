@@ -1,10 +1,10 @@
 import { collection } from "../mongo";
 import { Resolver } from "../Types";
-import * as JWT from "../jwt";
-import * as Email from "../email";
+
 import { ID } from "../Types";
 import uuid = require("uuid/v4");
-const TOKEN_EXPIRY = 2592000; // 30 days
+import Dataloader from "dataloader";
+import { keyBy } from "lodash";
 
 const run = collection("users");
 
@@ -17,64 +17,42 @@ export type User = {
   email: string;
 };
 
-export const fetch: Resolver<User | null, { id: ID }> = (
-  parent,
-  { id },
-  { user }
-) => {
-  return run((users) => users.findOne({ _id: id }));
+const idLoader = new Dataloader<string, User | undefined>(async (ids) => {
+  const users = await run<User[]>((users) =>
+    users.find({ id: { $in: ids } }).toArray()
+  );
+  const indexed = keyBy(users, (user) => user._id);
+  return ids.map((id) => indexed[id]);
+});
+
+export const get = idLoader.load;
+
+const emailLoader = new Dataloader<string, User | null>(async (emails) => {
+  console.log("emailLoader");
+  const users = await run<User[]>((users) =>
+    users.find({ email: { $in: emails } }).toArray()
+  );
+  console.log("emailloaderusers", users);
+  const indexed = keyBy(users, (user) => user.email);
+  return emails.map((email) => indexed[email]);
+});
+
+export const getByEmail = (email: string) => {
+  console.log("getByEmail");
+  return emailLoader.load(email);
 };
 
-export const unsafeFetchByEmail: Resolver<User | null, { email: string }> = (
-  parent,
-  { email },
-  { user }
-) => {
-  console.log("unsafe FETCH", email);
-  return run((users) => users.findOne({ email }));
-};
-
-export const fetchInOrg: Resolver<User[], { organisation: ID }> = (
-  parent,
-  { organisation },
-  { user }
-) => {
-  return run((users) => users.find({ organisation }).toArray());
-};
-
-export const authenticate: Resolver<boolean, { email: string }> = async (
-  parent,
-  { email },
-  ctx
-) => {
-  let user = await unsafeFetchByEmail(parent, { email }, ctx);
-  if (!user) {
-    user = {
-      _id: uuid(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      firstname: "",
-      lastname: "",
-      email: email
-    };
-    let res = await run((users) => users.insertOne(user));
-    console.log("Created new user", res);
-  }
-  const payload = {
-    user: {
-      id: user._id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email
-    }
+export const create = async (email: string) => {
+  const now = new Date();
+  const user = {
+    _id: uuid(),
+    createdAt: now,
+    updatedAt: now,
+    firstname: "",
+    lastname: "",
+    email: email
   };
-  console.log("Payload", payload);
-  const token = await JWT.sign(payload, { expiresIn: TOKEN_EXPIRY });
-  console.log("token", token);
-
-  await Email.sendAuth(email, `${ctx.host}?accessToke=${token}`);
-  console.log("SENT!");
-  return true;
+  let res = await run((users) => users.insertOne(user));
+  console.log("User created", res);
+  return user;
 };

@@ -76,7 +76,7 @@ const Slide = (props: Props) => {
 export default Slide;
 
 const SLIDE_RATIO = 450 / 800;
-const SlideContent = styled.div<{
+export const SlideContent = styled.div<{
   scale: number;
 }>`
   transform-origin: top left;
@@ -86,7 +86,7 @@ const SlideContent = styled.div<{
   overflow: visible;
 `;
 
-const SlideBackground = styled.section<{
+export const SlideBackground = styled.section<{
   active?: boolean;
   width: number;
   highlight?: boolean;

@@ -3,9 +3,9 @@ import React from "react";
 import styled from "styled-components";
 import {
   SlideTemplateType,
-  SlideElementTemplateType
+  TextElementTemplateType
 } from "../../models/reports";
-import Slide from "../../components/Slide";
+import { SlideBackground, SlideContent } from "../../components/Slide";
 import { useWindowSize } from "../../hooks";
 
 type Props = {
@@ -105,4 +105,40 @@ const SlideTemplateElement = styled.div`
   position: absolute;
   background: #ccc;
   border-radius: 2px;
+`;
+
+type SlideTemplateProps = {
+  slide: SlideTemplateType;
+  width: number;
+};
+const SlideTemplate = (props: SlideTemplateProps) => {
+  return (
+    <SlideBackground width={props.width}>
+      <SlideContent scale={props.width / 800}>
+        {props.slideTemplate.elements.map((el) => (
+          <span>{el.type}</span>
+        ))}
+      </SlideContent>
+    </SlideBackground>
+  );
+};
+
+const Text = (element: TextElementTemplateType) => (
+  <TextEl
+    style={{
+      left: element.x,
+      top: element.y,
+      width: element.width,
+      height: element.height,
+      fontSize: element.text.fontSize
+    }}
+  >
+    {element.text.value}
+  </TextEl>
+);
+
+const TextEl = styled.p`
+  position: absolute;
+  margin: 0;
+  border: 2px dashed #333;
 `;
