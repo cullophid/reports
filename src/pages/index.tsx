@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import firebase, { firestore } from "firebase/app"
-import { Page } from "../components/Page"
+import { Page } from "../components/page-component"
 import styled from "@emotion/styled"
 import { useSession } from "../firebase"
 import { navigateTo, Link } from "gatsby"
