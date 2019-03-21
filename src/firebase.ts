@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from "react"
-import firebase, { firestore } from "firebase/app"
+import { useState, useEffect } from "react"
+import firebase from "firebase/app"
+
 import "firebase/auth"
 import "firebase/firestore"
 import "firebase/functions"
+
 import { navigateTo } from "gatsby"
 
 const config = {
@@ -16,6 +18,8 @@ const config = {
 
 firebase.initializeApp(config)
 ;(window as any).firebase = firebase
+
+export default firebase
 
 export const useSession = () => {
   const [session, setSession] = useState<firebase.User | null>(null)
