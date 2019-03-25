@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { navigateTo } from "gatsby"
 import styled from "@emotion/styled"
-import { Page } from "../components/page"
+import { Page } from "../components/Page"
 import firebase from "../firebase"
-import { Spinner } from "../components/loader"
+import { Spinner } from "../components/Spinner"
 
 import googleIcon from "../images/google.svg"
 import githubIcon from "../images/github.svg"

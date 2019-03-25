@@ -1,35 +1,39 @@
 import { DocumentReference } from "./firestore"
 
-export type ReportType = {
+export type Report = {
+  id: string
   title: string
-  slides: SlideType[]
+  slides: Slide[]
   owner: string
 }
 
-export type SlideType = {
-  elements: SlideElementType[]
+export type Slide = {
+  id: string
+  elements: SlideElement[]
 }
 
-export type SlideTextElementType = {
+export type SlideTextElement = {
   x: number
   y: number
   width: number
   type: "Text"
   value: string
+  fontSize: number
+  textAlign: "left" | "right" | "center"
 }
 
-export type SlideChartElementType = {
+export type SlideChartElement = {
   x: number
   y: number
   width: number
   height: number
   type: "Chart"
-  datasource: DocumentReference<DataSourceType>
+  datasource: DocumentReference<DataSource>
 }
 
-export type SlideElementType = SlideChartElementType | SlideTextElementType
+export type SlideElement = SlideChartElement | SlideTextElement
 
-export type DataSourceType = {
+export type DataSource = {
   type: "MySQL"
   host: string
   port: string

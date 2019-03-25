@@ -29,4 +29,8 @@ export const HomeButton = styled(Link)`
   height: 60px;
   font-size: 10px;
   color: white;
+  &:visited,
+  &:active {
+    color: white;
+  }
 `

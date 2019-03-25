@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react"
-import { Page } from "../../components/page"
-import { Slide } from "../../components/slide"
+import { Page } from "../../components/Page"
+import { Header } from "../../components/Header"
+import { SlideView } from "../../components/Slide"
 import styled from "@emotion/styled"
 import { useSession } from "../../firebase"
 import { reportsCollection, Document } from "../../firestore"
 import { navigateTo, Link } from "gatsby"
 import * as Remote from "../../remote"
-import { ReportType } from "../../models"
-import { Button, HomeButton } from "../../components/buttons"
+import { Report } from "../../models"
+import { Button, HomeButton } from "../../components/Button"
+import { v4 as uuid } from "uuid"
 
 const IndexPage = () => {
-  const [reports, setReports] = useState<Remote.t<Document<ReportType>[]>>(
+  const [reports, setReports] = useState<Remote.t<Document<Report>[]>>(
     Remote.loading
   )
 
@@ -24,17 +26,14 @@ const IndexPage = () => {
   }, [user])
 
   const createReport = async () => {
-    const doc = await reportsCollection.add({
+    const id = uuid()
+    await reportsCollection.doc(id).set({
+      id,
       title: "Untitled",
       owner: user!.uid,
-      slides: [
-        {
-          elements: [],
-        },
-      ],
+      slides: [],
     })
-
-    navigateTo(`/reports/edit#${doc.id}`)
+    navigateTo(`/reports/edit#${id}`)
   }
 
   return (
@@ -68,17 +67,17 @@ const IndexPage = () => {
           <Main>
             <ReportList>
               {reports.data.map(report => {
-                const reportData = report.data() as ReportType
+                const reportData = report.data()!
                 const titleSlide = reportData.slides[0] || {
                   elements: [],
                 }
                 return (
-                  <Report key={report.id}>
+                  <ReportView key={report.id}>
                     <Link to={`/reports/edit#${report.id}`}>
-                      <Slide slide={titleSlide} />
+                      <SlideView slide={titleSlide} />
                       <H1>{reportData.title}</H1>
                     </Link>
-                  </Report>
+                  </ReportView>
                 )
               })}
             </ReportList>
@@ -92,18 +91,10 @@ export default IndexPage
 
 const Layout = styled.div`
   display: grid;
-  grid-template-rows: auto;
+  grid-template-rows: auto 1fr;
+  grid-auto-flow: row;
   min-height: 100vh;
   width: 100vw;
-`
-
-const Header = styled.header`
-  display: grid;
-  padding: 0 32px;
-  grid-template-columns: 1fr 4fr 1fr;
-  justify-items: center;
-  height: 100px;
-  align-items: center;
 `
 
 const Title = styled.h1`
@@ -128,6 +119,7 @@ const NoReports = styled.main`
 `
 
 const NoReportsMessage = styled.p`
+  font-family: "Indie Flower";
   text-align: center;
   font-size: 24px;
   color: #474747;
@@ -147,7 +139,7 @@ const ReportList = styled.ul`
   align-items: start;
   grid-gap: 32px;
 `
-const Report = styled.li`
+const ReportView = styled.li`
   list-style-type: none;
   position: relative;
   & h1 {
