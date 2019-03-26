@@ -17,7 +17,6 @@ const config = {
 }
 
 firebase.initializeApp(config)
-;(window as any).firebase = firebase
 
 export default firebase
 

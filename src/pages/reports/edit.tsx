@@ -6,7 +6,7 @@ import { Page } from "../../components/Page"
 import { navigateTo } from "gatsby"
 import { SlideView, SlideWrap, SlidePlaceholder } from "../../components/Slide"
 import { Header, Title } from "../../components/Header"
-import { HomeButton, Button } from "../../components/Button"
+import { HomeButton, Button, NewSlideButton } from "../../components/Button"
 import styled from "@emotion/styled"
 import { v4 as uuid } from "uuid"
 import { slideTemplates } from "../../slide-templates"
@@ -36,7 +36,6 @@ const Edit = (props: Props) => {
     <Page>
       <EditorLayout>
         <Header gridArea="header">
-          <HomeButton to="/">HOME</HomeButton>
           <Title>
             {report.status === "Success" ? report.data.data()!.title : "..."}
           </Title>
@@ -54,14 +53,27 @@ const Edit = (props: Props) => {
 export default Edit
 
 const EditorLayout = styled.div`
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 0 1fr 3fr 0;
   grid-template-rows: auto 1fr;
   grid-template-areas:
     "header header header header"
     ". slide-list slide-editor .";
-  grid-gap: 5%;
+  grid-column-gap: 5%;
+  grid-row-gap: 5%;
   padding-bottom: 64px;
+
+  @media (max-width: 500px) {
+    padding-bottom: 0;
+    grid-row-gap: 32px;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "slide-editor"
+      "slide-list";
+  }
 `
 
 type ReportEditorProps = {
@@ -102,12 +114,7 @@ export const ReportEditor = ({ report }: ReportEditorProps) => {
             </SlideLi>
           ))}
           <SlideLi>
-            <Button
-              style={{ display: "block", width: "100%" }}
-              onClick={() => setSelectSlideTemplate(true)}
-            >
-              Add Slide
-            </Button>
+            <NewSlideButton onClick={() => setSelectSlideTemplate(true)} />
           </SlideLi>
         </SlideList>
       )}
@@ -125,8 +132,21 @@ type SlideEditorProps = {
 }
 
 const SlideEditor = ({ slide }: SlideEditorProps) => {
-  return <SlideView slide={slide} style={{ gridArea: "slide-editor" }} />
+  return (
+    <SlideEditorWrap>
+      <SlideView slide={slide} style={{}} />
+    </SlideEditorWrap>
+  )
 }
+
+const SlideEditorWrap = styled.div`
+  display: grid;
+  justify-self: stretch;
+  grid-area: slide-editor;
+  @media (max-width: 500px) {
+    padding: 0 5%;
+  }
+`
 
 const SlideList = styled.ul`
   grid-area: slide-list;
@@ -134,11 +154,22 @@ const SlideList = styled.ul`
   display: grid;
   grid-auto-flow: row;
   grid-template-columns: 100%;
-  grid-gap: 32px;
+  grid-gap: 5%;
   justify-items: stretch;
   align-content: start;
   padding: 0;
   margin: 0;
+  @media (max-width: 500px) {
+    width: 100%;
+    grid-auto-flow: column;
+    grid-template-columns: auto;
+    grid-gap: 5%;
+    align-items: center;
+    justify-content: start;
+    justify-content: start;
+    overflow-x: auto;
+    padding: 5%;
+  }
 `
 
 const SlideLi = styled.li`
@@ -147,6 +178,9 @@ const SlideLi = styled.li`
   margin: 0;
   padding: 0;
   cursor: pointer;
+  @media (max-width: 500px) {
+    width: 150px;
+  }
 `
 
 const Placeholder = () => (

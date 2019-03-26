@@ -17,7 +17,7 @@ const LoginPage = () => {
   const login = (provider: firebase.auth.AuthProvider) => async () => {
     try {
       setLoading(true)
-      const result = await firebase.auth().signInWithPopup(provider)
+      const result = await firebase.auth().signInWithRedirect(provider)
       navigateTo("/")
     } catch (e) {
       setAuthMessage(e.message)

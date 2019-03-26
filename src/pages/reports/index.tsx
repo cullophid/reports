@@ -40,9 +40,6 @@ const IndexPage = () => {
     <Page>
       <Layout>
         <Header>
-          <nav>
-            <HomeButton to="/">HOME</HomeButton>
-          </nav>
           <Title>Reports</Title>
           <nav>
             {reports.status === "Success" && reports.data.length > 0 && (
@@ -126,18 +123,15 @@ const NoReportsMessage = styled.p`
 `
 
 const ReportList = styled.ul`
-  padding: 32px;
-  padding-top: 32px;
   margin: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr;
-    padding: 72px;
-    grid-gap: 72px;
-  }
   align-items: start;
-  grid-gap: 32px;
+  padding: 32px 10%;
+  grid-gap: 10%;
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 `
 const ReportView = styled.li`
   list-style-type: none;

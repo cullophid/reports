@@ -1,6 +1,7 @@
-import React from "react"
+import React, { HTMLAttributes } from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
+import { SlideWrap } from "./Slide"
 
 export const Button = styled.button`
   padding: 8px 24px;
@@ -33,4 +34,23 @@ export const HomeButton = styled(Link)`
   &:active {
     color: white;
   }
+`
+export const NewSlideButton = (props: HTMLAttributes<HTMLButtonElement>) => {
+  return (
+    <SlideWrap>
+      <NewSlideButtonEl {...props}>+</NewSlideButtonEl>
+    </SlideWrap>
+  )
+}
+
+const NewSlideButtonEl = styled.button`
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center center;
+  color: #474747;
+  background: white;
+  border: none;
+  font-size: 400px;
 `
