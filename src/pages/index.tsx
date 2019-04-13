@@ -3,6 +3,7 @@ import { navigateTo } from "gatsby"
 
 const IndexPage = () => {
   useEffect(() => {
+    console.log("INDEX")
     navigateTo("/reports")
   }, [])
   return null

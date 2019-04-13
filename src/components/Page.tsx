@@ -20,9 +20,10 @@ const global = css`
     margin: 0;
     font-family: "Roboto";
   }
+  a,
   a:visited,
   a:active {
-    color: initial;
+    color: inherit;
   }
 `
 

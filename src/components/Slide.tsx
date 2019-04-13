@@ -1,11 +1,13 @@
 import React, { useRef, ReactNode } from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
+import { TextPlaceholder, TextElement } from "./TextElement"
+import { ChartElement } from "./ChartElement"
 
 import useResizeAware from "react-resize-aware"
-import { Slide, SlideTextElement, SlideChartElement } from "../models"
+import { Slide } from "../models"
 
-const SLIDE_HEIGHT = 900
+const SLIDE_HEIGHT = 720
 const SLIDE_WIDTH = 1280
 
 type SlideWrapProps = {
@@ -20,10 +22,15 @@ export const SlideWrap = (props: SlideWrapProps) => {
   const slideRef = useRef<HTMLDivElement>(null)
   const bbox = slideRef.current && slideRef.current.getBoundingClientRect()
   const scale = bbox ? bbox.width / SLIDE_WIDTH : 1
+  console.log("SlideWrap Render")
   return (
     <SlideBackGround
       ref={slideRef}
-      style={{ ...style, height: SLIDE_HEIGHT * scale }}
+      style={{
+        ...style,
+        height: SLIDE_HEIGHT * scale,
+        opacity: slideRef.current ? 1 : 0,
+      }}
       className={props.className || ""}
     >
       {resizeListener}
@@ -46,9 +53,9 @@ export const SlideView = (props: SlideProps) => {
       {props.slide.elements.map(element => {
         switch (element.type) {
           case "Text":
-            return <SlideText {...element}>{element.value}</SlideText>
+            return <TextElement key={element.id} {...element} />
           case "Chart":
-            return <SlideChart {...element} />
+            return <ChartElement key={element.id} {...element} />
         }
       })}
     </SlideWrap>
@@ -66,7 +73,7 @@ export const SlidePlaceholder = ({
         height: 64px;
         left: 100px;
         width: 1080px;
-        top: 130px;
+        top: 100px;
       `}
     />
     <TextPlaceholder
@@ -74,7 +81,7 @@ export const SlidePlaceholder = ({
         height: 64px;
         left: 100px;
         width: 500px;
-        top: 300px;
+        top: 250px;
       `}
     />
     <TextPlaceholder
@@ -82,7 +89,7 @@ export const SlidePlaceholder = ({
         height: 64px;
         left: 100px;
         width: 450px;
-        top: 450px;
+        top: 400px;
       `}
     />
     <TextPlaceholder
@@ -90,7 +97,7 @@ export const SlidePlaceholder = ({
         height: 64px;
         left: 100px;
         width: 300px;
-        top: 600px;
+        top: 550px;
       `}
     />
     <TextPlaceholder
@@ -98,41 +105,17 @@ export const SlidePlaceholder = ({
         height: 364px;
         right: 100px;
         width: 500px;
-        top: 300px;
+        top: 250px;
       `}
     />
   </SlideWrap>
 )
-
-const TextPlaceholder = styled.div`
-  position: absolute;
-  background: #ccc;
-  height: 30px;
-  border-radius: 5px;
-`
 
 const SlideBackGround = styled.div`
   position: relative;
   background: white;
   box-shadow: 0 3px 10px #00000088;
   overflow: hidden;
-`
-
-const SlideChart = styled.div<SlideChartElement>`
-  position: absolute;
-  left: ${p => p.x}px;
-  top: ${p => p.y}px;
-  width: ${p => p.width}px;
-  height: ${p => p.height}px;
-`
-
-const SlideText = styled.div<SlideTextElement>`
-  position: absolute;
-  left: ${p => p.x}px;
-  top: ${p => p.y}px;
-  font-size: ${p => p.fontSize}px;
-  text-align: ${p => p.textAlign};
-  width: ${p => p.width}px;
 `
 
 const SlideContent = styled.div`

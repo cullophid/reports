@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { navigateTo } from "gatsby"
 import styled from "@emotion/styled"
 import { Page } from "../components/Page"
@@ -13,7 +13,7 @@ const githubProvider = new firebase.auth.GithubAuthProvider()
 
 const LoginPage = () => {
   const [authMessage, setAuthMessage] = useState(undefined)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const login = (provider: firebase.auth.AuthProvider) => async () => {
     try {
       setLoading(true)
@@ -26,6 +26,24 @@ const LoginPage = () => {
     }
   }
 
+  useEffect(() => {
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then(result => {
+        console.log("Auth Result", result)
+        if (result.user) {
+          navigateTo("/")
+        } else {
+          setLoading(false)
+        }
+      })
+      .catch(function(error) {
+        console.error("Auth Error", error)
+        setAuthMessage(error.message)
+      })
+  }, [])
+
   return (
     <Page>
       <Layout>
@@ -35,16 +53,20 @@ const LoginPage = () => {
           <>
             <Title>Sign In</Title>
             <LoginButton onClick={login(googleProvider)}>
-              <ButtonTitle>Google</ButtonTitle>
-              <LoginButtonLogoBg>
-                <img src={googleIcon} />
-              </LoginButtonLogoBg>
+              <LoginButtonLayout>
+                <ButtonTitle>Google</ButtonTitle>
+                <LoginButtonLogoBg>
+                  <img src={googleIcon} />
+                </LoginButtonLogoBg>
+              </LoginButtonLayout>
             </LoginButton>
             <LoginButton onClick={login(githubProvider)}>
-              <ButtonTitle>Github</ButtonTitle>
-              <LoginButtonLogoBg style={{ background: "black" }}>
-                <img src={githubIcon} />
-              </LoginButtonLogoBg>
+              <LoginButtonLayout>
+                <ButtonTitle>Github</ButtonTitle>
+                <LoginButtonLogoBg style={{ background: "black" }}>
+                  <img src={githubIcon} />
+                </LoginButtonLogoBg>
+              </LoginButtonLayout>
             </LoginButton>
             {authMessage && <ErrorMessage> {authMessage} </ErrorMessage>}
           </>
@@ -78,6 +100,9 @@ const LoginButton = styled.button`
   box-shadow: 0 4px 10px #00000025;
   width: 300px;
   height: 56px;
+`
+const LoginButtonLayout = styled.div`
+  height: 100%;
   display: grid;
   grid-template-columns: 1fr 70px;
 `

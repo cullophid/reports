@@ -1,5 +1,5 @@
 import firebase from "./firebase"
-import { Report, DataSource } from "./models"
+import { Report, DataSource, SlideElement, Slide } from "./models"
 export interface Document<Data> {
   readonly exists: boolean
   readonly ref: DocumentReference<Data>
@@ -180,6 +180,10 @@ export interface Firestore {
 const firestore = firebase.firestore() as Firestore
 
 export const reportsCollection = firestore.collection<Report>("reports")
+export const slidesCollection = firestore.collection<Slide>("slides")
+export const SlideElementsCollection = firestore.collection<SlideElement>(
+  "slideElements"
+)
 export const dataSourcesCollection = firestore.collection<DataSource>(
   "datasources"
 )

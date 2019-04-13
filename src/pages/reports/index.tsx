@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react"
 import { Page } from "../../components/Page"
 import { Header } from "../../components/Header"
-import { SlideView } from "../../components/Slide"
+import { SlideView, SlidePlaceholder } from "../../components/Slide"
 import styled from "@emotion/styled"
 import { useSession } from "../../firebase"
 import { reportsCollection, Document } from "../../firestore"
 import { navigateTo, Link } from "gatsby"
 import * as Remote from "../../remote"
 import { Report } from "../../models"
-import { Button, HomeButton } from "../../components/Button"
+import { Button } from "../../components/Button"
 import { v4 as uuid } from "uuid"
 
 const IndexPage = () => {
@@ -33,43 +33,41 @@ const IndexPage = () => {
       owner: user!.uid,
       slides: [],
     })
+
     navigateTo(`/reports/edit#${id}`)
   }
-
   return (
     <Page>
       <Layout>
-        <Header>
-          <Title>Reports</Title>
-          <nav>
-            {reports.status === "Success" && reports.data.length > 0 && (
-              <Button onClick={createReport}>NEW</Button>
-            )}
-          </nav>
+        <Header title="Reports">
+          {reports.status === "Success" && reports.data.length > 0 && (
+            <NewReportButton onClick={createReport}>NEW</NewReportButton>
+          )}
         </Header>
-        {reports.status === "Success" && reports.data.length === 0 && (
-          <NoReports>
-            <NoReportsMessage>
-              You do not have any reports yet!
-            </NoReportsMessage>
-            <Button
-              onClick={createReport}
-              style={{ fontSize: 24, padding: "16px 32px" }}
-            >
-              CREATE NEW REPORT
-            </Button>
-          </NoReports>
-        )}
-        {reports.status === "Success" && reports.data.length > 0 && (
-          <Main>
-            <ReportList>
-              {reports.data.map(report => {
+        <Main>
+          {reports.status === "Success" && reports.data.length === 0 && (
+            <NoReports>
+              <NoReportsMessage>
+                You do not have any reports yet!
+              </NoReportsMessage>
+              <Button
+                onClick={createReport}
+                style={{ fontSize: 24, padding: "16px 32px" }}
+              >
+                CREATE NEW REPORT
+              </Button>
+            </NoReports>
+          )}
+          <ReportList>
+            {reports.status === "Success" &&
+              reports.data.length > 0 &&
+              reports.data.map((report, i) => {
                 const reportData = report.data()!
                 const titleSlide = reportData.slides[0] || {
                   elements: [],
                 }
                 return (
-                  <ReportView key={report.id}>
+                  <ReportView key={i}>
                     <Link to={`/reports/edit#${report.id}`}>
                       <SlideView slide={titleSlide} />
                       <H1>{reportData.title}</H1>
@@ -77,14 +75,27 @@ const IndexPage = () => {
                   </ReportView>
                 )
               })}
-            </ReportList>
-          </Main>
-        )}
+            {reports.status === "Loading" &&
+              [0, 1, 2].map((_, i) => (
+                <ReportView key={i}>
+                  <SlidePlaceholder />
+                </ReportView>
+              ))}
+          </ReportList>
+        </Main>
       </Layout>
     </Page>
   )
 }
 export default IndexPage
+
+const NewReportButton = styled(Button)`
+  @media (max-width: 500px) {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+  }
+`
 
 const Layout = styled.div`
   display: grid;
@@ -92,17 +103,8 @@ const Layout = styled.div`
   grid-auto-flow: row;
   min-height: 100vh;
   width: 100vw;
-`
-
-const Title = styled.h1`
-  margin: 0;
-  font-size: 48px;
-  font-weight: 200;
-  font-family: "Montserrat";
-  color: #474747;
-  @media (max-width: 500px) {
-    font-size: 32px;
-  }
+  padding: 32px 0;
+  grid-gap: 32px 0;
 `
 
 const Main = styled.main`
@@ -125,15 +127,19 @@ const NoReportsMessage = styled.p`
 const ReportList = styled.ul`
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  align-items: start;
-  padding: 32px 10%;
-  grid-gap: 10%;
+  grid-template-columns: repeat(auto-fit, 300px);
+  align-items: stretch;
+  justify-items: stretch;
+  padding: 0 10%;
+  grid-gap: 5%;
   @media (max-width: 500px) {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 `
 const ReportView = styled.li`
+  display: block;
+  align-self: start;
+  justify-self: stretch;
   list-style-type: none;
   position: relative;
   & h1 {

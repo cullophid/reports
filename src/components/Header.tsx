@@ -1,41 +1,50 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { HomeButton } from "./Button"
+import { Link } from "gatsby"
 
 type HeaderProps = {
   gridArea?: string
-  children: React.ReactNode
+  children?: React.ReactNode
+  title: string
 }
-export const Header = ({ children, gridArea }: HeaderProps) => (
+export const Header = ({ children, gridArea, title }: HeaderProps) => (
   <HeaderEl gridArea={gridArea}>
-    <NavButton>
+    <nav>
       <HomeButton to="/">HOME</HomeButton>
-    </NavButton>
+    </nav>
+    <Title>{title}</Title>
     {children}
   </HeaderEl>
 )
+
 const HeaderEl = styled.header<{
   gridArea?: string
 }>`
   grid-area: ${p => p.gridArea || "auto"};
   display: grid;
   padding: 0 32px;
-  grid-auto-columns: auto;
+  grid-template-columns: auto 1fr;
+  grid-auto-columns: auto 1fr;
   grid-auto-flow: column;
-  justify-content: space-between;
-  height: 100px;
+  justify-content: start;
   align-items: center;
+  grid-gap: 16px;
 `
-
-const NavButton = styled.nav`
-  @media (max-width: 500px) {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    z-index: 1000;
+const HomeButton = styled(Link)`
+  font-weight: 400;
+  color: #474747;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 2px solid #474747;
+  &:hover,
+  &:visited {
+    color: #373737;
   }
 `
-export const Title = styled.h1`
+const Title = styled.h1`
   font-family: "Montserrat";
   font-weight: 300;
   margin: 0;

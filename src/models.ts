@@ -13,6 +13,7 @@ export type Slide = {
 }
 
 export type SlideTextElement = {
+  id: string
   x: number
   y: number
   width: number
@@ -23,12 +24,14 @@ export type SlideTextElement = {
 }
 
 export type SlideChartElement = {
+  id: string
   x: number
   y: number
   width: number
   height: number
   type: "Chart"
-  datasource: DocumentReference<DataSource>
+  datasource?: DocumentReference<DataSource>
+  query?: string
 }
 
 export type SlideElement = SlideChartElement | SlideTextElement

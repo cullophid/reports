@@ -17,6 +17,7 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -29,8 +30,7 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
-    `gatsby-plugin-emotion`
-
+    `gatsby-plugin-emotion`,
 
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
