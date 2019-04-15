@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react"
+import React, { HTMLAttributes, forwardRef } from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
 import { SlideWrap } from "./Slide"
@@ -37,7 +37,7 @@ export const HomeButton = styled(Link)`
 `
 export const NewSlideButton = (props: HTMLAttributes<HTMLButtonElement>) => {
   return (
-    <SlideWrap>
+    <SlideWrap className={props.className}>
       <NewSlideButtonEl {...props}>+</NewSlideButtonEl>
     </SlideWrap>
   )

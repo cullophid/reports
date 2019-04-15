@@ -6,22 +6,21 @@ import styled from "@emotion/styled"
 import { useSession } from "../../firebase"
 import { reportsCollection, Document } from "../../firestore"
 import { navigateTo, Link } from "gatsby"
-import * as Remote from "../../remote"
-import { Report } from "../../models"
-import { Button } from "../../components/Button"
+import { Report, Remote } from "../../models"
+import { Button, NewSlideButton } from "../../components/Button"
 import { v4 as uuid } from "uuid"
 
 const IndexPage = () => {
-  const [reports, setReports] = useState<Remote.t<Document<Report>[]>>(
-    Remote.loading
-  )
+  const [reports, setReports] = useState<Remote<Document<Report>[]>>({
+    loading: true,
+  })
 
   const user = useSession()
   useEffect(() => {
     if (!user) return
-    setReports(Remote.loading)
+    setReports({ loading: true })
     return reportsCollection.onSnapshot(snapShot =>
-      setReports(Remote.success(snapShot.docs))
+      setReports({ data: snapShot.docs })
     )
   }, [user])
 
@@ -39,13 +38,9 @@ const IndexPage = () => {
   return (
     <Page>
       <Layout>
-        <Header title="Reports">
-          {reports.status === "Success" && reports.data.length > 0 && (
-            <NewReportButton onClick={createReport}>NEW</NewReportButton>
-          )}
-        </Header>
+        <Header title="Reports" />
         <Main>
-          {reports.status === "Success" && reports.data.length === 0 && (
+          {reports.data && reports.data.length === 0 && (
             <NoReports>
               <NoReportsMessage>
                 You do not have any reports yet!
@@ -59,11 +54,12 @@ const IndexPage = () => {
             </NoReports>
           )}
           <ReportList>
-            {reports.status === "Success" &&
+            {reports.data &&
               reports.data.length > 0 &&
               reports.data.map((report, i) => {
                 const reportData = report.data()!
                 const titleSlide = reportData.slides[0] || {
+                  id: "",
                   elements: [],
                 }
                 return (
@@ -75,7 +71,10 @@ const IndexPage = () => {
                   </ReportView>
                 )
               })}
-            {reports.status === "Loading" &&
+            {reports.data && reports.data.length > 0 && (
+              <NewSlideButton onClick={createReport} />
+            )}
+            {reports.loading &&
               [0, 1, 2].map((_, i) => (
                 <ReportView key={i}>
                   <SlidePlaceholder />
@@ -103,7 +102,6 @@ const Layout = styled.div`
   grid-auto-flow: row;
   min-height: 100vh;
   width: 100vw;
-  padding: 32px 0;
   grid-gap: 32px 0;
 `
 

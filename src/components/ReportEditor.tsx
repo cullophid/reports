@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import styled from "@emotion/styled"
-import { Report, Slide } from "../models"
+import { Report, Slide, Remote } from "../models"
 import { reportsCollection } from "../firestore"
 import { v4 as uuid } from "uuid"
 import { SlideView, SlideWrap, SlidePlaceholder } from "./Slide"
@@ -9,6 +9,7 @@ import { TextElementEditor } from "./TextElement"
 import { ChartElement } from "./ChartElement"
 import { slideTemplates } from "../slide-templates"
 import { keyframes } from "@emotion/core"
+import qs from "qs"
 
 const fadeIn = keyframes`
 from {
@@ -20,69 +21,110 @@ to {
 `
 
 type ReportEditorProps = {
-  report: Report
+  report: Remote<Report>
   updateReport: (report: Report) => void
+  initialSlide?: string
 }
 
-export const ReportEditor = ({ report, updateReport }: ReportEditorProps) => {
+export const ReportEditor = ({
+  report,
+  updateReport,
+  initialSlide,
+}: ReportEditorProps) => {
   const [selectedSlideId, setSelectedSlideId] = useState<string | undefined>(
-    report.slides[0] && report.slides[0].id
+    initialSlide ||
+      (report.data && report.data.slides[0] && report.data.slides[0].id)
   )
   const [selectSlideTemplate, setSelectSlideTemplate] = useState(false)
 
-  const selectedSlide = report.slides.find(
-    slide => slide.id === selectedSlideId
-  )
+  const selectedSlide =
+    report.data &&
+    (report.data.slides.find(slide => slide.id === selectedSlideId) ||
+      report.data.slides[0])
 
   const addSlide = async (slideTemplate: Slide) => {
+    if (!report) {
+      return
+    }
     const slide = {
       ...slideTemplate,
       id: uuid(),
+      elements: slideTemplate.elements.map(e => ({ ...e, id: uuid() })),
     }
-    await reportsCollection.doc(report.id).set({
-      ...report,
-      slides: [...report.slides, slide],
+    await reportsCollection.doc(report.data.id).set({
+      ...report.data,
+      slides: [...report.data.slides, slide],
     })
     setSelectedSlideId(slide.id)
     setSelectSlideTemplate(false)
   }
 
+  useEffect(() => {
+    if (!report.data) {
+      return
+    }
+    history.replaceState(
+      {},
+      "edit report",
+      `${window.location.pathname}#${report.data.id}?${qs.stringify({
+        slide: selectedSlideId,
+      })}`
+    )
+  })
+
   const updateSlide = (slide: Slide) =>
     updateReport({
-      ...report,
-      slides: report.slides.map(current =>
+      ...report.data,
+      slides: report.data.slides.map(current =>
         current.id === slide.id ? slide : current
       ),
     })
 
+  if (selectSlideTemplate || (report.data && report.data.slides.length === 0)) {
+    return (
+      <ReportEditorLayout>
+        <SlideTemplates onSelect={addSlide} />
+      </ReportEditorLayout>
+    )
+  }
+
   return (
-    <>
-      {report.slides.length > 0 && !selectSlideTemplate && (
-        <SlideList>
-          {report.slides.map(slide => (
+    <ReportEditorLayout>
+      <SlideList>
+        {!report.data &&
+          [1, 2, 3].map((_, i) => (
+            <SlideLi key={i}>
+              <SlidePlaceholder />
+            </SlideLi>
+          ))}
+        {report.data &&
+          report.data.slides.map(slide => (
             <SlideLi
               key={slide.id}
               onClick={() => setSelectedSlideId(slide.id)}
-              style={
-                selectedSlideId && selectedSlideId === slide.id
-                  ? { border: "1px solid blue" }
-                  : {}
-              }
             >
-              <SlideView slide={slide} />
+              <SlideView
+                slide={slide}
+                style={
+                  selectedSlide && selectedSlide.id === slide.id
+                    ? { border: "2px solid #ffcc59" }
+                    : {}
+                }
+              />
             </SlideLi>
           ))}
-          <SlideLi>
-            <NewSlideButton onClick={() => setSelectSlideTemplate(true)} />
-          </SlideLi>
-        </SlideList>
+        <AddSlideButton onClick={() => setSelectSlideTemplate(true)} />
+      </SlideList>
+      {report.loading && (
+        <SlideEditorWrap>
+          <SlidePlaceholder />
+        </SlideEditorWrap>
       )}
-      {selectedSlide && !selectSlideTemplate ? (
+      {selectedSlide && (
         <SlideEditor slide={selectedSlide} onChange={updateSlide} />
-      ) : (
-        <SlideTemplates onSelect={addSlide} />
       )}
-    </>
+      <RightPanel />
+    </ReportEditorLayout>
   )
 }
 
@@ -102,7 +144,6 @@ const SlideEditor = (props: SlideEditorProps) => {
       }),
     [props.onChange, props.slide]
   )
-  console.log("SLIDE EDITOR", props.slide.elements)
   return (
     <SlideEditorWrap>
       <SlideWrap>
@@ -135,38 +176,68 @@ const SlideEditor = (props: SlideEditorProps) => {
   )
 }
 
+const ReportEditorLayout = styled.div`
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-auto-columns: 200px;
+  grid-auto-flow: column;
+  align-items: stretch;
+  overflow: hidden;
+  @media (max-width: 750px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const RightPanel = styled.aside`
+  background: white;
+  border-left: 1px solid #ddd;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  @media (max-width: 750px) {
+    display: none;
+  }
+`
+
 const SlideEditorWrap = styled.div`
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   display: grid;
   justify-self: stretch;
-  grid-area: slide-editor;
-  @media (max-width: 500px) {
-    padding: 0 5%;
+  align-self: stretch;
+  padding: 64px;
+  @media (max-width: 750px) {
+    padding: 0 32px;
     align-content: center;
+    display: none;
   }
 `
 
 const SlideList = styled.ul`
-  overflow-y: auto;
-  grid-area: slide-list;
-  min-width: 0;
+  background: #fff;
+  border-right: 1px solid #ddd;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  margin: 0;
+  padding: 32px;
   display: grid;
   grid-auto-flow: row;
   grid-template-columns: 100%;
-  grid-gap: 5%;
+  grid-gap: 32px;
   justify-items: stretch;
   align-content: start;
-  padding: 8px;
-  margin: 0;
   @media (max-width: 500px) {
     width: 100%;
     grid-auto-flow: column;
     grid-template-columns: auto;
-    grid-gap: 5%;
+    grid-gap: 32px;
     align-items: center;
     justify-content: start;
-    justify-content: start;
-    overflow-x: auto;
-    padding: 5%;
   }
 `
 
@@ -180,25 +251,6 @@ const SlideLi = styled.li`
     width: 150px;
   }
 `
-
-export const Placeholder = () => (
-  <>
-    <SlideList>
-      <SlideLi>
-        <SlidePlaceholder />
-      </SlideLi>
-      <SlideLi>
-        <SlidePlaceholder />
-      </SlideLi>
-      <SlideLi>
-        <SlidePlaceholder />
-      </SlideLi>
-    </SlideList>
-    <SlideEditorWrap>
-      <SlidePlaceholder style={{ gridArea: "slide-editor" }} />
-    </SlideEditorWrap>
-  </>
-)
 
 type SlideTemplateProps = {
   onSelect: (slide: Slide) => void
@@ -226,4 +278,10 @@ const SlideTemplateList = styled.ul`
   animation-fill-mode: forwards;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 32px;
+`
+
+const AddSlideButton = styled(NewSlideButton)`
+  @media (max-width: 750px) {
+    display: none;
+  }
 `

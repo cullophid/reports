@@ -44,3 +44,9 @@ export type DataSource = {
   database: string
   owner: string
 }
+
+export type Remote<Data> = {
+  data?: Data
+  error?: Error
+  loading?: boolean
+}

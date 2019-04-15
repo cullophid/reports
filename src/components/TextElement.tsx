@@ -34,6 +34,8 @@ export const TextEl = styled.div<SlideTextElement>`
 
 type TextEditorProps = SlideTextElement & {
   onSaveText: (value: string) => void
+  onfocus?: (e) => void
+  onBlur?: (e) => void
 }
 
 export const TextElementEditor = (props: TextEditorProps) => {
@@ -43,6 +45,8 @@ export const TextElementEditor = (props: TextEditorProps) => {
     debounce(value => props.onSaveText(Plain.serialize(value)), 500),
     [props.onSaveText]
   )
+
+  console.log(value.toJSON())
   return (
     <TextEditor {...rest}>
       <Editor
@@ -65,9 +69,9 @@ export const TextEditor = styled.div<SlideTextElement>`
   text-align: ${p => p.textAlign};
   width: ${p => p.width}px;
   & [data-slate-editor] {
-    border: 1px solid transparent;
+    border: 2px solid transparent;
   }
   & [data-slate-editor]:focus {
-    border: 1px solid #676767;
+    border: 2px solid #ffcc59;
   }
 `

@@ -3,12 +3,11 @@ import styled from "@emotion/styled"
 import { Link } from "gatsby"
 
 type HeaderProps = {
-  gridArea?: string
   children?: React.ReactNode
   title: string
 }
-export const Header = ({ children, gridArea, title }: HeaderProps) => (
-  <HeaderEl gridArea={gridArea}>
+export const Header = ({ children, title }: HeaderProps) => (
+  <HeaderEl>
     <nav>
       <HomeButton to="/">HOME</HomeButton>
     </nav>
@@ -17,35 +16,33 @@ export const Header = ({ children, gridArea, title }: HeaderProps) => (
   </HeaderEl>
 )
 
-const HeaderEl = styled.header<{
-  gridArea?: string
-}>`
-  grid-area: ${p => p.gridArea || "auto"};
+const HeaderEl = styled.header`
+  height: 40px;
+  background: #373539;
+  color: white;
   display: grid;
   padding: 0 32px;
-  grid-template-columns: auto 1fr;
-  grid-auto-columns: auto 1fr;
-  grid-auto-flow: column;
-  justify-content: start;
+  grid-template-columns: auto auto auto;
+  justify-content: space-between;
   align-items: center;
   grid-gap: 16px;
 `
 const HomeButton = styled(Link)`
   font-weight: 400;
-  color: #474747;
+  color: white;
   font-size: 14px;
   text-transform: uppercase;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  border-bottom: 2px solid #474747;
   &:hover,
   &:visited {
-    color: #373737;
+    color: white;
   }
 `
 const Title = styled.h1`
   font-family: "Montserrat";
   font-weight: 300;
+  font-size: 24px;
   margin: 0;
 `
