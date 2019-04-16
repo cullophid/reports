@@ -2,37 +2,45 @@ import React, { HTMLAttributes, useState, useCallback } from "react"
 import styled from "@emotion/styled"
 import { Editor } from "slate-react"
 import { Value } from "slate"
-import Plain from "slate-plain-serializer"
 import { debounce } from "lodash-es"
 
 import { SlideTextElement } from "../models"
 
-export const TextPlaceholder = styled.div`
-  position: absolute;
-  background: #eee;
-  height: 30px;
-`
-
-type TextElementProps = SlideTextElement & HTMLAttributes<HTMLDivElement>
-
-export const TextElement = (props: TextElementProps) => (
-  <TextEl {...props}>{props.value}</TextEl>
-)
-
-export const TextEl = styled.div<SlideTextElement>`
-  position: absolute;
-  left: ${p => p.x}px;
-  top: ${p => p.y}px;
-  font-size: ${p => p.fontSize}pt;
-  text-align: ${p => p.textAlign};
-  width: ${p => p.width}px;
-  & p {
-    margin: 0;
+export const TextElement = (props: SlideTextElement) => {
+  const lineHeight = props.fontSize * 1.2
+  let row = 0
+  let i = 0
+  const renderNode = (node: any) => {
+    switch (node.object) {
+      case "block": {
+        const children = node.nodes.map(renderNode)
+        return <g key={++i}>{children}</g>
+      }
+      case "text": {
+        const children = node.leaves.map(renderNode)
+        return (
+          <text dy={row++ * lineHeight} key={++i}>
+            {children}
+          </text>
+        )
+      }
+      case "leaf": {
+        return (
+          <tspan style={{ fontSize: props.fontSize }} key={++i}>
+            {node.text}
+          </tspan>
+        )
+      }
+    }
   }
-  white-space: pre-line;
-`
 
-type TextEditorProps = SlideTextElement & {
+  return (
+    <g transform={`translate(${props.x}, ${props.y})`}>
+      {props.value.document.nodes.map(renderNode)}
+    </g>
+  )
+}
+type TextEditorProps = Partial<SlideTextElement> & {
   onSaveText: (value: string) => void
   onfocus?: (e) => void
   onBlur?: (e) => void
@@ -40,34 +48,32 @@ type TextEditorProps = SlideTextElement & {
 
 export const TextElementEditor = (props: TextEditorProps) => {
   const { onSaveText, ...rest } = props
-  const [value, setValue] = useState<Value>(Plain.deserialize(props.value))
+  const [value, setValue] = useState<Value>(Value.fromJSON(props.value))
   const save = useCallback(
-    debounce(value => props.onSaveText(Plain.serialize(value)), 500),
+    debounce(value => props.onSaveText(value.toJSON()), 500),
     [props.onSaveText]
   )
-
-  console.log(value.toJSON())
   return (
-    <TextEditor {...rest}>
-      <Editor
-        autoFocus
-        value={value}
-        onChange={({ value }) => {
-          setValue(value)
-          save(value)
-        }}
-      />
-    </TextEditor>
+    <foreignObject x={props.x} y={props.y} width={props.width} height={1280}>
+      <TextEditor fontSize={props.fontSize}>
+        <Editor
+          autoFocus
+          value={value}
+          onChange={({ value }) => {
+            setValue(value)
+            save(value)
+          }}
+        />
+      </TextEditor>
+    </foreignObject>
   )
 }
 
-export const TextEditor = styled.div<SlideTextElement>`
-  position: absolute;
-  left: ${p => p.x}px;
-  top: ${p => p.y}px;
+export const TextEditor = styled.div<{
+  fontSize: number
+}>`
   font-size: ${p => p.fontSize}pt;
-  text-align: ${p => p.textAlign};
-  width: ${p => p.width}px;
+  line-height: 1.2em;
   & [data-slate-editor] {
     border: 2px solid transparent;
   }

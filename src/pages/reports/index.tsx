@@ -72,7 +72,9 @@ const IndexPage = () => {
                 )
               })}
             {reports.data && reports.data.length > 0 && (
-              <NewSlideButton onClick={createReport} />
+              <ReportView key={"NEW"}>
+                <NewSlideButton onClick={createReport} />
+              </ReportView>
             )}
             {reports.loading &&
               [0, 1, 2].map((_, i) => (

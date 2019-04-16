@@ -6,8 +6,7 @@ import { v4 as uuid } from "uuid"
 import { SlideView, SlideWrap, SlidePlaceholder } from "./Slide"
 import { NewSlideButton } from "./Button"
 import { TextElementEditor } from "./TextElement"
-import { ChartElement } from "./ChartElement"
-import { slideTemplates } from "../slide-templates"
+import { SlideTemplateModal } from "./SlideTemplateModal"
 import { keyframes } from "@emotion/core"
 import qs from "qs"
 
@@ -80,19 +79,16 @@ export const ReportEditor = ({
       ),
     })
 
-  if (selectSlideTemplate || (report.data && report.data.slides.length === 0)) {
-    return (
-      <ReportEditorLayout>
-        <SlideTemplates onSelect={addSlide} />
-      </ReportEditorLayout>
-    )
-  }
-
   return (
     <ReportEditorLayout>
+      <SlideTemplateModal
+        showDialog={selectSlideTemplate}
+        onDismiss={() => setSelectSlideTemplate(false)}
+        onSelect={addSlide}
+      />
       <SlideList>
         {!report.data &&
-          [1, 2, 3].map((_, i) => (
+          [1, 2, 3, 4, 5, 6].map((_, i) => (
             <SlideLi key={i}>
               <SlidePlaceholder />
             </SlideLi>
@@ -105,11 +101,7 @@ export const ReportEditor = ({
             >
               <SlideView
                 slide={slide}
-                style={
-                  selectedSlide && selectedSlide.id === slide.id
-                    ? { border: "2px solid #ffcc59" }
-                    : {}
-                }
+                highlight={selectedSlide && selectedSlide.id === slide.id}
               />
             </SlideLi>
           ))}
@@ -155,17 +147,6 @@ const SlideEditor = (props: SlideEditorProps) => {
                 {...slideElement}
                 onSaveText={value => {
                   updateElement({ ...slideElement, value })
-                }}
-              />
-            )
-          }
-          if (slideElement.type === "Chart") {
-            return (
-              <ChartElement
-                key={slideElement.id}
-                {...slideElement}
-                onClick={e => {
-                  e.nativeEvent.stopPropagation()
                 }}
               />
             )
@@ -252,35 +233,8 @@ const SlideLi = styled.li`
   }
 `
 
-type SlideTemplateProps = {
-  onSelect: (slide: Slide) => void
-}
-const SlideTemplates = ({ onSelect }: SlideTemplateProps) => {
-  return (
-    <SlideTemplateList>
-      {slideTemplates.map(slide => (
-        <SlideLi key={slide.id} onClick={() => onSelect(slide)}>
-          <SlideView slide={slide} />
-        </SlideLi>
-      ))}
-    </SlideTemplateList>
-  )
-}
-const SlideTemplateList = styled.ul`
-  grid-row: 2 / span 1;
-  grid-column: 1 / span 3;
-  margin: 0;
-  display: grid;
-  width: 100%;
-  opacity: 0;
-  animation-name: ${fadeIn};
-  animation-duration: 1000ms;
-  animation-fill-mode: forwards;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 32px;
-`
-
 const AddSlideButton = styled(NewSlideButton)`
+  margin-bottom: 32px;
   @media (max-width: 750px) {
     display: none;
   }

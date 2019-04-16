@@ -1,11 +1,7 @@
-import React, { useRef, ReactNode } from "react"
+import React, { ReactNode } from "react"
 import styled from "@emotion/styled"
-import { css } from "@emotion/core"
-import { TextPlaceholder, TextElement } from "./TextElement"
-import { ChartElement } from "./ChartElement"
-
-import useResizeAware from "react-resize-aware"
-import { Slide } from "../models"
+import { Slide, SlideTextElement } from "../models"
+import { TextElement } from "./TextElement"
 
 const SLIDE_HEIGHT = 720
 const SLIDE_WIDTH = 1280
@@ -13,49 +9,35 @@ const SLIDE_WIDTH = 1280
 type SlideWrapProps = {
   children: ReactNode
   className?: string
+  highlight?: boolean
   style?: React.CSSProperties
 }
 
 export const SlideWrap = (props: SlideWrapProps) => {
-  const style = props.style || {}
-  const [resizeListener] = useResizeAware()
-  const slideRef = useRef<HTMLDivElement>(null)
-  const bbox = slideRef.current && slideRef.current.getBoundingClientRect()
-  const scale = bbox ? bbox.width / SLIDE_WIDTH : 1
-  console.log("SlideWrap Render")
   return (
-    <SlideBackGround
-      ref={slideRef}
-      style={{
-        ...style,
-        height: SLIDE_HEIGHT * scale,
-        opacity: slideRef.current ? 1 : 0,
-      }}
+    <SlideSVG
+      viewBox={`0 0 ${SLIDE_WIDTH} ${SLIDE_HEIGHT}`}
+      preserveAspectRatio="xMidYMid meet"
       className={props.className || ""}
+      highlight={props.highlight}
     >
-      {resizeListener}
-      {slideRef.current && (
-        <SlideContent style={{ transform: `scale(${scale})` }}>
-          {props.children}
-        </SlideContent>
+      {props.children}
       )}
-    </SlideBackGround>
+    </SlideSVG>
   )
 }
 
 type SlideProps = {
   slide: Slide
-  style?: React.CSSProperties
+  highlight?: boolean
 }
 export const SlideView = (props: SlideProps) => {
   return (
-    <SlideWrap style={props.style || {}}>
+    <SlideWrap highlight={props.highlight}>
       {props.slide.elements.map(element => {
         switch (element.type) {
           case "Text":
             return <TextElement key={element.id} {...element} />
-          case "Chart":
-            return <ChartElement key={element.id} {...element} />
         }
       })}
     </SlideWrap>
@@ -68,59 +50,35 @@ export const SlidePlaceholder = ({
   style?: React.CSSProperties
 }) => (
   <SlideWrap style={style}>
+    <TextPlaceholder x="100" y="100" width="1080" height="60" rx={5} ry={5} />
+    <g transform="translate(100, 240)">
+      <TextPlaceholder x="0" y="0" width="500" height="30" rx={5} ry={5} />
+      <TextPlaceholder x="0" y="60" width="500" height="30" rx={5} ry={5} />
+      <TextPlaceholder x="0" y="120" width="450" height="30" rx={5} ry={5} />
+      <TextPlaceholder x="0" y="180" width="500" height="30" rx={5} ry={5} />
+      <TextPlaceholder x="0" y="240" width="500" height="30" rx={5} ry={5} />
+      <TextPlaceholder x="0" y="300" width="450" height="30" rx={5} ry={5} />
+    </g>
+
     <TextPlaceholder
-      css={css`
-        height: 64px;
-        left: 100px;
-        width: 1080px;
-        top: 100px;
-      `}
-    />
-    <TextPlaceholder
-      css={css`
-        height: 64px;
-        left: 100px;
-        width: 500px;
-        top: 250px;
-      `}
-    />
-    <TextPlaceholder
-      css={css`
-        height: 64px;
-        left: 100px;
-        width: 450px;
-        top: 400px;
-      `}
-    />
-    <TextPlaceholder
-      css={css`
-        height: 64px;
-        left: 100px;
-        width: 300px;
-        top: 550px;
-      `}
-    />
-    <TextPlaceholder
-      css={css`
-        height: 364px;
-        right: 100px;
-        width: 500px;
-        top: 250px;
-      `}
+      x={SLIDE_WIDTH - 600}
+      y="240"
+      width="500"
+      height="364"
+      rx={5}
+      ry={5}
     />
   </SlideWrap>
 )
 
-const SlideBackGround = styled.div`
-  position: relative;
-  background: white;
-  box-shadow: 0 3px 10px #00000088;
-  overflow: hidden;
+const TextPlaceholder = styled.rect`
+  fill: #eee;
+  stroke: none;
 `
 
-const SlideContent = styled.div`
-  position: relative;
-  transform-origin: 0 0;
-  width: ${SLIDE_WIDTH}px;
-  height: ${SLIDE_HEIGHT}px;
+const SlideSVG = styled.svg<{ highlight?: boolean }>`
+  width: 100%;
+  background: white;
+  box-shadow: 0 3px 10px #00000088;
+  border: 3px solid ${p => (p.highlight ? "#ffcc59" : "transparent")};
 `

@@ -38,7 +38,9 @@ export const HomeButton = styled(Link)`
 export const NewSlideButton = (props: HTMLAttributes<HTMLButtonElement>) => {
   return (
     <SlideWrap className={props.className}>
-      <NewSlideButtonEl {...props}>+</NewSlideButtonEl>
+      <foreignObject x={0} y={0} width={1280} height={720}>
+        <NewSlideButtonEl {...props}>+</NewSlideButtonEl>
+      </foreignObject>
     </SlideWrap>
   )
 }

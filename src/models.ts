@@ -18,7 +18,7 @@ export type SlideTextElement = {
   y: number
   width: number
   type: "Text"
-  value: string
+  value: any
   fontSize: number
   textAlign: "left" | "right" | "center"
 }
