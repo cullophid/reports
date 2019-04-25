@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noUnusedLocals": true,
     "outDir": "lib",
+    "lib": ["es2015"],
     "sourceMap": true,
     "strict": true,
-    "target": "es2015"
+    "target": "es2015",
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types"]
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src", "index.d.ts"]
 }

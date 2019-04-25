@@ -56,3 +56,20 @@ const NewSlideButtonEl = styled.button`
   border: none;
   font-size: 400px;
 `
+
+export const TextButton = styled.button<{ color?: string }>`
+  padding: 8px 24px;
+  justify-self: end;
+  font-weight: 400;
+  color: ${p => p.color || "#474747"};
+  font-size: 14px;
+  border-radius: 999px;
+  border: none;
+  text-transform: uppercase;
+  background: none;
+  cursor: pointer;
+  :focus {
+    outline: none;
+    border: 1px solid ${p => p.color || "#474747"};
+  }
+`
