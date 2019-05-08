@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback, useEffect, useRef } from "react"
 import styled from "@emotion/styled"
 import { Report, Slide, Remote } from "../models"
 import { reportsCollection } from "../firestore"
@@ -79,6 +79,18 @@ export const ReportEditor = ({
       ),
     })
 
+  const slideListRef = useRef<HTMLUListElement>()
+
+  const focusSlide = (i: number) => {
+    const child =
+      slideListRef.current &&
+      slideListRef.current.children.item(i) &&
+      slideListRef.current.children.item(i).querySelector("svg")
+    if (child) {
+      child.focus()
+    }
+  }
+
   return (
     <ReportEditorLayout>
       <SlideTemplateModal
@@ -86,7 +98,7 @@ export const ReportEditor = ({
         onDismiss={() => setSelectSlideTemplate(false)}
         onSelect={addSlide}
       />
-      <SlideList>
+      <SlideList ref={slideListRef}>
         {!report.data &&
           [1, 2, 3, 4, 5, 6].map((_, i) => (
             <SlideLi key={i}>
@@ -94,18 +106,32 @@ export const ReportEditor = ({
             </SlideLi>
           ))}
         {report.data &&
-          report.data.slides.map(slide => (
-            <SlideLi
-              key={slide.id}
-              onClick={() => setSelectedSlideId(slide.id)}
-            >
+          report.data.slides.map((slide, i) => (
+            <SlideLi key={slide.id}>
               <SlideView
+                tabIndex={i === 0 ? 0 : -1}
+                onPress={() => setSelectedSlideId(slide.id)}
+                onKeyDown={e => {
+                  switch (e.key) {
+                    case "ArrowDown":
+                      return focusSlide(i + 1)
+                    case "ArrowUp":
+                      return focusSlide(i - 1)
+                  }
+                }}
                 slide={slide}
-                highlight={selectedSlide && selectedSlide.id === slide.id}
               />
             </SlideLi>
           ))}
-        <AddSlideButton onClick={() => setSelectSlideTemplate(true)} />
+        <AddSlideButton
+          onClick={() => setSelectSlideTemplate(true)}
+          onKeyPress={e => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault()
+              setSelectSlideTemplate(true)
+            }
+          }}
+        />
       </SlideList>
       {report.loading && (
         <SlideEditorWrap>

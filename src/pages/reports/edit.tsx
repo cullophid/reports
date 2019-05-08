@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Report } from "../../models"
 import { reportsCollection } from "../../firestore"
 import { Page } from "../../components/Page"
-import { navigateTo } from "gatsby"
+import { navigate } from "gatsby"
 import { Header } from "../../components/Header"
 import styled from "@emotion/styled"
 import { ReportEditor } from "../../components/ReportEditor"
@@ -26,7 +26,7 @@ const Edit = (props: Props) => {
     return reportsCollection.doc(reportId).onSnapshot(
       doc => {
         if (!doc.data()) {
-          return navigateTo("/404")
+          return navigate("/404")
         }
         setReport({ data: doc.data()! })
       },

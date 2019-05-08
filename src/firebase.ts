@@ -5,7 +5,7 @@ import "firebase/auth"
 import "firebase/firestore"
 import "firebase/functions"
 
-import { navigateTo } from "gatsby"
+import { navigate } from "gatsby"
 
 const config = {
   apiKey: "AIzaSyB-yNwOSChS7cSINcrAvBahGlNaHMmaIN8",
@@ -28,7 +28,7 @@ export const useSession = () => {
       if (user) {
         setSession(user)
       } else {
-        navigateTo("/login")
+        navigate("/login")
       }
     })
   }, [])

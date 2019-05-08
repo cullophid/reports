@@ -1,5 +1,3 @@
-import { DocumentReference } from "./firestore"
-
 export type Report = {
   id: string
   title: string
@@ -30,7 +28,7 @@ export type SlideChartElement = {
   width: number
   height: number
   type: "Chart"
-  datasource?: DocumentReference<DataSource>
+  datasource?: string
   query?: string
 }
 

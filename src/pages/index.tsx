@@ -1,10 +1,10 @@
 import React, { useEffect } from "react"
-import { navigateTo } from "gatsby"
+import { navigate } from "gatsby"
 
 const IndexPage = () => {
   useEffect(() => {
     console.log("INDEX")
-    navigateTo("/reports")
+    navigate("/reports")
   }, [])
   return null
 }

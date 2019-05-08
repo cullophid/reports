@@ -5,6 +5,7 @@ import { slideTemplates } from "../slide-templates"
 import { SlideView } from "./Slide"
 import styled from "@emotion/styled"
 import { Global, css, keyframes } from "@emotion/core"
+import { Button } from "./Button"
 
 type Props = {
   showDialog: boolean
@@ -22,8 +23,11 @@ export const SlideTemplateModal = (props: Props) => {
         </Header>
         <TemplateList>
           {slideTemplates.map(template => (
-            <SlideLi key={template.id} onClick={() => props.onSelect(template)}>
-              <SlideView slide={template} />
+            <SlideLi key={template.id}>
+              <SlideView
+                slide={template}
+                onPress={() => props.onSelect(template)}
+              />
             </SlideLi>
           ))}
         </TemplateList>
@@ -76,7 +80,7 @@ const modalStyles = css`
     background: white;
     outline: none;
     display: grid;
-    grid-template-rows: 80px 1fr 80px;
+    grid-template-rows: 80px 1fr;
     grid-auto-flow: rows;
     height: 80vh;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
@@ -90,19 +94,10 @@ const modalStyles = css`
   }
 `
 
-const CloseButton = styled.button`
+const CloseButton = styled(Button)`
   position: absolute;
   top: 28px;
   right: 28px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 1000px;
-  padding: 8px 16px;
-  :focus {
-    outline: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  }
 `
 
 const Header = styled.div`

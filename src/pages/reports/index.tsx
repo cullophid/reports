@@ -4,11 +4,13 @@ import { Header } from "../../components/Header"
 import { SlideView, SlidePlaceholder } from "../../components/Slide"
 import styled from "@emotion/styled"
 import { useSession } from "../../firebase"
-import { reportsCollection, Document } from "../../firestore"
-import { navigateTo, Link } from "gatsby"
+import { reportsCollection } from "../../firestore"
+import { Document } from "../../firebaseTypes"
+import { navigate } from "gatsby"
 import { Report, Remote } from "../../models"
 import { Button, NewSlideButton } from "../../components/Button"
 import { v4 as uuid } from "uuid"
+import firebase from "firebase"
 
 const IndexPage = () => {
   const [reports, setReports] = useState<Remote<Document<Report>[]>>({
@@ -19,9 +21,9 @@ const IndexPage = () => {
   useEffect(() => {
     if (!user) return
     setReports({ loading: true })
-    return reportsCollection.onSnapshot(snapShot =>
-      setReports({ data: snapShot.docs })
-    )
+    return reportsCollection
+      .where("owner", "==", firebase.auth().currentUser.uid)
+      .onSnapshot(snapShot => setReports({ data: snapShot.docs }))
   }, [user])
 
   const createReport = async () => {
@@ -33,7 +35,7 @@ const IndexPage = () => {
       slides: [],
     })
 
-    navigateTo(`/reports/edit#${id}`)
+    navigate(`/reports/edit#${id}`)
   }
   return (
     <Page>
@@ -64,10 +66,10 @@ const IndexPage = () => {
                 }
                 return (
                   <ReportView key={i}>
-                    <Link to={`/reports/edit#${report.id}`}>
-                      <SlideView slide={titleSlide} />
-                      <H1>{reportData.title}</H1>
-                    </Link>
+                    <SlideView
+                      href={`/reports/view#${reportData.id}`}
+                      slide={titleSlide}
+                    />
                   </ReportView>
                 )
               })}
@@ -89,14 +91,6 @@ const IndexPage = () => {
   )
 }
 export default IndexPage
-
-const NewReportButton = styled(Button)`
-  @media (max-width: 500px) {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-  }
-`
 
 const Layout = styled.div`
   display: grid;
@@ -127,8 +121,9 @@ const NoReportsMessage = styled.p`
 const ReportList = styled.ul`
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 300px);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   align-items: stretch;
+  align-content: start;
   justify-items: stretch;
   padding: 0 10%;
   grid-gap: 5%;
@@ -148,17 +143,4 @@ const ReportView = styled.li`
   &:hover h1 {
     visibility: visible;
   }
-`
-
-const H1 = styled.h1`
-  background: #000000bb;
-  color: white;
-  margin: 0;
-  display: grid;
-  place-content: center center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20%;
 `

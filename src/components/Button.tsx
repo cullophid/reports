@@ -2,50 +2,48 @@ import React, { HTMLAttributes, forwardRef } from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
 import { SlideWrap } from "./Slide"
+import { css } from "@emotion/core"
 
-export const Button = styled.button`
-  padding: 8px 24px;
+type ButtonProps = {
+  size?: number
+  color?: string
+}
+export const buttonStyle = ({ size = 14 }: ButtonProps) => css`
+  padding: 0 1.5em;
+  height: 2.2em;
   justify-self: end;
+  display: grid;
+  place-content: center center;
   font-weight: 400;
   color: #474747;
   background: white;
-  font-size: 14px;
+  font-size: ${size}px;
   border-radius: 999px;
-  border: none;
+  border: 1px solid transparent;
   box-shadow: 0 2px 5px #00000055;
   text-transform: uppercase;
-  cursor: pointer;
-`
-
-export const HomeButton = styled(Link)`
   text-decoration: none;
-  justify-self: start;
-  background: #373737;
-  border: 5px solid white;
-  box-shadow: 0 3px 10px #00000088;
-  display: grid;
-  place-content: center center;
-  border-radius: 999px;
-  width: 60px;
-  height: 60px;
-  font-size: 10px;
-  color: white;
-  &:visited,
-  &:active {
-    color: white;
+  cursor: pointer;
+  :focus {
+    outline: none;
+    border-color: #ffcc59;
   }
 `
-export const NewSlideButton = (props: HTMLAttributes<HTMLButtonElement>) => {
+export const Button = styled.button<ButtonProps>`
+  ${p => buttonStyle(p)}
+`
+
+export const NewSlideButton = (props: HTMLAttributes<SVGElement>) => {
   return (
-    <SlideWrap className={props.className}>
+    <SlideWrap {...props} tabIndex={0}>
       <foreignObject x={0} y={0} width={1280} height={720}>
-        <NewSlideButtonEl {...props}>+</NewSlideButtonEl>
+        <NewSlideButtonEl>+</NewSlideButtonEl>
       </foreignObject>
     </SlideWrap>
   )
 }
 
-const NewSlideButtonEl = styled.button`
+const NewSlideButtonEl = styled.span`
   cursor: pointer;
   width: 100%;
   height: 100%;
@@ -55,21 +53,38 @@ const NewSlideButtonEl = styled.button`
   background: white;
   border: none;
   font-size: 400px;
+  &:focus {
+    outline: none;
+    border: 10px solid #ffcc59;
+  }
 `
 
-export const TextButton = styled.button<{ color?: string }>`
-  padding: 8px 24px;
-  justify-self: end;
-  font-weight: 400;
-  color: ${p => p.color || "#474747"};
-  font-size: 14px;
-  border-radius: 999px;
-  border: none;
+export const textButtonStyle = ({
+  color = "#474747",
+  size = 14,
+}: ButtonProps) => css`
+  padding: 0 1.5em;
+  height: 2.2em;
+  line-height: 1;
+  vertical-align: middle;
+  display: grid;
+  place-content: center center;
+  font-size: ${size}px;
+  border: 1px solid transparent;
   text-transform: uppercase;
-  background: none;
+  text-decoration: none;
   cursor: pointer;
+  font-weight: 400;
+  color: ${color};
+  border-radius: 999px;
+  background: none;
   :focus {
     outline: none;
-    border: 1px solid ${p => p.color || "#474747"};
+    color: ${color || "#474747"};
+    border-color: #ffcc59;
   }
+`
+
+export const TextButton = styled.button<ButtonProps>`
+  ${p => textButtonStyle(p)}
 `

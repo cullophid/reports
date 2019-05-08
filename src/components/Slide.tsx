@@ -1,40 +1,68 @@
-import React, { ReactNode } from "react"
+import React, { ReactNode, HTMLAttributes, KeyboardEvent } from "react"
 import styled from "@emotion/styled"
+import { keyframes } from "@emotion/core"
 import { Slide, SlideTextElement } from "../models"
 import { TextElement } from "./TextElement"
+import { navigate } from "gatsby"
 
 const SLIDE_HEIGHT = 720
 const SLIDE_WIDTH = 1280
 
 type SlideWrapProps = {
   children: ReactNode
-  className?: string
-  highlight?: boolean
-  style?: React.CSSProperties
-}
+} & HTMLAttributes<SVGElement>
 
 export const SlideWrap = (props: SlideWrapProps) => {
   return (
     <SlideSVG
       viewBox={`0 0 ${SLIDE_WIDTH} ${SLIDE_HEIGHT}`}
       preserveAspectRatio="xMidYMid meet"
-      className={props.className || ""}
-      highlight={props.highlight}
-    >
-      {props.children}
-      )}
-    </SlideSVG>
+      {...props}
+    />
   )
 }
 
 type SlideProps = {
   slide: Slide
   highlight?: boolean
-}
-export const SlideView = (props: SlideProps) => {
+  onPress?: () => void
+  href?: string
+} & HTMLAttributes<SVGElement>
+
+export const SlideView = ({
+  slide,
+  onClick,
+  onPress,
+  onKeyPress,
+  href,
+  ...rest
+}: SlideProps) => {
+  const navigateToHref = (
+    e: React.MouseEvent<SVGElement> | KeyboardEvent<SVGElement>
+  ) => {
+    e.metaKey || e.ctrlKey ? window.open(href, "_blank") : navigate(href)
+  }
   return (
-    <SlideWrap highlight={props.highlight}>
-      {props.slide.elements.map(element => {
+    <SlideWrap
+      role={href ? "link" : (onClick || onPress) && "button"}
+      tabIndex={rest.tabIndex || (onPress || href ? 0 : undefined)}
+      onClick={e => {
+        href && navigateToHref(e)
+        onPress && onPress()
+        onClick && onClick(e)
+      }}
+      onKeyPress={e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+
+          onPress && onPress()
+          href && navigateToHref(e)
+        }
+        onKeyPress && onKeyPress(e)
+      }}
+      {...rest}
+    >
+      {slide.elements.map(element => {
         switch (element.type) {
           case "Text":
             return <TextElement key={element.id} {...element} />
@@ -75,10 +103,27 @@ const TextPlaceholder = styled.rect`
   fill: #eee;
   stroke: none;
 `
-
+const fadeIn = keyframes`
+from {
+  opacity: 0;
+}
+to {
+  opacity: 1;
+}
+`
 const SlideSVG = styled.svg<{ highlight?: boolean }>`
   width: 100%;
   background: white;
   box-shadow: 0 3px 10px #00000088;
-  border: 3px solid ${p => (p.highlight ? "#ffcc59" : "transparent")};
+  animation-name: ${fadeIn};
+  animation-fill-mode: forwards;
+  animation-duration: 500ms;
+  &:focus {
+    outline: none;
+    border: 3px solid #ffcc59;
+  }
+  @media print {
+    position: relative;
+    box-shadow: none;
+  }
 `

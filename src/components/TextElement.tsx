@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, useState, useCallback } from "react"
 import styled from "@emotion/styled"
 import { Editor } from "slate-react"
-import { Value } from "slate"
+import { Value, Text, Node, Inline } from "slate"
 import { debounce } from "lodash-es"
 
 import { SlideTextElement } from "../models"
@@ -53,17 +53,15 @@ export const TextElementEditor = (props: TextEditorProps) => {
     debounce(value => props.onSaveText(value.toJSON()), 500),
     [props.onSaveText]
   )
+
+  const onChange = ({ value }: { value: Value }) => {
+    setValue(value)
+    save(value)
+  }
   return (
     <foreignObject x={props.x} y={props.y} width={props.width} height={1280}>
       <TextEditor fontSize={props.fontSize}>
-        <Editor
-          autoFocus
-          value={value}
-          onChange={({ value }) => {
-            setValue(value)
-            save(value)
-          }}
-        />
+        <Editor value={value} onChange={onChange} />
       </TextEditor>
     </foreignObject>
   )

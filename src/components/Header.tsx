@@ -8,20 +8,27 @@ type HeaderProps = {
   children?: React.ReactNode
   title: string
 }
-export const Header = ({ children, title }: HeaderProps) => (
-  <HeaderEl>
-    <nav>
-      <HomeButton to="/">HOME</HomeButton>
-    </nav>
-    <Title>{title}</Title>
-    <LogOutButton onClick={() => firebase.auth().signOut()}>
-      Fuck Off
-    </LogOutButton>
-  </HeaderEl>
-)
+export const Header = ({ children, title }: HeaderProps) => {
+  const logOut = async () => {
+    await firebase.auth().signOut()
+    window.location.href = "/login"
+  }
+  return (
+    <HeaderEl>
+      <nav>
+        <HomeButton to="/">HOME</HomeButton>
+      </nav>
+      <Title>{title}</Title>
+      <TextButton color="white" size={12} onClick={logOut}>
+        Fuck Off
+      </TextButton>
+    </HeaderEl>
+  )
+}
 
 const HeaderEl = styled.header`
   height: 40px;
+  width: 100%;
   background: #373539;
   color: white;
   display: grid;
@@ -30,6 +37,10 @@ const HeaderEl = styled.header`
   justify-content: space-between;
   align-items: center;
   grid-gap: 16px;
+
+  @media print {
+    display: none;
+  }
 `
 const HomeButton = styled(Link)`
   font-weight: 400;
@@ -39,21 +50,20 @@ const HomeButton = styled(Link)`
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
+  border-bottom: 2px solid transparent;
+  border-top: 2px solid transparent;
   &:hover,
   &:visited {
     color: white;
+  }
+  &:focus {
+    outline: none;
+    border-bottom-color: #ffcc59;
   }
 `
 const Title = styled.h1`
   font-family: "Montserrat";
   font-weight: 300;
-  font-size: 24px;
+  font-size: 20px;
   margin: 0;
-`
-
-const LogOutButton = styled(TextButton)`
-  color: white;
-  :focus {
-    color: #474747;
-  }
 `

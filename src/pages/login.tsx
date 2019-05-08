@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react"
-import { navigateTo } from "gatsby"
+import { navigate } from "gatsby"
 import styled from "@emotion/styled"
 import { Page } from "../components/Page"
 import firebase from "../firebase"
 import { Spinner } from "../components/Spinner"
-
-import googleIcon from "../images/google.svg"
-import githubIcon from "../images/github.svg"
+import { Alert } from "../components/Alert"
+import { Google } from "../icons/google"
+import { Github } from "../icons/github"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 const githubProvider = new firebase.auth.GithubAuthProvider()
 
 const LoginPage = () => {
-  const [authMessage, setAuthMessage] = useState(undefined)
+  const [error, setError] = useState(undefined)
   const [loading, setLoading] = useState(true)
   const login = (provider: firebase.auth.AuthProvider) => async () => {
     try {
       setLoading(true)
       const result = await firebase.auth().signInWithRedirect(provider)
-      navigateTo("/")
+      navigate("/")
     } catch (e) {
-      setAuthMessage(e.message)
+      setError(e)
     } finally {
       setLoading(false)
     }
@@ -33,30 +33,30 @@ const LoginPage = () => {
       .then(result => {
         console.log("Auth Result", result)
         if (result.user) {
-          navigateTo("/")
+          navigate("/")
         } else {
           setLoading(false)
         }
       })
       .catch(function(error) {
         console.error("Auth Error", error)
-        setAuthMessage(error.message)
+        setError(error)
+        setLoading(false)
       })
   }, [])
 
   return (
     <Page>
       <Layout>
-        {loading ? (
-          <Spinner />
-        ) : (
+        {loading && <Spinner />}
+        {!loading && (
           <>
             <Title>Sign In</Title>
             <LoginButton onClick={login(googleProvider)}>
               <LoginButtonLayout>
                 <ButtonTitle>Google</ButtonTitle>
                 <LoginButtonLogoBg>
-                  <img src={googleIcon} />
+                  <Google />
                 </LoginButtonLogoBg>
               </LoginButtonLayout>
             </LoginButton>
@@ -64,11 +64,11 @@ const LoginPage = () => {
               <LoginButtonLayout>
                 <ButtonTitle>Github</ButtonTitle>
                 <LoginButtonLogoBg style={{ background: "black" }}>
-                  <img src={githubIcon} />
+                  <Github />
                 </LoginButtonLogoBg>
               </LoginButtonLayout>
             </LoginButton>
-            {authMessage && <ErrorMessage> {authMessage} </ErrorMessage>}
+            {error && <Alert> {error.message} </Alert>}
           </>
         )}
       </Layout>
@@ -119,11 +119,4 @@ const LoginButtonLogoBg = styled.div`
   background: #4285f4;
   display: grid;
   place-content: center center;
-`
-const ErrorMessage = styled.p`
-  width: 300px;
-  background: #00000002;
-  border: 1px solid red;
-  padding: 32px;
-  border-radius: 5px;
 `
