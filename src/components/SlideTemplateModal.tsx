@@ -1,5 +1,6 @@
 import React from "react"
-import { Slide } from "../models"
+import { SlideType } from "../models"
+// @ts-ignore
 import { Dialog } from "@reach/dialog"
 import { slideTemplates } from "../slide-templates"
 import { SlideView } from "./Slide"
@@ -10,7 +11,7 @@ import { Button } from "./Button"
 type Props = {
   showDialog: boolean
   onDismiss: () => void
-  onSelect: (slide: Slide) => void
+  onSelect: (slide: SlideType) => void
 }
 export const SlideTemplateModal = (props: Props) => {
   return (

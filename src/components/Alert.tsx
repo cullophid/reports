@@ -1,6 +1,6 @@
 import ReachAlert from "@reach/alert"
 import styled from "@emotion/styled"
-
+// @ts-ignore
 export const Alert = styled(ReachAlert)`
   padding: 16px;
   background: #f95555;

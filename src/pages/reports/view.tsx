@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react"
-import { Report } from "../../models"
-import { reportsCollection } from "../../firestore"
-import { Page } from "../../components/Page"
+import { ReportType } from "src/models"
+import { reportsCollection } from "src/firestore"
+import { Page } from "src/components/Page"
 import { navigate } from "gatsby"
-import { Header } from "../../components/Header"
+import { Header } from "src/components/Header"
 import styled from "@emotion/styled"
-import { Remote } from "../../remote"
-import { SlideView, SlidePlaceholder } from "../../components/Slide"
+import { Remote } from "src/remote"
+import { SlideView, SlidePlaceholder } from "src/components/Slide"
 import { Link } from "gatsby"
-import { buttonStyle } from "../../components/Button"
+import { buttonStyle } from "src/components/Button"
 
 type Props = {
   location: Location
@@ -16,7 +16,7 @@ type Props = {
 
 const View = (props: Props) => {
   const reportId = props.location.hash.split("?")[0].substring(1)
-  const [report, setReport] = useState<Remote<Report>>({ loading: true })
+  const [report, setReport] = useState<Remote<ReportType>>({ loading: true })
   useEffect(() => {
     return reportsCollection.doc(reportId).onSnapshot(
       doc => {

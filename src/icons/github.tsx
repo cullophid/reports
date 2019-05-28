@@ -1,3 +1,4 @@
+import React from "react"
 export const Github = () => (
   <svg
     width="36"

@@ -1,8 +1,8 @@
 import React, { ReactNode, HTMLAttributes, KeyboardEvent } from "react"
 import styled from "@emotion/styled"
 import { keyframes } from "@emotion/core"
-import { Slide, SlideTextElement } from "../models"
-import { TextElement } from "./TextElement"
+import { SlideType, TextNodeType } from "../models"
+import { TextNode } from "./TextNode"
 import { navigate } from "gatsby"
 
 const SLIDE_HEIGHT = 720
@@ -23,7 +23,7 @@ export const SlideWrap = (props: SlideWrapProps) => {
 }
 
 type SlideProps = {
-  slide: Slide
+  slide: SlideType
   highlight?: boolean
   onPress?: () => void
   href?: string
@@ -40,7 +40,7 @@ export const SlideView = ({
   const navigateToHref = (
     e: React.MouseEvent<SVGElement> | KeyboardEvent<SVGElement>
   ) => {
-    e.metaKey || e.ctrlKey ? window.open(href, "_blank") : navigate(href)
+    e.metaKey || e.ctrlKey ? window.open(href, "_blank") : navigate(href || "#")
   }
   return (
     <SlideWrap
@@ -62,10 +62,10 @@ export const SlideView = ({
       }}
       {...rest}
     >
-      {slide.elements.map(element => {
-        switch (element.type) {
+      {slide.nodes.map(node => {
+        switch (node.type) {
           case "Text":
-            return <TextElement key={element.id} {...element} />
+            return <TextNode key={node.id} {...node} />
         }
       })}
     </SlideWrap>

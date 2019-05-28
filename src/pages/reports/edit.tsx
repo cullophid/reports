@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from "react"
-import { Report } from "../../models"
-import { reportsCollection } from "../../firestore"
-import { Page } from "../../components/Page"
+import { ReportType } from "src/models"
+import { reportsCollection } from "src/firestore"
+import { Page } from "src/components/Page"
 import { navigate } from "gatsby"
-import { Header } from "../../components/Header"
+import { Header } from "src/components/Header"
 import styled from "@emotion/styled"
-import { ReportEditor } from "../../components/ReportEditor"
+import { ReportEditor } from "src/components/ReportEditor"
 import qs from "qs"
-
+import { Remote } from "src/remote"
 type Props = {
   location: Location
-}
-
-type Remote<T> = {
-  data?: T
-  error?: Error
-  loading?: boolean
 }
 
 const Edit = (props: Props) => {
   const queryParams = qs.parse(props.location.hash.split("?")[1])
   const reportId = props.location.hash.split("?")[0].substring(1)
-  const [report, setReport] = useState<Remote<Report>>({ loading: true })
+  const [report, setReport] = useState<Remote<ReportType>>({ loading: true })
   useEffect(() => {
     return reportsCollection.doc(reportId).onSnapshot(
       doc => {
@@ -34,7 +28,7 @@ const Edit = (props: Props) => {
     )
   }, [reportId])
 
-  const updateReport = (report: Report) => {
+  const updateReport = (report: ReportType) => {
     reportsCollection.doc(report.id).set(report)
   }
 

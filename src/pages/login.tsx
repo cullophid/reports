@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react"
 import { navigate } from "gatsby"
 import styled from "@emotion/styled"
-import { Page } from "../components/Page"
-import firebase from "../firebase"
-import { Spinner } from "../components/Spinner"
-import { Alert } from "../components/Alert"
-import { Google } from "../icons/google"
-import { Github } from "../icons/github"
+import { Page } from "src/components/Page"
+import firebase from "src/firebase"
+import { Spinner } from "src/components/Spinner"
+import { Alert } from "src/components/Alert"
+import { Google } from "src/icons/google"
+import { Github } from "src/icons/github"
+import { Remote } from "src/remote"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 const githubProvider = new firebase.auth.GithubAuthProvider()
 
 const LoginPage = () => {
-  const [error, setError] = useState(undefined)
-  const [loading, setLoading] = useState(true)
+  const [response, setResponse] = useState<Remote<{}>>({})
   const login = (provider: firebase.auth.AuthProvider) => async () => {
     try {
-      setLoading(true)
-      const result = await firebase.auth().signInWithRedirect(provider)
+      setResponse({ loading: true })
+      await firebase.auth().signInWithRedirect(provider)
       navigate("/")
-    } catch (e) {
-      setError(e)
-    } finally {
-      setLoading(false)
+    } catch (error) {
+      setResponse({ error })
     }
   }
 
@@ -35,21 +33,20 @@ const LoginPage = () => {
         if (result.user) {
           navigate("/")
         } else {
-          setLoading(false)
+          setResponse({ loading: false })
         }
       })
       .catch(function(error) {
         console.error("Auth Error", error)
-        setError(error)
-        setLoading(false)
+        setResponse({ error })
       })
   }, [])
 
   return (
     <Page>
       <Layout>
-        {loading && <Spinner />}
-        {!loading && (
+        {response.loading && <Spinner />}
+        {!response.loading && (
           <>
             <Title>Sign In</Title>
             <LoginButton onClick={login(googleProvider)}>
@@ -68,7 +65,7 @@ const LoginPage = () => {
                 </LoginButtonLogoBg>
               </LoginButtonLayout>
             </LoginButton>
-            {error && <Alert> {error.message} </Alert>}
+            {response.error && <Alert> {response.error.message} </Alert>}
           </>
         )}
       </Layout>

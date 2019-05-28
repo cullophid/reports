@@ -1,27 +1,18 @@
 import React, { useState, useCallback, useEffect, useRef } from "react"
 import styled from "@emotion/styled"
-import { Report, Slide, Remote } from "../models"
-import { reportsCollection } from "../firestore"
+import { ReportType, SlideType } from "src/models"
+import { Remote } from "src/remote"
+import { reportsCollection } from "src/firestore"
 import { v4 as uuid } from "uuid"
 import { SlideView, SlideWrap, SlidePlaceholder } from "./Slide"
 import { NewSlideButton } from "./Button"
-import { TextElementEditor } from "./TextElement"
+import { TextNodeEditor } from "./TextNode"
 import { SlideTemplateModal } from "./SlideTemplateModal"
-import { keyframes } from "@emotion/core"
 import qs from "qs"
 
-const fadeIn = keyframes`
-from {
-  opacity:0;
-}
-to {
-  opacity: 1;
-}
-`
-
 type ReportEditorProps = {
-  report: Remote<Report>
-  updateReport: (report: Report) => void
+  report: Remote<ReportType>
+  updateReport: (report: ReportType) => void
   initialSlide?: string
 }
 
@@ -41,14 +32,14 @@ export const ReportEditor = ({
     (report.data.slides.find(slide => slide.id === selectedSlideId) ||
       report.data.slides[0])
 
-  const addSlide = async (slideTemplate: Slide) => {
-    if (!report) {
+  const addSlide = async (slideTemplate: SlideType) => {
+    if (!report.data) {
       return
     }
-    const slide = {
+    const slide: SlideType = {
       ...slideTemplate,
       id: uuid(),
-      elements: slideTemplate.elements.map(e => ({ ...e, id: uuid() })),
+      nodes: slideTemplate.nodes.map(e => ({ ...e, id: uuid() })),
     }
     await reportsCollection.doc(report.data.id).set({
       ...report.data,
@@ -71,21 +62,24 @@ export const ReportEditor = ({
     )
   })
 
-  const updateSlide = (slide: Slide) =>
+  const updateSlide = (slide: SlideType) => {
+    if (!report.data) {
+      return
+    }
+
     updateReport({
       ...report.data,
       slides: report.data.slides.map(current =>
         current.id === slide.id ? slide : current
       ),
     })
-
-  const slideListRef = useRef<HTMLUListElement>()
+  }
+  const slideListRef = useRef<HTMLUListElement>(null)
 
   const focusSlide = (i: number) => {
-    const child =
-      slideListRef.current &&
-      slideListRef.current.children.item(i) &&
-      slideListRef.current.children.item(i).querySelector("svg")
+    const listItem =
+      slideListRef.current && slideListRef.current.children.item(i)
+    const child = listItem && listItem.querySelector("svg")
     if (child) {
       child.focus()
     }
@@ -147,17 +141,17 @@ export const ReportEditor = ({
 }
 
 type SlideEditorProps = {
-  slide: Slide
-  onChange: (slide: Slide) => void
+  slide: SlideType
+  onChange: (slide: SlideType) => void
 }
 
 const SlideEditor = (props: SlideEditorProps) => {
   const updateElement = useCallback(
-    element =>
+    updatedNode =>
       props.onChange({
         ...props.slide,
-        elements: props.slide.elements.map(el =>
-          el.id === element.id ? element : el
+        nodes: props.slide.nodes.map(node =>
+          node.id === updatedNode.id ? updatedNode : node
         ),
       }),
     [props.onChange, props.slide]
@@ -165,14 +159,14 @@ const SlideEditor = (props: SlideEditorProps) => {
   return (
     <SlideEditorWrap>
       <SlideWrap>
-        {props.slide.elements.map(slideElement => {
-          if (slideElement.type === "Text") {
+        {props.slide.nodes.map(node => {
+          if (node.type === "Text") {
             return (
-              <TextElementEditor
-                key={slideElement.id}
-                {...slideElement}
+              <TextNodeEditor
+                key={node.id}
+                {...node}
                 onSaveText={value => {
-                  updateElement({ ...slideElement, value })
+                  updateElement({ ...node, value })
                 }}
               />
             )

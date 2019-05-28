@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react"
-import { Page } from "../../components/Page"
-import { Header } from "../../components/Header"
-import { SlideView, SlidePlaceholder } from "../../components/Slide"
+import { Page } from "src/components/Page"
+import { Header } from "src/components/Header"
+import { SlideView, SlidePlaceholder } from "src/components/Slide"
 import styled from "@emotion/styled"
-import { useSession } from "../../firebase"
-import { reportsCollection } from "../../firestore"
-import { Document } from "../../firebaseTypes"
+import { useSession } from "src/firebase"
+import { reportsCollection } from "src/firestore"
+import { Document } from "src/firebaseTypes"
 import { navigate } from "gatsby"
-import { Report, Remote } from "../../models"
-import { Button, NewSlideButton } from "../../components/Button"
+import { ReportType, SlideType } from "src/models"
+import { Remote } from "src/remote"
+import { Button, NewSlideButton } from "src/components/Button"
 import { v4 as uuid } from "uuid"
-import firebase from "firebase"
 
 const IndexPage = () => {
-  const [reports, setReports] = useState<Remote<Document<Report>[]>>({
+  const [reports, setReports] = useState<Remote<Document<ReportType>[]>>({
     loading: true,
   })
 
@@ -22,18 +22,21 @@ const IndexPage = () => {
     if (!user) return
     setReports({ loading: true })
     return reportsCollection
-      .where("owner", "==", firebase.auth().currentUser.uid)
+      .where("owner", "==", user.uid)
       .onSnapshot(snapShot => setReports({ data: snapShot.docs }))
   }, [user])
 
   const createReport = async () => {
     const id = uuid()
-    await reportsCollection.doc(id).set({
+    const newReport: ReportType = {
       id,
       title: "Untitled",
       owner: user!.uid,
       slides: [],
-    })
+    }
+    debugger
+
+    await reportsCollection.doc(id).set(newReport)
 
     navigate(`/reports/edit#${id}`)
   }
@@ -60,9 +63,9 @@ const IndexPage = () => {
               reports.data.length > 0 &&
               reports.data.map((report, i) => {
                 const reportData = report.data()!
-                const titleSlide = reportData.slides[0] || {
+                const titleSlide: SlideType = reportData.slides[0] || {
                   id: "",
-                  elements: [],
+                  nodes: [],
                 }
                 return (
                   <ReportView key={i}>

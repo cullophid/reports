@@ -7,9 +7,8 @@
   "dependencies": {
     "@emotion/core": "^10.0.9",
     "@emotion/styled": "^10.0.9",
-    "@reach/alert": "^0.1.5",
     "@reach/dialog": "^0.2.1",
-    "draft-js": "^0.10.5",
+    "@reach/alert": "^0.1.5",
     "firebase": "^5.8.6",
     "firebase-admin": "^7.3.0",
     "gatsby": "^2.1.30",
@@ -26,17 +25,13 @@
     "gatsby-source-filesystem": "^2.0.24",
     "gatsby-transformer-sharp": "^2.1.16",
     "lodash-es": "^4.17.11",
-    "prettier": "^1.16.4",
-    "prop-types": "^15.7.2",
     "qs": "^6.7.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-helmet": "^5.2.0",
-    "react-resize-aware": "^3.0.0-beta.3",
     "slate": "^0.45.0",
-    "slate-plain-serializer": "^0.6.38",
+    "slate-plain-serializer": "^0.6.39",
     "slate-react": "^0.21.20",
-    "typescript": "^3.4.5",
     "uuid": "^3.3.2"
   },
   "keywords": [
@@ -49,6 +44,7 @@
     "develop:firebase": "firebase serve",
     "format": "prettier --write src/**/*.{js,jsx}",
     "start": "npm run develop",
+    "typecheck": "tsc -w --noEmit",
     "serve": "gatsby serve",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
     "deploy": "firebase deploy"
@@ -63,10 +59,13 @@
   "devDependencies": {
     "@types/draft-js": "^0.10.30",
     "@types/lodash-es": "^4.14.123",
+    "@types/qs": "^6.5.3",
+    "@types/reach__alert": "^0.1.0",
     "@types/slate": "^0.44.2",
     "@types/slate-plain-serializer": "^0.6.1",
     "@types/slate-react": "^0.21.2",
     "@types/uuid": "^3.4.4",
-    "ts-node": "^8.1.0"
+    "prettier": "^1.16.4",
+    "typescript": "^3.4.5"
   }
 }

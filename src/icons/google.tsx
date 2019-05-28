@@ -1,3 +1,4 @@
+import React from "react"
 export const Google = () => (
   <svg
     width="36"

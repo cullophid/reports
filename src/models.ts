@@ -1,27 +1,27 @@
-export type Report = {
+export type ReportType = {
   id: string
   title: string
-  slides: Slide[]
+  slides: SlideType[]
   owner: string
 }
 
-export type Slide = {
+export type SlideType = {
   id: string
-  elements: SlideElement[]
+  nodes: NodeType[]
 }
 
-export type SlideTextElement = {
+export type TextNodeType = {
   id: string
   x: number
   y: number
   width: number
   type: "Text"
-  value: any
+  value: string
   fontSize: number
   textAlign: "left" | "right" | "center"
 }
 
-export type SlideChartElement = {
+export type ChartNodeType = {
   id: string
   x: number
   y: number
@@ -32,7 +32,7 @@ export type SlideChartElement = {
   query?: string
 }
 
-export type SlideElement = SlideChartElement | SlideTextElement
+export type NodeType = ChartNodeType | TextNodeType
 
 export type DataSource = {
   type: "MySQL"
@@ -41,10 +41,4 @@ export type DataSource = {
   user: string
   database: string
   owner: string
-}
-
-export type Remote<Data> = {
-  data?: Data
-  error?: Error
-  loading?: boolean
 }
