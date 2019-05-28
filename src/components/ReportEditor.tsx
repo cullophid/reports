@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react"
 import styled from "@emotion/styled"
-import { ReportType, SlideType } from "src/models"
+import { ReportType, SlideType, NodeType } from "src/models"
 import { Remote } from "src/remote"
 import { reportsCollection } from "src/firestore"
 import { v4 as uuid } from "uuid"
@@ -135,7 +135,6 @@ export const ReportEditor = ({
       {selectedSlide && (
         <SlideEditor slide={selectedSlide} onChange={updateSlide} />
       )}
-      <RightPanel />
     </ReportEditorLayout>
   )
 }
@@ -146,8 +145,8 @@ type SlideEditorProps = {
 }
 
 const SlideEditor = (props: SlideEditorProps) => {
-  const updateElement = useCallback(
-    updatedNode =>
+  const updateNode = useCallback(
+    (updatedNode: NodeType) =>
       props.onChange({
         ...props.slide,
         nodes: props.slide.nodes.map(node =>
@@ -166,7 +165,7 @@ const SlideEditor = (props: SlideEditorProps) => {
                 key={node.id}
                 {...node}
                 onSaveText={value => {
-                  updateElement({ ...node, value })
+                  updateNode({ ...node, value })
                 }}
               />
             )
@@ -180,24 +179,9 @@ const SlideEditor = (props: SlideEditorProps) => {
 const ReportEditorLayout = styled.div`
   display: grid;
   grid-template-columns: 260px 1fr;
-  grid-auto-columns: 200px;
-  grid-auto-flow: column;
-  align-items: stretch;
   overflow: hidden;
   @media (max-width: 750px) {
     grid-template-columns: 1fr;
-  }
-`
-
-const RightPanel = styled.aside`
-  background: white;
-  border-left: 1px solid #ddd;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  @media (max-width: 750px) {
-    display: none;
   }
 `
 

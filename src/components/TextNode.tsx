@@ -4,28 +4,31 @@ import { MarkdownEditor } from "./MarkdownEditor"
 import { EventHook } from "slate-react"
 
 export const TextNode = (props: TextNodeType) => {
-  return (
-    <foreignObject x={props.x} y={props.y} width={props.width} height={1280}>
-      <p>props.value</p>
-    </foreignObject>
-  )
+  return <TextNodeWrap {...props}>{props.value}</TextNodeWrap>
 }
 
 type TextEditorProps = TextNodeType & {
   onSaveText: (value: string) => void
-  onfocus?: EventHook
+  onFocus?: EventHook
   onBlur?: EventHook
 }
 
 export const TextNodeEditor = (props: TextEditorProps) => {
+  const { onFocus, onBlur, onSaveText, ...rest } = props
   return (
-    <foreignObject x={props.x} y={props.y} width={props.width} height={1280}>
+    <TextNodeWrap {...rest}>
       <MarkdownEditor
         initialValue={props.value}
-        onChange={props.onSaveText}
-        onFocus={props.onfocus}
-        onBlur={props.onBlur}
+        onChange={onSaveText}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
-    </foreignObject>
+    </TextNodeWrap>
   )
 }
+
+const TextNodeWrap = (props: TextNodeType & { children: React.ReactChild }) => (
+  <foreignObject x={props.x} y={props.y} width={props.width} height={1280}>
+    <div style={{ fontSize: props.fontSize }}>{props.children}</div>
+  </foreignObject>
+)

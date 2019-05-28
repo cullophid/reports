@@ -34,7 +34,6 @@ const IndexPage = () => {
       owner: user!.uid,
       slides: [],
     }
-    debugger
 
     await reportsCollection.doc(id).set(newReport)
 
