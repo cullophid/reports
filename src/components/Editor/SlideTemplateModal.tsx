@@ -1,12 +1,12 @@
 import React from "react"
-import { SlideType } from "../models"
+import { SlideType } from "src/models"
 // @ts-ignore
 import { Dialog } from "@reach/dialog"
-import { slideTemplates } from "../slide-templates"
-import { SlideView } from "./Slide"
+import { slideTemplates } from "src/slide-templates"
+import { SlideView } from "src/components/Slide"
 import styled from "@emotion/styled"
 import { Global, css, keyframes } from "@emotion/core"
-import { Button } from "./Button"
+import { Button } from "src/components/Button"
 
 type Props = {
   showDialog: boolean

@@ -1,26 +1,27 @@
 import React, { ReactNode, HTMLAttributes, KeyboardEvent } from "react"
 import styled from "@emotion/styled"
 import { keyframes } from "@emotion/core"
-import { SlideType, TextNodeType } from "../models"
+import { SlideType } from "../models"
 import { TextNode } from "./TextNode"
 import { navigate } from "gatsby"
 
-const SLIDE_HEIGHT = 720
-const SLIDE_WIDTH = 1280
-
 type SlideWrapProps = {
+  width: number
+  height: number
   children: ReactNode
 } & HTMLAttributes<SVGElement>
 
-export const SlideWrap = (props: SlideWrapProps) => {
+export const SlideWrap = React.forwardRef<any, SlideWrapProps>((props, ref) => {
+  const { width, height, ...rest } = props
   return (
     <SlideSVG
-      viewBox={`0 0 ${SLIDE_WIDTH} ${SLIDE_HEIGHT}`}
+      ref={ref}
+      viewBox={`0 0 ${props.width} ${props.height}`}
       preserveAspectRatio="xMidYMid meet"
-      {...props}
+      {...rest}
     />
   )
-}
+})
 
 type SlideProps = {
   slide: SlideType
@@ -44,6 +45,8 @@ export const SlideView = ({
   }
   return (
     <SlideWrap
+      width={slide.width}
+      height={slide.height}
       role={href ? "link" : (onClick || onPress) && "button"}
       tabIndex={rest.tabIndex || (onPress || href ? 0 : undefined)}
       onClick={e => {
@@ -77,7 +80,7 @@ export const SlidePlaceholder = ({
 }: {
   style?: React.CSSProperties
 }) => (
-  <SlideWrap style={style}>
+  <SlideWrap style={style} width={1280} height={720}>
     <TextPlaceholder x="100" y="100" width="1080" height="60" rx={5} ry={5} />
     <g transform="translate(100, 240)">
       <TextPlaceholder x="0" y="0" width="500" height="30" rx={5} ry={5} />
@@ -89,7 +92,7 @@ export const SlidePlaceholder = ({
     </g>
 
     <TextPlaceholder
-      x={SLIDE_WIDTH - 600}
+      x={1280 - 600}
       y="240"
       width="500"
       height="364"
@@ -114,7 +117,7 @@ to {
 const SlideSVG = styled.svg<{ highlight?: boolean }>`
   width: 100%;
   background: white;
-  box-shadow: 0 3px 10px #00000088;
+  box-shadow: 0 3px 8px #00000055;
   animation-name: ${fadeIn};
   animation-fill-mode: forwards;
   animation-duration: 500ms;

@@ -7,6 +7,8 @@ export type ReportType = {
 
 export type SlideType = {
   id: string
+  height: number
+  width: number
   nodes: NodeType[]
 }
 
@@ -15,6 +17,7 @@ export type TextNodeType = {
   x: number
   y: number
   width: number
+  height: number
   type: "Text"
   value: string
   fontSize: number

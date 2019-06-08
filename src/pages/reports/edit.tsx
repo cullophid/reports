@@ -5,7 +5,7 @@ import { Page } from "src/components/Page"
 import { navigate } from "gatsby"
 import { Header } from "src/components/Header"
 import styled from "@emotion/styled"
-import { ReportEditor } from "src/components/ReportEditor"
+import { ReportEditor } from "src/components/Editor/ReportEditor"
 import qs from "qs"
 import { Remote } from "src/remote"
 type Props = {
