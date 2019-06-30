@@ -3,8 +3,8 @@ import { ReportType } from "src/models"
 import { reportsCollection } from "src/firestore"
 import { Page } from "src/components/Page"
 import { navigate } from "gatsby"
-import { Header } from "src/components/Header"
 import styled from "@emotion/styled"
+import { css } from "@emotion/core"
 import { ReportEditor } from "src/components/Editor/ReportEditor"
 import qs from "qs"
 import { Remote } from "src/remote"
@@ -35,7 +35,16 @@ const Edit = (props: Props) => {
   return (
     <Page>
       <EditorLayout>
-        <Header title={report.data ? report.data.title : "..."} />
+        <Header>
+          <h1
+            css={css`
+              margin: 0;
+              font-size: 24px;
+            `}
+          >
+            {report.data ? report.data.title : "..."}
+          </h1>
+        </Header>
         <ReportEditor
           report={report}
           updateReport={updateReport}
@@ -58,4 +67,14 @@ const EditorLayout = styled.div`
     grid-row-gap: 32px;
     grid-template-columns: auto 1fr;
   }
+`
+
+const Header = styled.header`
+  height: 40px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+  display: grid;
+  align-content: center;
+  padding: 0 16px;
+  background: white;
 `

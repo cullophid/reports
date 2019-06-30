@@ -29,8 +29,9 @@ export const Header = ({ children, title }: HeaderProps) => {
 const HeaderEl = styled.header`
   height: 40px;
   width: 100%;
-  background: #373539;
-  color: white;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  color: #333;
   display: grid;
   padding: 0 32px;
   grid-template-columns: auto auto auto;
@@ -44,7 +45,7 @@ const HeaderEl = styled.header`
 `
 const HomeButton = styled(Link)`
   font-weight: 400;
-  color: white;
+  color: #333;
   font-size: 14px;
   text-transform: uppercase;
   font-weight: 600;
@@ -54,7 +55,7 @@ const HomeButton = styled(Link)`
   border-top: 2px solid transparent;
   &:hover,
   &:visited {
-    color: white;
+    color: #333;
   }
   &:focus {
     outline: none;

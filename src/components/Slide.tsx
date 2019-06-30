@@ -4,6 +4,7 @@ import { keyframes } from "@emotion/core"
 import { SlideType } from "../models"
 import { TextNode } from "./TextNode"
 import { navigate } from "gatsby"
+import { ChartNode } from "./ChartNode"
 
 type SlideWrapProps = {
   width: number
@@ -69,6 +70,8 @@ export const SlideView = ({
         switch (node.type) {
           case "Text":
             return <TextNode key={node.id} {...node} />
+          case "Chart":
+            return <ChartNode key={node.id} {...node} />
         }
       })}
     </SlideWrap>
