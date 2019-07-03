@@ -1,7 +1,7 @@
 import React from "react"
-import { Global, css } from "@emotion/core"
+import { createGlobalStyle, css } from "styled-components"
 
-const global = css`
+const Global = createGlobalStyle`
   @import url("https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600");
   @import url("https://fonts.googleapis.com/css?family=Indie+Flower");
   body {
@@ -33,7 +33,7 @@ type props = {
 
 export const Page = ({ children }: props) => (
   <>
-    <Global styles={global} />
+    <Global />
     {children}
   </>
 )

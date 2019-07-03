@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef, useReducer, Reducer } from "react"
-import styled from "@emotion/styled"
-import { ReportType, SlideType, NodeType, TextNodeType } from "src/models"
+import React, { useState, useEffect } from "react"
+import styled, { css } from "styled-components"
+import { ReportType, SlideType } from "src/models"
 import { Remote } from "src/remote"
 import { reportsCollection } from "src/firestore"
 import { v4 as uuid } from "uuid"
-import { SlideView, SlidePlaceholder } from "../Slide"
-import { SlideTemplateModal } from "./SlideTemplateModal"
+import { SlideTemplateModal } from "../SlideTemplateModal"
 import qs from "qs"
-import { EditorSelection, SelectionContext } from "./selection"
-import { SlideEditor, SlideEditorPlaceholder } from "./SlideEditor"
-import { TextField, AddBox } from "../Icon"
+import { AddBox } from "../Icon"
+import { MarkdownEditor } from "../MarkdownEditor"
+import { Slide } from "../Slide"
+import { TextNode } from "../TextNode"
 
 type ReportEditorProps = {
   report: Remote<ReportType>
@@ -22,7 +22,21 @@ export const ReportEditor = ({
   updateReport,
   initialSlide,
 }: ReportEditorProps) => {
-  const [selection, setSelection] = useState<EditorSelection>(undefined)
+  useEffect(() => {
+    if (!report.data) {
+      return
+    }
+    history.replaceState(
+      {},
+      "edit report",
+      `${window.location.pathname}#${report.data.id}?${qs.stringify({
+        slide: selectedSlideId,
+      })}`
+    )
+  })
+
+  const [selection, setSelection] = useState<string | undefined>(undefined)
+
   const [selectedSlideId, setSelectedSlideId] = useState<string | undefined>(
     initialSlide ||
       (report.data && report.data.slides[0] && report.data.slides[0].id)
@@ -51,19 +65,6 @@ export const ReportEditor = ({
     setSelectSlideTemplate(false)
   }
 
-  useEffect(() => {
-    if (!report.data) {
-      return
-    }
-    history.replaceState(
-      {},
-      "edit report",
-      `${window.location.pathname}#${report.data.id}?${qs.stringify({
-        slide: selectedSlideId,
-      })}`
-    )
-  })
-
   const updateSlide = (slide: SlideType) => {
     if (!report.data) {
       return
@@ -75,50 +76,15 @@ export const ReportEditor = ({
       ),
     })
   }
-  const slideListRef = useRef<HTMLUListElement>(null)
 
-  const focusSlide = (i: number) => {
-    const listItem =
-      slideListRef.current && slideListRef.current.children.item(i)
-    const child = listItem && listItem.querySelector("svg")
-    if (child) {
-      child.focus()
-    }
-  }
   return (
-    <SelectionContext.Provider value={[selection, setSelection]}>
-      <ReportEditorLayout>
-        <SlideTemplateModal
-          showDialog={selectSlideTemplate}
-          onDismiss={() => setSelectSlideTemplate(false)}
-          onSelect={addSlide}
-        />
-        <SlideList ref={slideListRef}>
-          {!report.data &&
-            [1, 2, 3, 4, 5, 6].map((_, i) => (
-              <SlideLi key={i}>
-                <SlidePlaceholder />
-              </SlideLi>
-            ))}
-          {report.data &&
-            report.data.slides.map((slide, i) => (
-              <SlideLi key={slide.id}>
-                <SlideView
-                  tabIndex={i === 0 ? 0 : -1}
-                  onPress={() => setSelectedSlideId(slide.id)}
-                  onKeyDown={e => {
-                    switch (e.key) {
-                      case "ArrowDown":
-                        return focusSlide(i + 1)
-                      case "ArrowUp":
-                        return focusSlide(i - 1)
-                    }
-                  }}
-                  slide={slide}
-                />
-              </SlideLi>
-            ))}
-        </SlideList>
+    <>
+      <div
+        css={css`
+          display: grid;
+          grid-template-rows: auto 1fr;
+        `}
+      >
         <Toolbar>
           <ToolbarButton
             onClick={() => setSelectSlideTemplate(true)}
@@ -133,28 +99,59 @@ export const ReportEditor = ({
           </ToolbarButton>
           <ToolbarSeparator />
         </Toolbar>
-        {report.loading && <SlideEditorPlaceholder />}
         {selectedSlide && (
-          <SlideEditor slide={selectedSlide} onChange={updateSlide} />
+          <div
+            css={css`
+              padding: 64px;
+            `}
+          >
+            <Slide width={selectedSlide.width} height={selectedSlide.height}>
+              {selectedSlide.nodes.map(node => {
+                switch (node.type) {
+                  case "Text": {
+                    return (
+                      <TextNode {...node} key={node.id}>
+                        <MarkdownEditor
+                          onFocus={() => setSelection(node.id)}
+                          onBlur={() =>
+                            setSelection(s => (s == node.id ? undefined : s))
+                          }
+                          initialValue={node.value}
+                          onChange={value => {
+                            console.log(value)
+                            updateSlide({
+                              ...selectedSlide,
+                              nodes: selectedSlide.nodes.map(n =>
+                                n.id == node.id ? { ...node, value } : n
+                              ),
+                            })
+                          }}
+                        />
+                        {node.value}
+                      </TextNode>
+                    )
+                  }
+                }
+              })}
+            </Slide>
+          </div>
         )}
-      </ReportEditorLayout>
-    </SelectionContext.Provider>
+      </div>
+      <SlideTemplateModal
+        showDialog={selectSlideTemplate}
+        onDismiss={() => setSelectSlideTemplate(false)}
+        onSelect={addSlide}
+      />
+    </>
   )
 }
 
-const newTextNode = (): TextNodeType => ({
-  id: uuid(),
-  fontSize: 64,
-  textAlign: "left",
-  type: "Text",
-  value: "hello",
-  width: 1080,
-  height: 80,
-  x: 100,
-  y: 360,
-})
+type SlideEditorProps = {
+  children?: React.ReactNode
+  slide: SlideType
+}
+
 const Toolbar = styled.div`
-  grid-area: toolbar;
   height: 60px;
   background: white;
   border-bottom: 1px solid #ddd;
@@ -176,54 +173,4 @@ const ToolbarSeparator = styled.div`
   height: 32px;
   background: #ddd;
   padding: 0;
-`
-
-const ReportEditorLayout = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 260px 1fr;
-  grid-template-areas:
-    "toolbar toolbar"
-    "slideList slideEditor";
-  overflow: hidden;
-  @media (max-width: 750px) {
-    grid-template-columns: 1fr;
-  }
-`
-
-const SlideList = styled.ul`
-  grid-area: slideList;
-  background: #fff;
-  border-right: 1px solid #ddd;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  margin: 0;
-  padding: 32px;
-  display: grid;
-  grid-auto-flow: row;
-  grid-template-columns: 100%;
-  grid-gap: 32px;
-  justify-items: stretch;
-  align-content: start;
-  @media (max-width: 500px) {
-    width: 100%;
-    grid-auto-flow: column;
-    grid-template-columns: auto;
-    grid-gap: 32px;
-    align-items: center;
-    justify-content: start;
-  }
-`
-
-const SlideLi = styled.li`
-  display: block;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  @media (max-width: 500px) {
-    width: 150px;
-  }
 `

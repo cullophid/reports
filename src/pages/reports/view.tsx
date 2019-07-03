@@ -4,15 +4,26 @@ import { reportsCollection } from "src/firestore"
 import { Page } from "src/components/Page"
 import { navigate } from "gatsby"
 import { Header } from "src/components/Header"
-import styled from "@emotion/styled"
+import styled from "styled-components"
 import { Remote } from "src/remote"
-import { SlideView, SlidePlaceholder } from "src/components/Slide"
 import { Link } from "gatsby"
 import { buttonStyle } from "src/components/Button"
+import { Slide } from "src/components/Slide"
+import { TextNode } from "src/components/TextNode"
+import { css, keyframes } from "styled-components"
 
 type Props = {
   location: Location
 }
+
+const fadeIn = keyframes`
+from {
+  opacity:0;
+}
+to {
+  opacity:1;
+}
+`
 
 const View = (props: Props) => {
   const reportId = props.location.hash.split("?")[0].substring(1)
@@ -40,17 +51,16 @@ const View = (props: Props) => {
           <EditLink to={`/reports/edit#${reportId}`}>EDIT</EditLink>
         </Actions>
         <SlideList>
-          {!report.data &&
-            [1, 2, 3].map(i => (
-              <SlideLi key={i}>
-                <SlidePlaceholder />
-              </SlideLi>
-            ))}
           {report.data &&
-            report.data.slides.map(slide => (
-              <SlideLi key={slide.id}>
-                <SlideView slide={slide} />
-              </SlideLi>
+            report.data.slides.map((slide, i) => (
+              <Slide key={i} width={slide.width} height={slide.height}>
+                {slide.nodes.map(node => {
+                  switch (node.type) {
+                    case "Text":
+                      return <TextNode {...node}>{node.value}</TextNode>
+                  }
+                })}
+              </Slide>
             ))}
         </SlideList>
       </ViewLayout>
@@ -85,15 +95,7 @@ const Actions = styled.nav`
   padding: 0 32px;
 `
 
-const SlideLi = styled.li`
-  list-style-type: none;
-  @media print {
-    page-break-inside: avoid;
-    page-break-after: always;
-  }
-`
-
-const SlideList = styled.ul`
+const SlideList = styled.div`
   margin: 0;
   padding: 0 15%;
   display: grid;

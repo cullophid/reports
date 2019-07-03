@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { navigate } from "gatsby"
-import styled from "@emotion/styled"
+import styled from "styled-components"
 import { Page } from "src/components/Page"
 import firebase from "src/firebase"
 import { Spinner } from "src/components/Spinner"

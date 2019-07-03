@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react"
 import { Page } from "src/components/Page"
 import { Header } from "src/components/Header"
-import { SlideView, SlidePlaceholder } from "src/components/Slide"
-import styled from "@emotion/styled"
+import styled from "styled-components"
 import { useSession } from "src/firebase"
 import { reportsCollection } from "src/firestore"
 import { Document } from "src/firebaseTypes"
-import { navigate } from "gatsby"
+import { navigate, Link } from "gatsby"
 import { ReportType, SlideType } from "src/models"
 import { Remote } from "src/remote"
-import { Button, NewSlideButton } from "src/components/Button"
+import { Button } from "src/components/Button"
 import { v4 as uuid } from "uuid"
+import { Slide } from "src/components/Slide"
+import { TextNode } from "src/components/TextNode"
 
 const IndexPage = () => {
   const [reports, setReports] = useState<Remote<Document<ReportType>[]>>({
@@ -68,24 +69,26 @@ const IndexPage = () => {
                 }
                 return (
                   <ReportView key={i}>
-                    <SlideView
-                      href={`/reports/view#${reportData.id}`}
-                      slide={titleSlide}
-                    />
+                    <Link to={`/reports/view#${reportData.id}`}>
+                      <Slide
+                        width={titleSlide.width}
+                        height={titleSlide.height}
+                      >
+                        {titleSlide.nodes.map(node => {
+                          switch (node.type) {
+                            case "Text":
+                              return <TextNode {...node}>{node.value}</TextNode>
+                          }
+                        })}
+                      </Slide>
+                    </Link>
                   </ReportView>
                 )
               })}
             {reports.data && reports.data.length > 0 && (
-              <ReportView key={"NEW"}>
-                <NewSlideButton onClick={createReport} />
-              </ReportView>
+              <ReportView key={"NEW"} />
             )}
-            {reports.loading &&
-              [0, 1, 2].map((_, i) => (
-                <ReportView key={i}>
-                  <SlidePlaceholder />
-                </ReportView>
-              ))}
+            {reports.loading && [0, 1, 2].map((_, i) => <ReportView key={i} />)}
           </ReportList>
         </Main>
       </Layout>

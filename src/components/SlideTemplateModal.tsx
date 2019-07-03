@@ -3,9 +3,8 @@ import { SlideType } from "src/models"
 // @ts-ignore
 import { Dialog } from "@reach/dialog"
 import { slideTemplates } from "src/slide-templates"
-import { SlideView } from "src/components/Slide"
-import styled from "@emotion/styled"
-import { Global, css, keyframes } from "@emotion/core"
+import styled from "styled-components"
+import { createGlobalStyle, css, keyframes } from "styled-components"
 import { Button } from "src/components/Button"
 
 type Props = {
@@ -16,7 +15,7 @@ type Props = {
 export const SlideTemplateModal = (props: Props) => {
   return (
     <>
-      <Global styles={modalStyles} />
+      <Global />
       <Dialog isOpen={props.showDialog}>
         <Header>
           <Title> Select Template</Title>
@@ -24,12 +23,7 @@ export const SlideTemplateModal = (props: Props) => {
         </Header>
         <TemplateList>
           {slideTemplates.map(template => (
-            <SlideLi key={template.id}>
-              <SlideView
-                slide={template}
-                onPress={() => props.onSelect(template)}
-              />
-            </SlideLi>
+            <SlideLi key={template.id} />
           ))}
         </TemplateList>
       </Dialog>
@@ -55,7 +49,7 @@ to {
 }
 `
 
-const modalStyles = css`
+const Global = createGlobalStyle`
   :root {
     --reach-dialog: 1;
   }
