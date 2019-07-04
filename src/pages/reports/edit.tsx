@@ -12,6 +12,7 @@ import { AddBox } from "src/components/Icon"
 import { MarkdownEditor } from "src/components/MarkdownEditor"
 import { Slide } from "src/components/Slide"
 import { TextNode } from "src/components/TextNode"
+import { primaryColor } from "src/theme"
 
 type Props = {
   location: Location
@@ -81,25 +82,35 @@ const Edit = (props: Props) => {
       ),
     })
   }
-  console.log({ selection })
 
   return (
     <Page>
       <EditorLayout>
-        <Toolbar>
-          <ToolbarButton
-            onClick={() => setSelectSlideTemplate(true)}
-            onKeyPress={e => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault()
-                setSelectSlideTemplate(true)
-              }
-            }}
-          >
-            <AddBox color="#333" size={32} />
-          </ToolbarButton>
-          <ToolbarSeparator />
-        </Toolbar>
+        <SideBar>
+          <SlideList>
+            {report.data &&
+              report.data.slides.map(slide => (
+                <SlideListItem
+                  key={slide.id}
+                  highlighted={selectedSlideId === slide.id}
+                  onClick={() => setSelectedSlideId(slide.id)}
+                >
+                  <Slide
+                    key={slide.id}
+                    width={slide.width}
+                    height={slide.height}
+                  >
+                    {slide.nodes.map(node => {
+                      switch (node.type) {
+                        case "Text":
+                          return <TextNode {...node}>{node.value}</TextNode>
+                      }
+                    })}
+                  </Slide>
+                </SlideListItem>
+              ))}
+          </SlideList>
+        </SideBar>
         {selectedSlide && (
           <Stage>
             <Slide width={selectedSlide.width} height={selectedSlide.height}>
@@ -139,6 +150,28 @@ const Edit = (props: Props) => {
   )
 }
 
+const SideBar = styled.aside`
+  width: 200px;
+  border-right: 1px solid #ddd;
+  background: white;
+
+  padding: 32px 0;
+`
+
+const SlideList = styled.ul`
+  display: grid;
+  display: grid;
+  grid-auto-flow: row;
+  align-content: start;
+  padding: 0;
+`
+const SlideListItem = styled.li<{ highlighted: boolean }>`
+  list-style-type: none;
+  padding: 8px 16px;
+  background: ${p => (p.highlighted ? primaryColor : "none")};
+  cursor: pointer;
+`
+
 export default Edit
 
 const Stage = styled.div`
@@ -148,7 +181,8 @@ const Stage = styled.div`
 const EditorLayout = styled.div`
   height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  align-content: stretch;
 `
 
 const Toolbar = styled.div`

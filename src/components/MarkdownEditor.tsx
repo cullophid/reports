@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styled, { css } from "styled-components"
-import { Editor, EditorState } from "draft-js"
+import { Editor, EditorState, ContentState, convertToRaw } from "draft-js"
 import { useDebounce } from "src/hooks/useDebounce"
 import { primaryColor } from "src/theme"
 import "draft-js/dist/Draft.css"
@@ -14,11 +14,16 @@ type PropType = {
 
 export const MarkdownEditor = (props: PropType) => {
   const { initialValue, onChange, ...rest } = props
-  const [value, setValue] = useState(EditorState.createEmpty())
+  const [value, setValue] = useState(
+    EditorState.createWithContent(ContentState.createFromText(initialValue))
+  )
   const debouncedValue = useDebounce(value)
 
   useEffect(() => {
-    props.onChange(debouncedValue.toString())
+    const textValue = convertToRaw(debouncedValue.getCurrentContent())
+      .blocks.map(({ text }) => text)
+      .join("\n")
+    props.onChange(textValue)
   }, [debouncedValue])
 
   return (
