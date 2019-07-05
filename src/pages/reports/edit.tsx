@@ -8,7 +8,6 @@ import { reportsCollection } from "src/firestore"
 import { v4 as uuid } from "uuid"
 import { SlideTemplateModal } from "src/components/SlideTemplateModal"
 import qs from "qs"
-import { AddBox } from "src/components/Icon"
 import { MarkdownEditor } from "src/components/MarkdownEditor"
 import { Slide } from "src/components/Slide"
 import { TextNode } from "src/components/TextNode"
@@ -20,34 +19,34 @@ type Props = {
 
 const Edit = (props: Props) => {
   const queryParams = qs.parse(props.location.hash.split("?")[1])
-  const initialSlide = queryParams.slide as string
   const reportId = props.location.hash.split("?")[0].substring(1)
   const [report, setReport] = useState<Remote<ReportType>>({ loading: true })
 
   const [selection, setSelection] = useState<string | undefined>(undefined)
 
-  const [selectedSlideId, setSelectedSlideId] = useState<string | undefined>(
-    initialSlide ||
-      (report.data && report.data.slides[0] && report.data.slides[0].id)
+  const [selectedSlide, setSelectedSlide] = useState<SlideType | undefined>(
+    undefined
   )
+  useEffect(() => {
+    if (report.data && selectedSlide === undefined) {
+      setSelectedSlide(
+        report.data.slides.find(slide => slide.id === queryParams.slide)
+      )
+    }
+  }, [report])
   const [selectSlideTemplate, setSelectSlideTemplate] = useState(false)
 
-  const selectedSlide =
-    report.data &&
-    (report.data.slides.find(slide => slide.id === selectedSlideId) ||
-      report.data.slides[0])
   useEffect(() => {
-    if (!report.data) {
-      return
+    if (report.data && selectedSlide) {
+      history.replaceState(
+        {},
+        "edit report",
+        `${window.location.pathname}#${report.data.id}?${qs.stringify({
+          slide: selectedSlide.id,
+        })}`
+      )
     }
-    history.replaceState(
-      {},
-      "edit report",
-      `${window.location.pathname}#${report.data.id}?${qs.stringify({
-        slide: selectedSlideId,
-      })}`
-    )
-  })
+  }, [selectedSlide])
 
   useEffect(() => {
     return reportsCollection.doc(reportId).onSnapshot(
@@ -168,8 +167,9 @@ const SlideList = styled.ul`
 const SlideListItem = styled.li<{ highlighted: boolean }>`
   list-style-type: none;
   padding: 8px 16px;
-  background: ${p => (p.highlighted ? primaryColor : "none")};
+  background-color: ${p => (p.highlighted ? primaryColor : "none")};
   cursor: pointer;
+  transition: background-color 200ms;
 `
 
 export default Edit
