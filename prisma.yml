@@ -2,7 +2,7 @@ port: 4466
 databases:
   default:
     connector: postgres
-    host: postgres.render.com
+    host: dpg-bkf3gc360hne8rq2ihtg
     database: reports
     schema: public
     user: reports_user
