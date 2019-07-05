@@ -1,10 +1,15 @@
 port: 4466
-databases:
-  default:
-    connector: postgres
-    host: postgres.render.com
-    port: 5432
-    user: reports_user
-    password: WHT399VNBZ
-    migrations: true
-#
+  # uncomment the next line and provide the env var PRISMA_MANAGEMENT_API_SECRET=my-secret to activate cluster security
+  # managementApiSecret: my-secret
+  databases:
+    default:
+      connector: postgres
+      host: postgres.render.com
+      database: reports
+      schema: public
+      user: reports_user
+      password: WHT399VNBZ
+      ssl: true
+      rawAccess: true
+      port: '5432'
+      migrations: true
