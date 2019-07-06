@@ -1,0 +1,97 @@
+type Query {
+  reports: [Report]!
+}
+
+type Mutation {
+  createReport(data: ReportCreateInput!): Report
+  updateReport(data: ReportUpdateInput!): Report
+}
+
+type Report {
+  id: ID!
+  title: String!
+  owner: ID!
+  slides: [Slide!]!
+  width: Int!
+  height: Int!
+}
+
+input ReportCreateInput {
+  title: String!
+  width: Int!
+  height: Int!
+  owner: ID!
+  slides: [SlideCreateInput!]
+}
+
+input ReportUpdateInput {
+  id: ID!
+  title: String
+  width: Int
+  height: Int
+  slides: [SlideUpdateInput!]
+}
+
+type Slide {
+  report: Report!
+  id: ID!
+  textNodes: [TextNode!]!
+  chartNodes: [ChartNode!]!
+}
+
+input SlideCreateInput {
+  textNodes: [TextNodeCreateInput!]
+  chartNodes: [ChartNodeCreateInput!]
+}
+
+input SlideUpdateInput {
+  id: ID!
+  textNodes: [TextNodeCreateInput!]
+  chartNodes: [ChartNodeCreateInput!]
+}
+
+type TextNode {
+  id: ID!
+  fontSize: Int!
+  color: String!
+  textAlign: TextAlign!
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+  value: String!
+}
+
+input TextNodeCreateInput {
+  fontSize: Int!
+  color: String!
+  textAlign: TextAlign!
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+  value: String!
+}
+
+enum TextAlign {
+  Left
+  Right
+  Center
+}
+
+type ChartNode {
+  id: ID!
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+  query: String!
+}
+
+input ChartNodeCreateInput {
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+  query: String!
+}

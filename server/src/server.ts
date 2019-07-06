@@ -1,51 +1,36 @@
 import { ApolloServer, gql } from "apollo-server";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES,
-  ssl: true
-});
+import fs from "fs";
+import Path from "path";
+import { Resolvers } from "./generated/graphql";
+import { prisma } from "./generated/prisma-client";
+import { Query } from "./resolvers/Query";
+import { Mutation } from "./resolvers/Mutation";
+import { Report } from "./resolvers/Report";
+import { Slide } from "./resolvers/Slide";
+import { TextNode } from "./resolvers/TextNode";
+import { ChartNode } from "./resolvers/ChartNode";
 
 const typeDefs = gql`
-  type Query {
-    reports: [Report]!
-  }
-
-  type Mutation {
-    createReport(report: ReportCreate): Report
-  }
-
-  type Report {
-    id: ID!
-  }
-
-  input ReportCreate {
-    title: String!
-  }
+  ${fs
+    .readFileSync(Path.join(__dirname, "../schema.graphql"))
+    .toString("utf-8")}
 `;
 
-const resolvers = {
-  Query: {
-    reports: async ({}, {}, ctx: any) => {
-      const res = await ctx.db.query("SELECT * FROM reports");
-      return res.rows;
-    }
-  },
-  Mutation: {
-    createReport: async ({}, { report }: any, ctx: any) => {
-      const keys = Object.keys(report);
-      const res = await ctx.db.query("INSERT into reports  ");
-      return res.rows;
-    }
-  }
+const resolvers: Resolvers = {
+  Query,
+  Mutation,
+  Report,
+  Slide,
+  TextNode,
+  ChartNode
 };
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
+  resolvers: resolvers as any,
   rootValue: {},
   context: () => {
     return {
-      db: pool
+      prisma
     };
   }
 });

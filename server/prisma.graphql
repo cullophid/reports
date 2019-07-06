@@ -1,0 +1,44 @@
+type Report {
+  id: ID! @id
+  title: String!
+  owner: ID!
+  width: Int!
+  height: Int!
+  slides: [Slide!]!
+}
+
+type Slide {
+  report: Report! @relation(link: INLINE)
+  id: ID! @id
+  textNodes: [TextNode!]!
+  chartNodes: [ChartNode!]!
+}
+
+type TextNode {
+  id: ID! @id
+  slide: Slide! @relation(link: INLINE)
+  fontSize: Int!
+  color: String!
+  textAlign: TextAlign!
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+  value: String!
+}
+
+type ChartNode {
+  id: ID! @id
+  slide: Slide! @relation(link: INLINE)
+  x: Int!
+  y: Int!
+  width: Int!
+  height: Int!
+  query: String!
+}
+
+enum TextAlign {
+  Left
+  Right
+  Center
+}

@@ -1,0 +1,15 @@
+overwrite: true
+schema: "schema.graphql"
+generates:
+  src/generated/graphql.ts:
+    config:
+      contextType: ../types#Context
+      avoidOptionals: true
+      mappers:
+        Report: ./prisma-client#Report
+        Slide: ./prisma-client#Slide
+        TextNode: ./prisma-client#TextNode
+        TextAlign: ./prisma-client#TextAlign
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
