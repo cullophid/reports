@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --no-notify -- src/server.ts",
     "codegen": "prisma generate && graphql-codegen --config codegen.yml",
-    "build": " prisma deploy -p prisma.prod.yml && npm run codegen && tsc",
+    "build": "PRISMA_MANAGEMENT_API_SECRET=andreas prisma deploy -p prisma.prod.yml && npm run codegen && tsc",
     "start": "node dist/server.js"
   },
   "author": "",

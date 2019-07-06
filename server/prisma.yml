@@ -4,3 +4,5 @@ datamodel: prisma.graphql
 generate:
   - generator: typescript-client
     output: ./src/generated/prisma-client/
+
+secret: SHHHHHH
