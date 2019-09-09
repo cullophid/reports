@@ -1,68 +1,26 @@
 {
-  "name": "@oolon/reports",
-  "private": true,
-  "description": "Reports",
-  "version": "0.1.0",
-  "author": "Andreas Møller <andreas.moller@gmail.com>",
-  "dependencies": {
-    "@reach/alert": "^0.1.5",
-    "@reach/dialog": "^0.2.1",
-    "draft-js": "^0.10.5",
-    "firebase": "^5.8.6",
-    "firebase-admin": "^7.3.0",
-    "gatsby": "^2.1.30",
-    "gatsby-image": "^2.0.32",
-    "gatsby-plugin-manifest": "^2.0.23",
-    "gatsby-plugin-offline": "^2.0.25",
-    "gatsby-plugin-react-helmet": "^3.0.12",
-    "gatsby-plugin-react-svg": "^2.1.0",
-    "gatsby-plugin-sharp": "^2.0.32",
-    "gatsby-plugin-styled-components": "^3.1.0",
-    "gatsby-plugin-svg-sprite": "^2.0.1",
-    "gatsby-plugin-typescript": "^2.0.13",
-    "gatsby-plugin-typescript-checker": "^1.0.3",
-    "gatsby-source-filesystem": "^2.0.24",
-    "gatsby-transformer-sharp": "^2.1.16",
-    "lodash-es": "^4.17.11",
-    "qs": "^6.7.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-draggable": "^3.3.0",
-    "react-helmet": "^5.2.0",
-    "react-resize-aware": "^3.0.0-beta.3",
-    "styled-components": "^4.3.2",
-    "uuid": "^3.3.2"
-  },
-  "keywords": [
-    "gatsby"
-  ],
+  "name": "next",
+  "version": "1.0.0",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "gatsby build",
-    "develop": "gatsby develop",
-    "develop:firebase": "firebase serve",
-    "format": "prettier --write src/**/*.{js,jsx}",
-    "start": "npm run develop",
-    "typecheck": "tsc -w --noEmit",
-    "serve": "gatsby serve",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
-    "deploy": "firebase deploy"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  "dependencies": {
+    "@types/styled-system": "^5.1.1",
+    "next": "^9.0.5",
+    "prisma2": "^2.0.0-preview-10",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "styled-components": "^4.3.2",
+    "styled-system": "^5.1.1"
   },
   "devDependencies": {
-    "@types/draft-js": "^0.10.30",
-    "@types/lodash-es": "^4.14.123",
-    "@types/qs": "^6.5.3",
-    "@types/reach__alert": "^0.1.0",
-    "@types/styled-components": "^4.1.16",
-    "@types/uuid": "^3.4.4",
-    "prettier": "^1.16.4",
-    "typescript": "^3.4.5"
+    "@types/node": "^12.7.4",
+    "@types/react": "^16.9.2",
+    "@types/styled-components": "^4.1.19",
+    "typescript": "^3.6.2"
   }
 }
