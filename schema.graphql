@@ -1,0 +1,13 @@
+scalar Date
+
+type Query {
+  users: [User!]!
+}
+
+type User {
+  id:ID!
+  createdAt:Date!
+  email:String!
+  firstName:String!
+  lastName:String!
+}
