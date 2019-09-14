@@ -1,0 +1,11 @@
+{
+  "version": "0.2.36",
+  "steps": [
+    {
+      "stepType": "UpdateField",
+      "model": "Node",
+      "name": "slide",
+      "arity": "optional"
+    }
+  ]
+}

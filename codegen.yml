@@ -1,11 +1,24 @@
 schema: schema.graphql
 documents: null
 generates:
-  ./node_modules/@generated/graphql.ts:
+  ./client/codegen/graphql.ts:
+    documents: "client/**/*.graphql"
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo:
+          withHooks: true
+          withHOC: false
+          withComponent: false
+
+  ./server/codegen/graphql.ts:
     plugins:
       - typescript
       - typescript-resolvers:
-        avoidOptionals: true
-        contextType: ../../pages/api/graphql#Context
-        mappers:
-          User: ./photon#User
+          avoidOptionals: true
+          contextType: ../../pages/api/graphql#Context
+          scalars:
+            Date: Date
+          mappers:
+            User: "@generated/photon#User"
+            Report: "@generated/photon#Report"

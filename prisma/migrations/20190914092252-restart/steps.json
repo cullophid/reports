@@ -1,0 +1,26 @@
+{
+  "version": "0.2.36",
+  "steps": [
+    {
+      "stepType": "DeleteModel",
+      "name": "Node"
+    },
+    {
+      "stepType": "DeleteModel",
+      "name": "NodeChart"
+    },
+    {
+      "stepType": "DeleteModel",
+      "name": "Slide"
+    },
+    {
+      "stepType": "DeleteField",
+      "model": "Report",
+      "name": "slides"
+    },
+    {
+      "stepType": "DeleteEnum",
+      "name": "NodeType"
+    }
+  ]
+}

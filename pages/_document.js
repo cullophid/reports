@@ -26,6 +26,9 @@ export default class MyDocument extends Document {
                     {/* Step 5: Output the styles in the head  */}
                     {this.props.styleTags}
                     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap" rel="stylesheet"></link>
+                    <script src="https://apis.google.com/js/platform.js" async defer></script>
+                    <meta name="google-signin-client_id" content="286867092487-igml1mm8o3aoqku5tfvhblffh3ebfp2f.apps.googleusercontent.com"></meta>
+
                 </Head>
                 <body>
                     <Main />

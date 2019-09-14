@@ -1,0 +1,25 @@
+{
+  "version": "0.2.36",
+  "steps": [
+    {
+      "stepType": "CreateField",
+      "model": "User",
+      "name": "reports",
+      "type": {
+        "Relation": {
+          "to": "Report",
+          "to_fields": [],
+          "name": "ReportToUser",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "DeleteField",
+      "model": "User",
+      "name": "report"
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 import React from 'react'
 import App from 'next/app'
-import { ThemeProvider, createGlobalStyle } from 'styled-components'
-import { theme } from '../src/theme'
+import { createGlobalStyle, ThemeProvider } from "styled-components"
+import { theme } from "../client/theme"
+import { Apollo } from "../client/components/Apollo"
+
+
 const Global = createGlobalStyle`
   html, body, #__next {
     margin:0;
@@ -25,13 +28,16 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props
     return (
-      <ThemeProvider theme={theme}>
-        <>
-          <Global />
-          <Component {...pageProps} />
-        </>
-      </ThemeProvider>
+      < Apollo >
+        <ThemeProvider theme={theme}>
+          <>
+            <Global />
+            <Component {...pageProps} />
+          </>
+        </ThemeProvider>
+      </Apollo >
     )
+
   }
 }
 

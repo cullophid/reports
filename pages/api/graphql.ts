@@ -1,10 +1,19 @@
 import { ApolloServer } from 'apollo-server-micro'
 import typeDefs from "../../schema.graphql"
-import { Resolvers } from "@generated/graphql"
+
+import { photon } from "../../server/helpers/photon"
+import { resolvers } from "../../server/resolvers"
 import Photon from '@generated/photon'
+import { MicroRequest } from 'apollo-server-micro/dist/types'
+import { verifyAuthToken, AuthToken } from '../../server/helpers/jwt'
 
 export type Context = {
-  photon: Photon
+  photon: Photon,
+  session: Session
+}
+
+type Session = {
+  user?: AuthToken
 }
 
 export const config = {
@@ -13,20 +22,21 @@ export const config = {
   }
 };
 
-const resolvers: Resolvers = {
-  Query: {
-    users: (_, { }, { photon }) => photon.users.findMany()
-  },
-};
-
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => {
-    const photon = new Photon()
-    photon.connect();
+  context: async ({ req }: { req: MicroRequest }) => {
+    let session: Session = {}
+    console.log(Object.keys(req))
+    if (req.headers.authorization) {
+      const auth_token = req.headers.authorization.split(/\s/)[1]
+      if (auth_token) {
+        session.user = await verifyAuthToken(auth_token)
+      }
+    }
     return {
-      photon
+      photon,
+      session
     }
   }
 });

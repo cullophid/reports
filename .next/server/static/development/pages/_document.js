@@ -1164,22 +1164,39 @@ class MyDocument extends next_document__WEBPACK_IMPORTED_MODULE_3___default.a {
         lineNumber: 28
       },
       __self: this
-    })), __jsx("body", {
+    }), __jsx("script", {
+      src: "https://apis.google.com/js/platform.js",
+      async: true,
+      defer: true,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 29
+      },
+      __self: this
+    }), __jsx("meta", {
+      name: "google-signin-client_id",
+      content: "286867092487-igml1mm8o3aoqku5tfvhblffh3ebfp2f.apps.googleusercontent.com",
       __source: {
         fileName: _jsxFileName,
         lineNumber: 30
       },
       __self: this
+    })), __jsx("body", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 33
+      },
+      __self: this
     }, __jsx(next_document__WEBPACK_IMPORTED_MODULE_3__["Main"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 31
+        lineNumber: 34
       },
       __self: this
     }), __jsx(next_document__WEBPACK_IMPORTED_MODULE_3__["NextScript"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 32
+        lineNumber: 35
       },
       __self: this
     })));

@@ -93,6 +93,163 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "./client/components/Apollo.tsx":
+/*!**************************************!*\
+  !*** ./client/components/Apollo.tsx ***!
+  \**************************************/
+/*! exports provided: Apollo */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Apollo", function() { return Apollo; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var apollo_boost__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apollo-boost */ "apollo-boost");
+/* harmony import */ var apollo_boost__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(apollo_boost__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @apollo/react-hooks */ "@apollo/react-hooks");
+/* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Auth__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Auth */ "./client/components/Auth.tsx");
+var _jsxFileName = "/Users/andreasmoller/code/reports/client/components/Apollo.tsx";
+
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+
+
+const Apollo = ({
+  children
+}) => {
+  const jwt = Object(_Auth__WEBPACK_IMPORTED_MODULE_4__["useAuth"])();
+  const client = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(() => new apollo_boost__WEBPACK_IMPORTED_MODULE_1___default.a({
+    uri: "/api/graphql",
+    request: async operation => {
+      operation.setContext({
+        headers: jwt ? {
+          Authorization: `Bearer ${jwt}`
+        } : {}
+      });
+    },
+    onError: ({
+      response,
+      operation
+    }) => {
+      if (response && response.errors) {
+        console.error(response, operation);
+      }
+    },
+    cache: new apollo_boost__WEBPACK_IMPORTED_MODULE_1__["InMemoryCache"]({
+      dataIdFromObject: object => object.id
+    }),
+    fetch: (isomorphic_fetch__WEBPACK_IMPORTED_MODULE_2___default())
+  }), [jwt]);
+  return __jsx(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_3__["ApolloProvider"], {
+    client: client,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 31
+    },
+    __self: undefined
+  }, children);
+};
+
+/***/ }),
+
+/***/ "./client/components/Auth.tsx":
+/*!************************************!*\
+  !*** ./client/components/Auth.tsx ***!
+  \************************************/
+/*! exports provided: AuthProvider, useAuth */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthProvider", function() { return AuthProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useAuth", function() { return useAuth; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
+var _jsxFileName = "/Users/andreasmoller/code/reports/client/components/Auth.tsx";
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+const AuthContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])(undefined);
+
+const fetchAuthToken = async () => {
+  const res = await isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("/api/refresh_token");
+
+  if (res.status !== 200) {
+    next_router__WEBPACK_IMPORTED_MODULE_2___default.a.push("/login");
+  }
+
+  const {
+    auth_token
+  } = await res.json();
+  console.log({
+    auth_token
+  });
+  return auth_token;
+};
+
+const AuthProvider = ({
+  children
+}) => {
+  const {
+    0: authToken,
+    1: setAuthToken
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    fetchAuthToken().then(setAuthToken);
+    const interval = setInterval(() => {
+      fetchAuthToken().then(setAuthToken);
+    }, 5 * 60 * 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  return __jsx(AuthContext.Provider, {
+    value: authToken,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 39
+    },
+    __self: undefined
+  }, children);
+};
+const useAuth = () => Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(AuthContext);
+
+/***/ }),
+
+/***/ "./client/theme.ts":
+/*!*************************!*\
+  !*** ./client/theme.ts ***!
+  \*************************/
+/*! exports provided: theme */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "theme", function() { return theme; });
+const theme = {
+  colors: {
+    primary: "#ffc400",
+    secondary: "#ffc107",
+    gray: "#263238",
+    lightgray: "#4f5b62",
+    darkgray: "#000a12"
+  },
+  space: [0, 4, 8, 16, 32, 64, 128, 256, 512]
+};
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime-corejs2/core-js/object/assign.js":
 /*!**********************************************************************!*\
   !*** ./node_modules/@babel/runtime-corejs2/core-js/object/assign.js ***!
@@ -712,10 +869,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! styled-components */ "styled-components");
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _src_theme__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../src/theme */ "./src/theme.ts");
+/* harmony import */ var _client_theme__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../client/theme */ "./client/theme.ts");
+/* harmony import */ var _client_components_Apollo__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../client/components/Apollo */ "./client/components/Apollo.tsx");
 
 var _jsxFileName = "/Users/andreasmoller/code/reports/pages/_app.js";
 var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
+
 
 
 
@@ -745,54 +904,37 @@ class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_2___default.a {
       Component,
       pageProps
     } = this.props;
-    return __jsx(styled_components__WEBPACK_IMPORTED_MODULE_3__["ThemeProvider"], {
-      theme: _src_theme__WEBPACK_IMPORTED_MODULE_4__["theme"],
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 28
-      },
-      __self: this
-    }, __jsx(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, __jsx(Global, {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 30
-      },
-      __self: this
-    }), __jsx(Component, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, pageProps, {
+    return __jsx(_client_components_Apollo__WEBPACK_IMPORTED_MODULE_5__["Apollo"], {
       __source: {
         fileName: _jsxFileName,
         lineNumber: 31
       },
       __self: this
-    }))));
+    }, __jsx(styled_components__WEBPACK_IMPORTED_MODULE_3__["ThemeProvider"], {
+      theme: _client_theme__WEBPACK_IMPORTED_MODULE_4__["theme"],
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 32
+      },
+      __self: this
+    }, __jsx(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, __jsx(Global, {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 34
+      },
+      __self: this
+    }), __jsx(Component, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, pageProps, {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 35
+      },
+      __self: this
+    })))));
   }
 
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (MyApp);
-
-/***/ }),
-
-/***/ "./src/theme.ts":
-/*!**********************!*\
-  !*** ./src/theme.ts ***!
-  \**********************/
-/*! exports provided: theme */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "theme", function() { return theme; });
-const theme = {
-  colors: {
-    primary: "#ffc400",
-    secondary: "#ffc107",
-    gray: "#263238",
-    lightgray: "#4f5b62",
-    darkgray: "#000a12"
-  },
-  space: [0, 4, 8, 16, 32, 64, 128, 256, 512]
-};
 
 /***/ }),
 
@@ -805,6 +947,28 @@ const theme = {
 
 module.exports = __webpack_require__(/*! private-next-pages/_app.js */"./pages/_app.js");
 
+
+/***/ }),
+
+/***/ "@apollo/react-hooks":
+/*!**************************************!*\
+  !*** external "@apollo/react-hooks" ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@apollo/react-hooks");
+
+/***/ }),
+
+/***/ "apollo-boost":
+/*!*******************************!*\
+  !*** external "apollo-boost" ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("apollo-boost");
 
 /***/ }),
 
@@ -852,6 +1016,17 @@ module.exports = require("core-js/library/fn/promise");
 
 /***/ }),
 
+/***/ "isomorphic-fetch":
+/*!***********************************!*\
+  !*** external "isomorphic-fetch" ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("isomorphic-fetch");
+
+/***/ }),
+
 /***/ "next-server/dist/lib/router-context":
 /*!******************************************************!*\
   !*** external "next-server/dist/lib/router-context" ***!
@@ -882,6 +1057,17 @@ module.exports = require("next-server/dist/lib/router/router");
 /***/ (function(module, exports) {
 
 module.exports = require("next-server/dist/lib/utils");
+
+/***/ }),
+
+/***/ "next/router":
+/*!******************************!*\
+  !*** external "next/router" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/router");
 
 /***/ }),
 

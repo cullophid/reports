@@ -1,0 +1,15 @@
+# IF THERE'S A GIT CONFLICT IN THIS FILE, DON'T SOLVE IT MANUALLY!
+# INSTEAD EXECUTE `prisma lift fix`
+# lift lockfile v1
+# Read more about conflict resolution here: TODO
+
+20190911225035-init
+20190914082348-reports
+20190914082610-slides
+20190914085446-nodes
+20190914085841-node-type
+20190914090031-node-chart
+20190914090411-node
+20190914091715-user_reports
+20190914092252-restart
+20190914092745-report-owner

@@ -1,0 +1,6 @@
+query ReportListGet {
+  reports {
+    id
+    title
+  }
+}

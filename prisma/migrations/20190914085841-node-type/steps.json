@@ -1,0 +1,21 @@
+{
+  "version": "0.2.36",
+  "steps": [
+    {
+      "stepType": "UpdateField",
+      "model": "Node",
+      "name": "type",
+      "type": {
+        "Enum": "NodeType"
+      }
+    },
+    {
+      "stepType": "CreateEnum",
+      "name": "NodeType",
+      "values": [
+        "Text",
+        "Chart"
+      ]
+    }
+  ]
+}

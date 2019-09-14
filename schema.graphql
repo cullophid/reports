@@ -1,13 +1,29 @@
 scalar Date
 
-type Query {
-  users: [User!]!
+type Query {  
+  currentUser: User
+  reports: [Report!]!
 }
 
+type Mutation {
+  signin(email:String!): String!
+}
+
+
+
 type User {
-  id:ID!
+  id: ID!
   createdAt:Date!
   email:String!
   firstName:String!
   lastName:String!
+  reports:[Report!]!
 }
+
+type Report {
+  id: ID!
+  owner:User!
+  title: String!
+}
+
+

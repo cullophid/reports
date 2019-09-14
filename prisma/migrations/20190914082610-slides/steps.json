@@ -1,0 +1,25 @@
+{
+  "version": "0.2.36",
+  "steps": [
+    {
+      "stepType": "CreateField",
+      "model": "Report",
+      "name": "slides",
+      "type": {
+        "Relation": {
+          "to": "Slide",
+          "to_fields": [],
+          "name": "ReportToSlide",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "DeleteField",
+      "model": "Report",
+      "name": "slide"
+    }
+  ]
+}

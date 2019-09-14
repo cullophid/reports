@@ -1,0 +1,26 @@
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:RVH-DwvtQc2uYu9omd9e@35.228.50.88:3306/reports?sslmode=prefer"
+}
+
+generator photonjs {
+  provider = "photonjs"
+}
+
+
+model Report {
+  id    String @default(cuid()) @id
+  owner User?
+  title String
+}
+
+
+model User {
+  id           String   @default(cuid()) @id
+  createdAt    DateTime @default(now())
+  email        String   @unique
+  firstName    String
+  lastName     String
+  reports      Report[]
+  refreshToken String?
+}

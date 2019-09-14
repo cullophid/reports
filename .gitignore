@@ -13,6 +13,8 @@ pids
 
 # Dependency directories
 node_modules/
+client/codegen/
+server/codegen/
 
 
 # Optional npm cache directory
