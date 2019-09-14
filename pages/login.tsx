@@ -1,2 +1,6 @@
 import LoginPage from "../client/LoginPage"
-export default LoginPage
+import { Page } from "../client/components/Page";
+export default () =>
+  <Page requireAuth={false}>
+    <LoginPage />
+  </Page>
