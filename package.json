@@ -8,7 +8,7 @@
     "predev": "yarn run codegen",
     "dev": "next",
     "prisma": "prisma2",
-    "now-build": "yarn run codegen && next build",
+    "now-build": "echo Building... && yarn run codegen && next build",
     "start": "next start"
   },
   "dependencies": {
