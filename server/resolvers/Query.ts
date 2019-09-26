@@ -22,5 +22,24 @@ export const Query: QueryResolvers = {
         id: ctx.session.user.sub
       }
     }).reports();
+  },
+  report: async (_, { id }, ctx) => {
+    const { user } = ctx.session
+    if (!user) {
+      throw new AuthenticationError("You are not authenticated")
+    }
+
+    const [report] = await ctx.photon.reports.findMany({
+      where: {
+        id,
+        owner: {
+          id: user.sub
+        }
+      }
+    })
+    if (!report) {
+      throw new Error("Could not find a report with that id")
+    }
+    return report
   }
 }

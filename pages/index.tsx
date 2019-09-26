@@ -1,4 +1,4 @@
-import { HomePage } from "../client/HomePage";
+import { HomePage } from "../client/Home";
 import { Page } from "../client/components/Page";
 
 export default () =>

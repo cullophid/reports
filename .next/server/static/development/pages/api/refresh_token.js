@@ -296,7 +296,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _generated_photon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @generated/photon */ "@generated/photon");
 /* harmony import */ var _generated_photon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_generated_photon__WEBPACK_IMPORTED_MODULE_0__);
 
-const photon = new _generated_photon__WEBPACK_IMPORTED_MODULE_0___default.a();
+const photon = new _generated_photon__WEBPACK_IMPORTED_MODULE_0__["Photon"]();
 photon.connect();
 
 /***/ }),

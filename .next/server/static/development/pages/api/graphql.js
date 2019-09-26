@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -101,17 +101,6 @@ module.exports =
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! core-js/library/fn/date/now */ "core-js/library/fn/date/now");
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime-corejs2/core-js/object/keys.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@babel/runtime-corejs2/core-js/object/keys.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! core-js/library/fn/object/keys */ "core-js/library/fn/object/keys");
 
 /***/ }),
 
@@ -136,15 +125,12 @@ module.exports = __webpack_require__(/*! core-js/library/fn/promise */ "core-js/
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "config", function() { return config; });
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/keys */ "./node_modules/@babel/runtime-corejs2/core-js/object/keys.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var apollo_server_micro__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apollo-server-micro */ "apollo-server-micro");
-/* harmony import */ var apollo_server_micro__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(apollo_server_micro__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _schema_graphql__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../schema.graphql */ "./schema.graphql");
-/* harmony import */ var _server_helpers_photon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../server/helpers/photon */ "./server/helpers/photon.ts");
-/* harmony import */ var _server_resolvers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../server/resolvers */ "./server/resolvers/index.ts");
-/* harmony import */ var _server_helpers_jwt__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../server/helpers/jwt */ "./server/helpers/jwt.ts");
-
+/* harmony import */ var apollo_server_micro__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apollo-server-micro */ "apollo-server-micro");
+/* harmony import */ var apollo_server_micro__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apollo_server_micro__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _schema_graphql__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../schema.graphql */ "./schema.graphql");
+/* harmony import */ var _server_helpers_photon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../server/helpers/photon */ "./server/helpers/photon.ts");
+/* harmony import */ var _server_resolvers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../server/resolvers */ "./server/resolvers/index.ts");
+/* harmony import */ var _server_helpers_jwt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../server/helpers/jwt */ "./server/helpers/jwt.ts");
 
 
 
@@ -155,25 +141,24 @@ const config = {
     bodyParser: false
   }
 };
-const apolloServer = new apollo_server_micro__WEBPACK_IMPORTED_MODULE_1__["ApolloServer"]({
-  typeDefs: _schema_graphql__WEBPACK_IMPORTED_MODULE_2__["default"],
-  resolvers: _server_resolvers__WEBPACK_IMPORTED_MODULE_4__["resolvers"],
+const apolloServer = new apollo_server_micro__WEBPACK_IMPORTED_MODULE_0__["ApolloServer"]({
+  typeDefs: _schema_graphql__WEBPACK_IMPORTED_MODULE_1__["default"],
+  resolvers: _server_resolvers__WEBPACK_IMPORTED_MODULE_3__["resolvers"],
   context: async ({
     req
   }) => {
     let session = {};
-    console.log(_babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_0___default()(req));
 
     if (req.headers.authorization) {
       const auth_token = req.headers.authorization.split(/\s/)[1];
 
       if (auth_token) {
-        session.user = await Object(_server_helpers_jwt__WEBPACK_IMPORTED_MODULE_5__["verifyAuthToken"])(auth_token);
+        session.user = await Object(_server_helpers_jwt__WEBPACK_IMPORTED_MODULE_4__["verifyAuthToken"])(auth_token);
       }
     }
 
     return {
-      photon: _server_helpers_photon__WEBPACK_IMPORTED_MODULE_3__["photon"],
+      photon: _server_helpers_photon__WEBPACK_IMPORTED_MODULE_2__["photon"],
       session
     };
   }
@@ -193,7 +178,7 @@ const apolloServer = new apollo_server_micro__WEBPACK_IMPORTED_MODULE_1__["Apoll
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("scalar Date\n\ntype Query {  \n  currentUser: User\n  reports: [Report!]!\n}\n\ntype Mutation {\n  signin(email:String!): String!\n}\n\n\n\ntype User {\n  id: ID!\n  createdAt:Date!\n  email:String!\n  firstName:String!\n  lastName:String!\n  reports:[Report!]!\n}\n\ntype Report {\n  id: ID!\n  owner:User!\n  title: String!\n}\n\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("scalar Date\n\ntype Query {  \n  currentUser: User\n  reports: [Report!]!\n  report(id:ID!): Report!\n}\n\ntype Mutation {\n  signin(email:String!): String!\n  createReport(title:String!): Report!\n}\n\n\ntype User {\n  id: ID!\n  createdAt:Date!\n  email:String!\n  firstName:String!\n  lastName:String!\n  reports:[Report!]!\n}\n\ntype Report {\n  id: ID!\n  owner:User!\n  width: Int!\n  height: Int!\n  title: String!\n  slides: [Slide!]!\n}\n\ntype Slide {\n  id:ID!\n}\n\n");
 
 /***/ }),
 
@@ -304,8 +289,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _generated_photon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @generated/photon */ "@generated/photon");
 /* harmony import */ var _generated_photon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_generated_photon__WEBPACK_IMPORTED_MODULE_0__);
 
-const photon = new _generated_photon__WEBPACK_IMPORTED_MODULE_0___default.a();
+const photon = new _generated_photon__WEBPACK_IMPORTED_MODULE_0__["Photon"]();
 photon.connect();
+
+/***/ }),
+
+/***/ "./server/resolvers/Mutation/createReport.ts":
+/*!***************************************************!*\
+  !*** ./server/resolvers/Mutation/createReport.ts ***!
+  \***************************************************/
+/*! exports provided: createReport */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createReport", function() { return createReport; });
+/* harmony import */ var apollo_server_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apollo-server-core */ "apollo-server-core");
+/* harmony import */ var apollo_server_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apollo_server_core__WEBPACK_IMPORTED_MODULE_0__);
+
+const createReport = async (_, {
+  title
+}, ctx) => {
+  if (!ctx.session.user) {
+    throw new apollo_server_core__WEBPACK_IMPORTED_MODULE_0__["AuthenticationError"]("You are not logged in");
+  }
+
+  return ctx.photon.reports.create({
+    data: {
+      title,
+      width: 1280,
+      height: 720,
+      owner: {
+        connect: {
+          id: ctx.session.user.sub
+        }
+      }
+    }
+  });
+};
 
 /***/ }),
 
@@ -320,9 +341,12 @@ photon.connect();
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Mutation", function() { return Mutation; });
 /* harmony import */ var _signin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./signin */ "./server/resolvers/Mutation/signin.ts");
+/* harmony import */ var _createReport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createReport */ "./server/resolvers/Mutation/createReport.ts");
+
 
 const Mutation = {
-  signin: _signin__WEBPACK_IMPORTED_MODULE_0__["signin"]
+  signin: _signin__WEBPACK_IMPORTED_MODULE_0__["signin"],
+  createReport: _createReport__WEBPACK_IMPORTED_MODULE_1__["createReport"]
 };
 
 /***/ }),
@@ -411,6 +435,32 @@ const Query = {
         id: ctx.session.user.sub
       }
     }).reports();
+  },
+  report: async (_, {
+    id
+  }, ctx) => {
+    const {
+      user
+    } = ctx.session;
+
+    if (!user) {
+      throw new apollo_server_core__WEBPACK_IMPORTED_MODULE_0__["AuthenticationError"]("You are not authenticated");
+    }
+
+    const [report] = await ctx.photon.reports.findMany({
+      where: {
+        id,
+        owner: {
+          id: user.sub
+        }
+      }
+    });
+
+    if (!report) {
+      throw new Error("Could not find a report with that id");
+    }
+
+    return report;
   }
 };
 
@@ -429,11 +479,38 @@ __webpack_require__.r(__webpack_exports__);
 const Report = {
   id: report => report.id,
   title: report => report.title,
-  owner: (report, {}, ctx) => ctx.photon.reports.findOne({
+  width: report => report.width,
+  height: report => report.height,
+  owner: ({
+    id
+  }, _, ctx) => ctx.photon.reports.findOne({
     where: {
-      id: report.id
+      id
     }
-  }).owner()
+  }).owner(),
+  slides: ({
+    id
+  }, _, ctx) => ctx.photon.reports.findOne({
+    where: {
+      id
+    }
+  }).slides()
+};
+
+/***/ }),
+
+/***/ "./server/resolvers/Slide.ts":
+/*!***********************************!*\
+  !*** ./server/resolvers/Slide.ts ***!
+  \***********************************/
+/*! exports provided: Slide */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Slide", function() { return Slide; });
+const Slide = {
+  id: slide => slide.id
 };
 
 /***/ }),
@@ -477,8 +554,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Mutation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Mutation */ "./server/resolvers/Mutation/index.ts");
 /* harmony import */ var _User__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./User */ "./server/resolvers/User.ts");
 /* harmony import */ var _Report__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Report */ "./server/resolvers/Report.ts");
-/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! graphql */ "graphql");
-/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(graphql__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _Slide__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Slide */ "./server/resolvers/Slide.ts");
+/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! graphql */ "graphql");
+/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(graphql__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -489,7 +568,8 @@ const resolvers = {
   Mutation: _Mutation__WEBPACK_IMPORTED_MODULE_1__["Mutation"],
   User: _User__WEBPACK_IMPORTED_MODULE_2__["User"],
   Report: _Report__WEBPACK_IMPORTED_MODULE_3__["Report"],
-  Date: new graphql__WEBPACK_IMPORTED_MODULE_4__["GraphQLScalarType"]({
+  Slide: _Slide__WEBPACK_IMPORTED_MODULE_4__["Slide"],
+  Date: new graphql__WEBPACK_IMPORTED_MODULE_5__["GraphQLScalarType"]({
     name: 'Date',
     description: 'Date custom scalar type',
 
@@ -502,7 +582,7 @@ const resolvers = {
     },
 
     parseLiteral(ast) {
-      if (ast.kind === graphql__WEBPACK_IMPORTED_MODULE_4__["Kind"].INT) {
+      if (ast.kind === graphql__WEBPACK_IMPORTED_MODULE_5__["Kind"].INT) {
         return new Date(ast.value); // ast value is always in string format
       }
 
@@ -514,7 +594,7 @@ const resolvers = {
 
 /***/ }),
 
-/***/ 7:
+/***/ 6:
 /*!************************************!*\
   !*** multi ./pages/api/graphql.ts ***!
   \************************************/
@@ -567,17 +647,6 @@ module.exports = require("apollo-server-micro");
 /***/ (function(module, exports) {
 
 module.exports = require("core-js/library/fn/date/now");
-
-/***/ }),
-
-/***/ "core-js/library/fn/object/keys":
-/*!*************************************************!*\
-  !*** external "core-js/library/fn/object/keys" ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("core-js/library/fn/object/keys");
 
 /***/ }),
 

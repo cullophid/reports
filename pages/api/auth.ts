@@ -6,25 +6,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { signin_token } = req.query
     const { email } = await verifySigninToken(signin_token as string);
-
+    console.log("AUTH")
     let [user] = await photon.users.findMany({
       where: {
         email
       }
     })
-    const refreshToken = await createRefreshToken(user);
+
 
     if (!user) {
       user = await photon.users.create({
         data: {
           email,
           firstName: "",
-          lastName: "",
-          refreshToken
+          lastName: ""
         }
       })
-    }
 
+    }
+    const refreshToken = await createRefreshToken(user);
     await photon.users.update({
       where: {
         id: user.id

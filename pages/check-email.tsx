@@ -1,4 +1,4 @@
-import { CheckEmailPage } from "../client/CheckEmailPage";
+import { CheckEmailPage } from "../client/CheckEmail";
 import { Page } from "../client/components/Page";
 
 export default () =>

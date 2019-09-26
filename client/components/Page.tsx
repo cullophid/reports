@@ -3,16 +3,22 @@ import fetch from "isomorphic-fetch";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ReactChild, useMemo, createContext, useState, useEffect } from "react";
 import React from 'react'
-import App from 'next/app'
-import { createGlobalStyle, ThemeProvider } from "styled-components"
-import { theme } from "../theme"
+import { Global, css } from "@emotion/core"
 import Router from "next/router";
 
-const Global = createGlobalStyle`
+const globalStyles = css`
   html, body, #__next {
     margin:0;
     padding:0;
     height:100%;
+  }
+  a, a:hover, a:visited {
+    text-decoration:none;
+    color:inherit;
+    
+  }
+  * {
+    box-sizing:border-box;
   }
 `
 
@@ -85,12 +91,8 @@ export const Page = ({ requireAuth, children }: Props) => {
   return (
     <AuthContext.Provider value={authToken}>
       <ApolloProvider client={apolloClient}>
-        <ThemeProvider theme={theme}>
-          <>
-            <Global />
-            {children}
-          </>
-        </ThemeProvider>
+        <Global styles={globalStyles} />
+        {children}
       </ApolloProvider >
     </AuthContext.Provider>
   )

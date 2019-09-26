@@ -1,6 +1,5 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { color, space, layout, ColorProps, SpaceProps, LayoutProps } from "styled-system";
-import { theme } from "../theme";
 import { ReactChild } from "react";
 
 type Props = {
@@ -12,11 +11,11 @@ export const Button = styled.button<Props & ColorProps & SpaceProps & LayoutProp
   ${color}
   ${space}
   ${layout}
-  background: ${theme.colors.primary};
-  color: black;
+  background: linear-gradient(180deg, #EF536F 0%, #CC475F 100%);
+  color: white;
   border:none;
   height: 40px;
-  padding: 0 10px;
+  padding: 0 32px;
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);

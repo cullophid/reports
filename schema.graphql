@@ -3,12 +3,13 @@ scalar Date
 type Query {  
   currentUser: User
   reports: [Report!]!
+  report(id:ID!): Report!
 }
 
 type Mutation {
   signin(email:String!): String!
+  createReport(title:String!): Report!
 }
-
 
 
 type User {
@@ -23,7 +24,13 @@ type User {
 type Report {
   id: ID!
   owner:User!
+  width: Int!
+  height: Int!
   title: String!
+  slides: [Slide!]!
 }
 
+type Slide {
+  id:ID!
+}
 

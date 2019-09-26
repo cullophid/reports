@@ -1,0 +1,89 @@
+{
+  "version": "0.2.55",
+  "steps": [
+    {
+      "stepType": "CreateModel",
+      "name": "Slide",
+      "embedded": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Report",
+      "name": "slides",
+      "type": {
+        "Relation": {
+          "to": "Slide",
+          "to_fields": [],
+          "name": "ReportToSlide",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Report",
+      "name": "width",
+      "type": {
+        "Base": "Int"
+      },
+      "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Report",
+      "name": "height",
+      "type": {
+        "Base": "Int"
+      },
+      "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Slide",
+      "name": "id",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "required",
+      "isUnique": false,
+      "id": {
+        "strategy": "Auto",
+        "sequence": null
+      },
+      "default": {
+        "Expression": [
+          "cuid",
+          "String",
+          []
+        ]
+      }
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Slide",
+      "name": "report",
+      "type": {
+        "Relation": {
+          "to": "Report",
+          "to_fields": [
+            "id"
+          ],
+          "name": "ReportToSlide",
+          "on_delete": "None"
+        }
+      },
+      "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "UpdateField",
+      "model": "Report",
+      "name": "owner",
+      "arity": "required"
+    }
+  ]
+}

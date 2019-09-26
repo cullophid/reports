@@ -1,0 +1,16 @@
+
+fragment Report on Report {
+  id
+  title
+  width
+  height
+  slides {
+    id
+  }
+}
+
+query ReportGet($id:ID!) {
+  report(id:$id) {
+    ...Report
+  }
+}

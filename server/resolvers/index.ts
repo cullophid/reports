@@ -3,6 +3,7 @@ import { Query } from "./Query"
 import { Mutation } from "./Mutation"
 import { User } from "./User"
 import { Report } from "./Report"
+import { Slide } from "./Slide"
 import { GraphQLScalarType, Kind } from "graphql";
 
 export const resolvers: Resolvers = {
@@ -10,6 +11,7 @@ export const resolvers: Resolvers = {
   Mutation,
   User,
   Report,
+  Slide,
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
