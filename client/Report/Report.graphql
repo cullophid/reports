@@ -30,6 +30,6 @@ query ReportGet($id:ID!) {
 
 mutation ReportUpdate($report:ReportInput!) {
   updateReport(report:$report) {
-    ...Report
+    id
   }
 }

@@ -38,12 +38,13 @@ const removeTypename = (report: ReportFragment): ReportUpdateMutationVariables["
 }
 
 const getModifiers = (e: KeyboardEvent) =>
-  [
+  new Set([
     e.nativeEvent.metaKey && "meta",
     e.nativeEvent.ctrlKey && "ctrl",
     e.nativeEvent.altKey && "alt",
     e.nativeEvent.shiftKey && "shift",
   ].filter(Boolean)
+  )
 
 export const ReportPage = (props: { id: string, slide?: string }) => {
   const [scale, setScale] = useState(1)
@@ -51,6 +52,10 @@ export const ReportPage = (props: { id: string, slide?: string }) => {
 
   const [tool, setTool] = useState<Tool>("select")
   const [selection, setSelection] = useState<Selection[]>([])
+
+  const [undoHistory, setUndoHistory] = useState<ReportUpdateMutationVariables["report"][]>([])
+  const [undoHistoryIndex, setUndoHistoryIndex] = useState<number>(0)
+
   const reportQuery = useReportGetQuery({
     variables: {
       id: props.id
@@ -60,9 +65,22 @@ export const ReportPage = (props: { id: string, slide?: string }) => {
     }
   })
 
+  const report = reportQuery.data && reportQuery.data.report
+
+  useEffect(() => {
+    if (report && undoHistory.length === 0) {
+      setUndoHistory([report])
+    }
+  }, [report])
+
   const [_updateReport, updateReportQuery] = useReportUpdateMutation()
 
-  const updateReport = (report: ReportUpdateMutationVariables["report"]) => {
+  const updateReport = (report: ReportUpdateMutationVariables["report"], isUndo = false) => {
+    if (!isUndo) {
+      setUndoHistory([...undoHistory.slice(0, undoHistoryIndex + 1), report])
+      setUndoHistoryIndex(undoHistoryIndex + 1)
+
+    }
     reportQuery.client.writeQuery({
       query: ReportGetDocument,
       variables: { id: report.id },
@@ -78,7 +96,6 @@ export const ReportPage = (props: { id: string, slide?: string }) => {
 
   }
 
-  const report = reportQuery.data && reportQuery.data.report
 
   useEffect(() => {
     const handler = () => {
@@ -150,17 +167,17 @@ export const ReportPage = (props: { id: string, slide?: string }) => {
           }
           return e.preventDefault();
         case "c":
-          if (modifiers.length === 0) {
+          if (modifiers.size === 0) {
             setTool("insert_chart")
             return e.preventDefault();
           }
         case "i":
-          if (modifiers.length === 0) {
+          if (modifiers.size === 0) {
             setTool("insert_image")
             return e.preventDefault();
           }
         case "t":
-          if (modifiers.length === 0) {
+          if (modifiers.size === 0) {
             setTool("insert_text")
             return e.preventDefault();
           }
@@ -173,6 +190,27 @@ export const ReportPage = (props: { id: string, slide?: string }) => {
             }))
           })
         }
+        case "z":
+          if (modifiers.has("meta") && modifiers.has("shift")) { // Redo
+            if (undoHistory.length <= undoHistoryIndex + 1) {
+              return
+            }
+            const newIndex = undoHistoryIndex + 1;
+            updateReport(undoHistory[newIndex], true);
+            setUndoHistoryIndex(newIndex)
+            return e.preventDefault();
+          }
+
+          if (modifiers.has("meta")) { // undo
+            if (undoHistoryIndex === 0) {
+              return
+            }
+
+            const newIndex = undoHistoryIndex - 1;
+            updateReport(undoHistory[newIndex], true);
+            setUndoHistoryIndex(newIndex)
+            return e.preventDefault();
+          }
 
       }
     }}>
