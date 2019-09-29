@@ -1,0 +1,10 @@
+{
+  "version": "0.2.55",
+  "steps": [
+    {
+      "stepType": "DeleteField",
+      "model": "User",
+      "name": "refreshToken"
+    }
+  ]
+}

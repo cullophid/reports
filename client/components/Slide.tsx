@@ -1,21 +1,22 @@
-import React from "react"
+import React, { forwardRef, Ref, RefObject } from "react"
 import styled from "@emotion/styled"
 import useResizeListener from "react-resize-aware"
 import { colors } from "../theme"
 
-type SlideProps<ComponentType = React.Component> = {
+type SlideProps = {
   children?: React.ReactNode
   width: number
   height: number
   onClick?: (e: React.MouseEvent) => void
   selected?: boolean
 }
-export const Slide = (props: SlideProps) => {
+export const Slide = forwardRef((props: SlideProps, ref: RefObject<HTMLElement>) => {
   const [resizeListener, sizes] = useResizeListener()
   const { width, height, children } = props
   const scale = sizes.width / width
   return (
     <Background
+      ref={ref}
       onClick={props.onClick}
       scale={scale}
       height={height}
@@ -28,7 +29,7 @@ export const Slide = (props: SlideProps) => {
       </Content>
     </Background>
   )
-}
+})
 type BackgroundProps = {
   scale: number
   height: number

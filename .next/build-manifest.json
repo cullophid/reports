@@ -12,10 +12,6 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/reports": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
     "/reports/[reportId]": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"

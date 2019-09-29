@@ -167,20 +167,12 @@ const getNewTokens = async refresh_token => {
     }
   });
 
-  if (user.refreshToken !== refresh_token) {
-    throw new Error("Invalid token");
+  if (!user) {
+    throw new Error("User does not exist");
   }
 
   const auth_token = await Object(_server_helpers_jwt__WEBPACK_IMPORTED_MODULE_1__["createAuthToken"])(user);
   const refreshToken = await Object(_server_helpers_jwt__WEBPACK_IMPORTED_MODULE_1__["createRefreshToken"])(user);
-  await _server_helpers_photon__WEBPACK_IMPORTED_MODULE_0__["photon"].users.update({
-    where: {
-      id: user.id
-    },
-    data: {
-      refreshToken
-    }
-  });
   return {
     auth_token,
     refreshToken

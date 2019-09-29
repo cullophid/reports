@@ -4,6 +4,7 @@ import { Mutation } from "./Mutation"
 import { User } from "./User"
 import { Report } from "./Report"
 import { Slide } from "./Slide"
+import { Chart } from "./Chart"
 import { GraphQLScalarType, Kind } from "graphql";
 
 export const resolvers: Resolvers = {
@@ -12,6 +13,7 @@ export const resolvers: Resolvers = {
   User,
   Report,
   Slide,
+  Chart,
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',

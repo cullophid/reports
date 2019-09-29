@@ -25,14 +25,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     }
     const refreshToken = await createRefreshToken(user);
-    await photon.users.update({
-      where: {
-        id: user.id
-      },
-      data: {
-        refreshToken
-      }
-    })
     res.setHeader("Set-Cookie", `refresh_token=${refreshToken}; Path=/; HttpOnly`)
     res.status(302).setHeader("Location", "/")
     res.send("");

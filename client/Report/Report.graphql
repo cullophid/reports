@@ -6,11 +6,30 @@ fragment Report on Report {
   height
   slides {
     id
+    charts {
+      ...Chart
+    }
   }
 }
 
+fragment Chart on Chart {
+  id
+  x
+  y
+  width
+  height
+}
+
+
 query ReportGet($id:ID!) {
   report(id:$id) {
+    ...Report
+  }
+}
+
+
+mutation ReportUpdate($report:ReportInput!) {
+  updateReport(report:$report) {
     ...Report
   }
 }

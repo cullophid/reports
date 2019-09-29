@@ -10,6 +10,7 @@ generates:
           withHooks: true
           withHOC: false
           withComponent: false
+          nonOptionalTypename: true
 
   ./server/codegen/graphql.ts:
     plugins:
@@ -22,3 +23,5 @@ generates:
           mappers:
             User: "@generated/photon#User"
             Report: "@generated/photon#Report"
+            Slide: "@generated/photon#Slide"
+            Chart: "@generated/photon#Chart"

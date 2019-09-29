@@ -31,20 +31,11 @@ const getNewTokens = async (refresh_token: string) => {
       id: userId
     }
   })
-  if (user.refreshToken !== refresh_token) {
-    throw new Error("Invalid token");
+  if (!user) {
+    throw new Error("User does not exist");
   }
   const auth_token = await createAuthToken(user)
   const refreshToken = await createRefreshToken(user)
-
-  await photon.users.update({
-    where: {
-      id: user.id
-    },
-    data: {
-      refreshToken
-    }
-  })
 
   return {
     auth_token,

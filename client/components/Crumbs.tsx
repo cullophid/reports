@@ -19,6 +19,9 @@ place-content: center start;
     margin-right: 8px;
     color: ${colors.text};
   }
+  :first-child::before {
+    content: none;
+  }
 }
 `
 
@@ -36,3 +39,4 @@ export const CrumbLink = (props: CrumbLinkProps) =>
 
 export const CrumbTitle = (props: { children: ReactNode }) =>
   <Title as="h1" fontSize="1rem">{props.children}</Title>
+

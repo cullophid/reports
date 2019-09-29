@@ -104,6 +104,50 @@ module.exports = __webpack_require__(/*! core-js/library/fn/date/now */ "core-js
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime-corejs2/core-js/object/define-property.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/core-js/object/define-property.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! core-js/library/fn/object/define-property */ "core-js/library/fn/object/define-property");
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-descriptor.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-descriptor.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! core-js/library/fn/object/get-own-property-descriptor */ "core-js/library/fn/object/get-own-property-descriptor");
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-symbols.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-symbols.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! core-js/library/fn/object/get-own-property-symbols */ "core-js/library/fn/object/get-own-property-symbols");
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/core-js/object/keys.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/core-js/object/keys.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! core-js/library/fn/object/keys */ "core-js/library/fn/object/keys");
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime-corejs2/core-js/promise.js":
 /*!****************************************************************!*\
   !*** ./node_modules/@babel/runtime-corejs2/core-js/promise.js ***!
@@ -112,6 +156,79 @@ module.exports = __webpack_require__(/*! core-js/library/fn/date/now */ "core-js
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! core-js/library/fn/promise */ "core-js/library/fn/promise");
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _defineProperty; });
+/* harmony import */ var _core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core-js/object/define-property */ "./node_modules/@babel/runtime-corejs2/core-js/object/define-property.js");
+/* harmony import */ var _core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0__);
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    _core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0___default()(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/objectSpread.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/objectSpread.js ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _objectSpread; });
+/* harmony import */ var _core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core-js/object/get-own-property-descriptor */ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-descriptor.js");
+/* harmony import */ var _core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core-js/object/get-own-property-symbols */ "./node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-symbols.js");
+/* harmony import */ var _core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _core_js_object_keys__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../core-js/object/keys */ "./node_modules/@babel/runtime-corejs2/core-js/object/keys.js");
+/* harmony import */ var _core_js_object_keys__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_core_js_object_keys__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./defineProperty */ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js");
+
+
+
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    var ownKeys = _core_js_object_keys__WEBPACK_IMPORTED_MODULE_2___default()(source);
+
+    if (typeof _core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default.a === 'function') {
+      ownKeys = ownKeys.concat(_core_js_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default()(source).filter(function (sym) {
+        return _core_js_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_0___default()(source, sym).enumerable;
+      }));
+    }
+
+    ownKeys.forEach(function (key) {
+      Object(_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(target, key, source[key]);
+    });
+  }
+
+  return target;
+}
 
 /***/ }),
 
@@ -178,7 +295,7 @@ const apolloServer = new apollo_server_micro__WEBPACK_IMPORTED_MODULE_0__["Apoll
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("scalar Date\n\ntype Query {  \n  currentUser: User\n  reports: [Report!]!\n  report(id:ID!): Report!\n}\n\ntype Mutation {\n  signin(email:String!): String!\n  createReport(title:String!): Report!\n}\n\n\ntype User {\n  id: ID!\n  createdAt:Date!\n  email:String!\n  firstName:String!\n  lastName:String!\n  reports:[Report!]!\n}\n\ntype Report {\n  id: ID!\n  owner:User!\n  width: Int!\n  height: Int!\n  title: String!\n  slides: [Slide!]!\n}\n\ntype Slide {\n  id:ID!\n}\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("scalar Date\n\ntype Query {  \n  currentUser: User\n  reports: [Report!]!\n  report(id:ID!): Report!\n}\n\ntype Mutation {\n  signin(email:String!): String!\n  createReport(title:String!): Report!\n  updateReport(report:ReportInput): Report!\n}\n\n\ntype User {\n  id: ID!\n  createdAt:Date!\n  email:String!\n  firstName:String!\n  lastName:String!\n  reports:[Report!]!\n}\n\ntype Report {\n  id: ID!\n  owner:User!\n  width: Int!\n  height: Int!\n  title: String!\n  slides: [Slide!]!\n}\n\ntype Slide {\n  id:ID!\n  charts: [Chart!]!\n}\n\ntype Chart {\n  id:ID!\n  slide:Slide!\n  x:Int!\n  y:Int!\n  width:Int!\n  height:Int!\n}\n\ninput ReportInput {\n  id:ID!\n  title: String!\n  width: Int!\n  height: Int!\n  slides: [SlideInput!]!\n}\n\ninput SlideInput {\n  id:ID\n  charts: [ChartInput!]!\n}\n\ninput ChartInput {\n  id:ID\n  x:Int!\n  y:Int!\n  width:Int!\n  height:Int!\n}\n\n");
 
 /***/ }),
 
@@ -294,6 +411,33 @@ photon.connect();
 
 /***/ }),
 
+/***/ "./server/resolvers/Chart.ts":
+/*!***********************************!*\
+  !*** ./server/resolvers/Chart.ts ***!
+  \***********************************/
+/*! exports provided: Chart */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Chart", function() { return Chart; });
+const Chart = {
+  id: chart => chart.id,
+  x: chart => chart.x,
+  y: chart => chart.y,
+  width: chart => chart.width,
+  height: chart => chart.height,
+  slide: ({
+    id
+  }, _, ctx) => ctx.photon.charts.findOne({
+    where: {
+      id
+    }
+  }).slide()
+};
+
+/***/ }),
+
 /***/ "./server/resolvers/Mutation/createReport.ts":
 /*!***************************************************!*\
   !*** ./server/resolvers/Mutation/createReport.ts ***!
@@ -342,11 +486,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Mutation", function() { return Mutation; });
 /* harmony import */ var _signin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./signin */ "./server/resolvers/Mutation/signin.ts");
 /* harmony import */ var _createReport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createReport */ "./server/resolvers/Mutation/createReport.ts");
+/* harmony import */ var _updateReport__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./updateReport */ "./server/resolvers/Mutation/updateReport.ts");
+
 
 
 const Mutation = {
   signin: _signin__WEBPACK_IMPORTED_MODULE_0__["signin"],
-  createReport: _createReport__WEBPACK_IMPORTED_MODULE_1__["createReport"]
+  createReport: _createReport__WEBPACK_IMPORTED_MODULE_1__["createReport"],
+  updateReport: _updateReport__WEBPACK_IMPORTED_MODULE_2__["updateReport"]
 };
 
 /***/ }),
@@ -396,6 +543,83 @@ const signin = async (_, {
     res
   });
   return "OK";
+};
+
+/***/ }),
+
+/***/ "./server/resolvers/Mutation/updateReport.ts":
+/*!***************************************************!*\
+  !*** ./server/resolvers/Mutation/updateReport.ts ***!
+  \***************************************************/
+/*! exports provided: updateReport */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateReport", function() { return updateReport; });
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/objectSpread */ "./node_modules/@babel/runtime-corejs2/helpers/esm/objectSpread.js");
+
+const updateReport = async (_, {
+  report
+}, ctx) => {
+  if (!ctx.session.user) {
+    throw new Error("You must be authenticated");
+  }
+
+  const current = await ctx.photon.reports.findOne({
+    where: {
+      id: report.id
+    },
+    include: {
+      owner: true
+    }
+  });
+
+  if (current.owner.id !== ctx.session.user.sub) {
+    throw new Error("Report does not exist");
+  }
+
+  return ctx.photon.reports.update({
+    where: {
+      id: report.id
+    },
+    data: {
+      title: report.title,
+      slides: {
+        upsert: report.slides.map(slide => ({
+          where: {
+            id: slide.id
+          },
+          update: Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, slide, {
+            charts: {
+              upsert: slide.charts.map(chart => ({
+                where: {
+                  id: chart.id
+                },
+                update: chart,
+                create: chart
+              })),
+              deleteMany: {
+                id: {
+                  notIn: slide.charts.map(c => c.id)
+                }
+              }
+            }
+          }),
+          create: Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, slide, {
+            charts: {
+              create: slide.charts
+            }
+          })
+        })),
+        deleteMany: {
+          id: {
+            notIn: report.slides.map(s => s.id)
+          }
+        }
+      }
+    }
+  });
 };
 
 /***/ }),
@@ -510,7 +734,14 @@ const Report = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Slide", function() { return Slide; });
 const Slide = {
-  id: slide => slide.id
+  id: slide => slide.id,
+  charts: ({
+    id
+  }, _, ctx) => ctx.photon.slides.findOne({
+    where: {
+      id
+    }
+  }).charts()
 };
 
 /***/ }),
@@ -555,8 +786,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _User__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./User */ "./server/resolvers/User.ts");
 /* harmony import */ var _Report__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Report */ "./server/resolvers/Report.ts");
 /* harmony import */ var _Slide__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Slide */ "./server/resolvers/Slide.ts");
-/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! graphql */ "graphql");
-/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(graphql__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _Chart__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Chart */ "./server/resolvers/Chart.ts");
+/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! graphql */ "graphql");
+/* harmony import */ var graphql__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(graphql__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -569,7 +802,8 @@ const resolvers = {
   User: _User__WEBPACK_IMPORTED_MODULE_2__["User"],
   Report: _Report__WEBPACK_IMPORTED_MODULE_3__["Report"],
   Slide: _Slide__WEBPACK_IMPORTED_MODULE_4__["Slide"],
-  Date: new graphql__WEBPACK_IMPORTED_MODULE_5__["GraphQLScalarType"]({
+  Chart: _Chart__WEBPACK_IMPORTED_MODULE_5__["Chart"],
+  Date: new graphql__WEBPACK_IMPORTED_MODULE_6__["GraphQLScalarType"]({
     name: 'Date',
     description: 'Date custom scalar type',
 
@@ -582,7 +816,7 @@ const resolvers = {
     },
 
     parseLiteral(ast) {
-      if (ast.kind === graphql__WEBPACK_IMPORTED_MODULE_5__["Kind"].INT) {
+      if (ast.kind === graphql__WEBPACK_IMPORTED_MODULE_6__["Kind"].INT) {
         return new Date(ast.value); // ast value is always in string format
       }
 
@@ -647,6 +881,50 @@ module.exports = require("apollo-server-micro");
 /***/ (function(module, exports) {
 
 module.exports = require("core-js/library/fn/date/now");
+
+/***/ }),
+
+/***/ "core-js/library/fn/object/define-property":
+/*!************************************************************!*\
+  !*** external "core-js/library/fn/object/define-property" ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("core-js/library/fn/object/define-property");
+
+/***/ }),
+
+/***/ "core-js/library/fn/object/get-own-property-descriptor":
+/*!************************************************************************!*\
+  !*** external "core-js/library/fn/object/get-own-property-descriptor" ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("core-js/library/fn/object/get-own-property-descriptor");
+
+/***/ }),
+
+/***/ "core-js/library/fn/object/get-own-property-symbols":
+/*!*********************************************************************!*\
+  !*** external "core-js/library/fn/object/get-own-property-symbols" ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("core-js/library/fn/object/get-own-property-symbols");
+
+/***/ }),
+
+/***/ "core-js/library/fn/object/keys":
+/*!*************************************************!*\
+  !*** external "core-js/library/fn/object/keys" ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("core-js/library/fn/object/keys");
 
 /***/ }),
 

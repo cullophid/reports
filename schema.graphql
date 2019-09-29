@@ -9,6 +9,7 @@ type Query {
 type Mutation {
   signin(email:String!): String!
   createReport(title:String!): Report!
+  updateReport(report:ReportInput): Report!
 }
 
 
@@ -32,5 +33,36 @@ type Report {
 
 type Slide {
   id:ID!
+  charts: [Chart!]!
+}
+
+type Chart {
+  id:ID!
+  slide:Slide!
+  x:Int!
+  y:Int!
+  width:Int!
+  height:Int!
+}
+
+input ReportInput {
+  id:ID!
+  title: String!
+  width: Int!
+  height: Int!
+  slides: [SlideInput!]!
+}
+
+input SlideInput {
+  id:ID
+  charts: [ChartInput!]!
+}
+
+input ChartInput {
+  id:ID
+  x:Int!
+  y:Int!
+  width:Int!
+  height:Int!
 }
 
