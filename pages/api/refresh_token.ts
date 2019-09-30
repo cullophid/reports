@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { photon } from "../../server/helpers/photon"
 import { createAuthToken, createRefreshToken, verifyRefreshToken } from "../../server/helpers/jwt"
-import Cookies from "cookies";
+import * as dotenv from "dotenv"
+dotenv.config()
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   const refresh_token = req.cookies.refresh_token;
