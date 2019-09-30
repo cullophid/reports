@@ -6,8 +6,6 @@ import { resolvers } from "../../server/resolvers"
 import { Photon } from '@generated/photon'
 import { MicroRequest } from 'apollo-server-micro/dist/types'
 import { verifyAuthToken, AuthToken } from '../../server/helpers/jwt'
-import * as dotenv from "dotenv"
-dotenv.config()
 
 export type Context = {
   photon: Photon,

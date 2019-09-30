@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { photon } from "../../server/helpers/photon"
 import { createRefreshToken, verifySigninToken } from "../../server/helpers/jwt"
-import * as dotenv from "dotenv"
-dotenv.config()
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
