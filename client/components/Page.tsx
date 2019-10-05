@@ -32,7 +32,8 @@ const AuthContext = createContext<string | null>(undefined)
 
 
 export const fetchAuthToken = async () => {
-  const res = await fetch(process.env.ORIGIN + "/api/refresh_token")
+
+  const res = await fetch("/api/refresh_token")
   if (res.status !== 200) {
     Router.push("/login")
   }

@@ -6,6 +6,11 @@
     "GMAIL_PASS": "mfaxbafsfwscjzwx",
     "JWT_SECRET": "@jwt-secret",
     "MONGODB_URL": "@mongodb-url",
-    "ORIGIN": "https://reports.cullophid.now.sh"
+    "ORIGIN": "https://reports.now.sh"
+  },
+  "build": {
+    "env": {
+      "ORIGIN": "https://reports.now.sh"
+    }
   }
 }
