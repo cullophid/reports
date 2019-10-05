@@ -21,7 +21,7 @@ export const signin: MutationResolvers["signin"] = async (_, { email }) => {
     to: email,
     subject: 'Sign in to Reports', // Subject line
     html: `
-      <a href="http://localhost:3000/api/auth?signin_token=${signin_token}">Sign In</a>
+      <a href="${process.env.ORIGIN}/api/auth?signin_token=${signin_token}">Sign In</a>
     `// plain text body
   })
   console.log({ res })
