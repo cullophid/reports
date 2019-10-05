@@ -1,4 +1,10 @@
 {
   "name": "reports",
-  "version": 2
+  "version": 2,
+  "env": {
+    "GMAIL_USER": "andreas.moller@gmail.com",
+    "GMAIL_PASS": "mfaxbafsfwscjzwx",
+    "JWT_SECRET": "@jwt-secret",
+    "MONGODB_URL": "@mongodb-url"
+  }
 }
