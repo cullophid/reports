@@ -8,5 +8,8 @@ module.exports = {
     )
 
     return config
+  },
+  env: {
+    ORIGIN: process.env.ORIGIN
   }
 }
