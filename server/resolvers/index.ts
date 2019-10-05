@@ -29,5 +29,5 @@ export const resolvers: Resolvers = {
       }
       return null;
     },
-  }),
+  })
 }

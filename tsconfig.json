@@ -4,6 +4,7 @@
         "lib": [
             "dom",
             "dom.iterable",
+            "es6",
             "esnext"
         ],
         "allowJs": true,
@@ -11,6 +12,8 @@
         "strict": false,
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "esModuleInterop": true,
         "module": "esnext",
         "moduleResolution": "node",

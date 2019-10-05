@@ -10,7 +10,6 @@ generates:
           withHooks: true
           withHOC: false
           withComponent: false
-          nonOptionalTypename: true
 
   ./server/codegen/graphql.ts:
     plugins:
@@ -20,8 +19,9 @@ generates:
           contextType: ../../pages/api/graphql#Context
           scalars:
             Date: Date
+            ID: mongodb#ObjectID
           mappers:
-            User: "@generated/photon#User"
-            Report: "@generated/photon#Report"
-            Slide: "@generated/photon#Slide"
-            Chart: "@generated/photon#Chart"
+            User: "../Models#User"
+            Report: "../Models#Report"
+            Slide: "../Models#Slide"
+            Chart: "../Models#Chart"

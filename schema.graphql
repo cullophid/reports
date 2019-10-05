@@ -32,13 +32,12 @@ type Report {
 }
 
 type Slide {
-  id:ID!
+  id: ID!
   charts: [Chart!]!
 }
 
 type Chart {
   id:ID!
-  slide:Slide!
   x:Int!
   y:Int!
   width:Int!

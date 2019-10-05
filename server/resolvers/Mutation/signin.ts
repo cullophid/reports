@@ -1,9 +1,8 @@
 import { MutationResolvers } from "../../codegen/graphql";
 import { createTransport } from "nodemailer"
-
-
-import { GMAIL_USER, GMAIL_PASS } from "../../helpers/config"
 import { createSigninToken } from "../../helpers/jwt";
+const GMAIL_PASS = process.env.GMAIL_PASS;
+const GMAIL_USER = process.env.GMAIL_USER;
 
 export const signin: MutationResolvers["signin"] = async (_, { email }) => {
   const emailTransport = createTransport({

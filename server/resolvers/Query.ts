@@ -1,45 +1,28 @@
 import { QueryResolvers } from "../codegen/graphql";
 import { AuthenticationError } from "apollo-server-core";
-import { encodeXText } from "nodemailer/lib/shared";
+
 
 export const Query: QueryResolvers = {
-  currentUser: ({ }, { }, ctx) => {
+  currentUser: (_, { }, ctx) => {
     if (!ctx.session.user) {
       throw new AuthenticationError("You are not authenticated")
     }
-    return ctx.photon.users.findOne({
-      where: {
-        id: ctx.session.user.sub
-      }
-    })
+    return ctx.dataLoaders.users.id.load(ctx.session.user.sub)
   },
   reports: (_, { }, ctx) => {
     if (!ctx.session.user) {
       throw new AuthenticationError("You must be authenticated")
     }
-    return ctx.photon.users.findOne({
-      where: {
-        id: ctx.session.user.sub
-      }
-    }).reports();
+    return ctx.dataLoaders.reports.owner.load(ctx.session.user.sub)
   },
   report: async (_, { id }, ctx) => {
     const { user } = ctx.session
     if (!user) {
       throw new AuthenticationError("You are not authenticated")
     }
-
-    const [report] = await ctx.photon.reports.findMany({
-      where: {
-        id,
-        owner: {
-          id: user.sub
-        }
-      }
+    return ctx.collections.reports.findOne({
+      _id: id,
+      owner: ctx.session.user.sub
     })
-    if (!report) {
-      throw new Error("Could not find a report with that id")
-    }
-    return report
   }
 }

@@ -1,16 +1,17 @@
+
 import { ApolloServer } from 'apollo-server-micro'
 import typeDefs from "../../schema.graphql"
-
-import { photon } from "../../server/helpers/photon"
 import { resolvers } from "../../server/resolvers"
-import { Photon } from '@generated/photon'
 import { MicroRequest } from 'apollo-server-micro/dist/types'
 import { verifyAuthToken, AuthToken } from '../../server/helpers/jwt'
+import { MongoClient } from 'mongodb'
+import { dataLayer } from '../../server/dataLayer'
+
+const client = new MongoClient(process.env.MONGODB_URL, { useNewUrlParser: true });
 
 export type Context = {
-  photon: Photon,
   session: Session
-}
+} & ReturnType<typeof dataLayer>
 
 type Session = {
   user?: AuthToken
@@ -26,6 +27,7 @@ const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }: { req: MicroRequest }) => {
+
     let session: Session = {}
     if (req.headers.authorization) {
       const auth_token = req.headers.authorization.split(/\s/)[1]
@@ -33,8 +35,11 @@ const apolloServer = new ApolloServer({
         session.user = await verifyAuthToken(auth_token)
       }
     }
+    const connection = await client.connect()
+    const db = connection.db("reports")
+
     return {
-      photon,
+      ...dataLayer(db),
       session
     }
   }

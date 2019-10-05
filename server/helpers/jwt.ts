@@ -1,6 +1,7 @@
 import jwt, { SignOptions } from "jsonwebtoken"
-import { JWT_SECRET } from "./config"
-import { User } from "@generated/photon";
+import { User } from "../Models";
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const sign = (payload: any, options: SignOptions): Promise<string> => new Promise((resolve, reject) => {
   if (!JWT_SECRET) {
@@ -27,13 +28,13 @@ export type AuthToken = {
 }
 
 export const createAuthToken = (user: User) => sign({
-  sub: user.id,
+  sub: user._id,
   email: user.email,
   iat: Date.now() / 1000
 }, { expiresIn: "15m" })
 export const verifyAuthToken = (token: string) => verify(token) as Promise<AuthToken>
 
-export const createRefreshToken = (user: User) => sign({ userId: user.id }, { expiresIn: "30d" })
+export const createRefreshToken = (user: User) => sign({ userId: user._id }, { expiresIn: "30d" })
 export const verifyRefreshToken = (token: string) => verify(token) as Promise<{ userId: string }>
 
 

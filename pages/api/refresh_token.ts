@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { photon } from "../../server/helpers/photon"
 import { createAuthToken, createRefreshToken, verifyRefreshToken } from "../../server/helpers/jwt"
+import { MongoClient, ObjectId } from 'mongodb'
+import { User } from "../../server/Models";
+
+const client = new MongoClient(process.env.MONGODB_URL, { useNewUrlParser: true });
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   const refresh_token = req.cookies.refresh_token;
-  console.log({ refresh_token })
   if (!refresh_token) {
     return res.status(401).send("Missing refresh token")
   }
@@ -20,16 +22,13 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const getNewTokens = async (refresh_token: string) => {
+  const connection = await client.connect();
+  const userCollection = connection.db("reports").collection<User>("users")
   const { userId } = await verifyRefreshToken(refresh_token)
   if (!userId) {
     throw new Error("Token does not contain a userId")
   }
-
-  let user = await photon.users.findOne({
-    where: {
-      id: userId
-    }
-  })
+  const user = await userCollection.findOne({ _id: userId })
   if (!user) {
     throw new Error("User does not exist");
   }

@@ -5,6 +5,5 @@ export const Chart: ChartResolvers = {
   x: chart => chart.x,
   y: chart => chart.y,
   width: chart => chart.width,
-  height: chart => chart.height,
-  slide: ({ id }, _, ctx) => ctx.photon.charts.findOne({ where: { id } }).slide()
+  height: chart => chart.height
 }
