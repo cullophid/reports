@@ -1,8 +1,12 @@
-import { MutationResolvers } from "../../codegen/graphql";
+import { MutationResolvers } from "../../../codegen/api";
 
-export const updateReport: MutationResolvers["updateReport"] = async (_, { report }, ctx) => {
+export const updateReport: MutationResolvers["updateReport"] = async (
+  _,
+  { report },
+  ctx
+) => {
   if (!ctx.session.user) {
-    throw new Error("You must be authenticated")
+    throw new Error("You must be authenticated");
   }
 
   const { id: _id, ...data } = report;
@@ -10,15 +14,18 @@ export const updateReport: MutationResolvers["updateReport"] = async (_, { repor
   const current = await ctx.collections.reports.findOne({
     _id,
     owner: ctx.session.user.sub
-  })
+  });
 
   if (!current) {
-    throw new Error("Report does not exist")
+    throw new Error("Report does not exist");
   }
-  await ctx.collections.reports.update({
-    _id
-  }, {
-    $set: data
-  })
-  return ctx.collections.reports.findOne({ _id })
-}
+  await ctx.collections.reports.update(
+    {
+      _id
+    },
+    {
+      $set: data
+    }
+  );
+  return ctx.collections.reports.findOne({ _id });
+};

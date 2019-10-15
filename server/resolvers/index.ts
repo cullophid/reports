@@ -1,10 +1,10 @@
-import { Resolvers } from "../codegen/graphql";
-import { Query } from "./Query"
-import { Mutation } from "./Mutation"
-import { User } from "./User"
-import { Report } from "./Report"
-import { Slide } from "./Slide"
-import { Chart } from "./Chart"
+import { Resolvers } from "../../codegen/api";
+import { Query } from "./Query";
+import { Mutation } from "./Mutation";
+import { User } from "./User";
+import { Report } from "./Report";
+import { Slide } from "./Slide";
+import { Chart } from "./Chart";
 import { GraphQLScalarType, Kind } from "graphql";
 
 export const resolvers: Resolvers = {
@@ -15,8 +15,8 @@ export const resolvers: Resolvers = {
   Slide,
   Chart,
   Date: new GraphQLScalarType({
-    name: 'Date',
-    description: 'Date custom scalar type',
+    name: "Date",
+    description: "Date custom scalar type",
     parseValue(value) {
       return new Date(value); // value from the client
     },
@@ -25,9 +25,9 @@ export const resolvers: Resolvers = {
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
-        return new Date(ast.value) // ast value is always in string format
+        return new Date(ast.value); // ast value is always in string format
       }
       return null;
-    },
+    }
   })
-}
+};

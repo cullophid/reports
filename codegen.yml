@@ -1,8 +1,8 @@
 schema: schema.graphql
 documents: null
 generates:
-  ./client/codegen/graphql.ts:
-    documents: "client/**/*.graphql"
+  ./codegen/client.ts:
+    documents: "pages/**/*.graphql"
     plugins:
       - typescript
       - typescript-operations
@@ -11,17 +11,17 @@ generates:
           withHOC: false
           withComponent: false
 
-  ./server/codegen/graphql.ts:
+  ./codegen/api.ts:
     plugins:
       - typescript
       - typescript-resolvers:
           avoidOptionals: true
-          contextType: ../../pages/api/graphql#Context
+          contextType: ../pages/api/graphql#Context
           scalars:
             Date: Date
             ID: mongodb#ObjectID
           mappers:
-            User: "../Models#User"
-            Report: "../Models#Report"
-            Slide: "../Models#Slide"
-            Chart: "../Models#Chart"
+            User: "../server/Models#User"
+            Report: "../server/Models#Report"
+            Slide: "../server/Models#Slide"
+            Chart: "../server/Models#Chart"

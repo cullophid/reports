@@ -1,5 +1,4 @@
-import { ReportResolvers } from "../codegen/graphql";
-
+import { ReportResolvers } from "../../codegen/api";
 
 export const Report: ReportResolvers = {
   id: report => report._id,
@@ -8,4 +7,4 @@ export const Report: ReportResolvers = {
   height: report => report.height,
   owner: async ({ owner }, _, ctx) => ctx.dataLoaders.users.id.load(owner),
   slides: report => report.slides
-}
+};

@@ -1,18 +1,18 @@
 query ReportListGet {
   reports {
-   ...ReportListReport
+    ...ReportListReport
   }
 }
 
 fragment ReportListReport on Report {
-  id 
+  id
   title
   width
   height
 }
 
-mutation ReportListCreateReport($title:String!) {
-  createReport(title:$title) {
+mutation ReportListCreateReport($title: String!) {
+  createReport(title: $title) {
     ...ReportListReport
   }
 }

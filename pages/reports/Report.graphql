@@ -1,4 +1,3 @@
-
 fragment Report on Report {
   id
   title
@@ -20,16 +19,14 @@ fragment Chart on Chart {
   height
 }
 
-
-query ReportGet($id:ID!) {
-  report(id:$id) {
+query ReportGet($id: ID!) {
+  report(id: $id) {
     ...Report
   }
 }
 
-
-mutation ReportUpdate($report:ReportInput!) {
-  updateReport(report:$report) {
+mutation ReportUpdate($report: ReportInput!) {
+  updateReport(report: $report) {
     id
     __typename
   }

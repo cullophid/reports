@@ -1,12 +1,10 @@
-
-
 export type User = {
   _id: string;
   createdAt: Date;
   email: string;
   firstName: string;
   lastName: string;
-}
+};
 
 export type Report = {
   _id: string;
@@ -15,13 +13,13 @@ export type Report = {
   height: number;
   title: string;
   createdAt: Date;
-  slides: Slide[]
-}
+  slides: Slide[];
+};
 
 export type Slide = {
   id: string;
-  charts: Chart[]
-}
+  charts: Chart[];
+};
 
 export type Chart = {
   id: string;
@@ -29,4 +27,4 @@ export type Chart = {
   y: number;
   width: number;
   height: number;
-}
+};

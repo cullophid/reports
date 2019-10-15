@@ -1,4 +1,4 @@
-import { ChartResolvers } from "../codegen/graphql";
+import { ChartResolvers } from "../../codegen/api";
 
 export const Chart: ChartResolvers = {
   id: chart => chart.id,
@@ -6,4 +6,4 @@ export const Chart: ChartResolvers = {
   y: chart => chart.y,
   width: chart => chart.width,
   height: chart => chart.height
-}
+};
