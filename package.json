@@ -48,6 +48,7 @@
     "react-dom": "^16.9.0",
     "react-draggable": "^4.0.3",
     "react-resize-aware": "^3.0.0-beta.3",
+    "react-spring": "^8.0.27",
     "reflect-metadata": "^0.1.13",
     "styled-system": "^5.1.2"
   },
