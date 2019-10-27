@@ -22,7 +22,7 @@ const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
           boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)"
         }
       : {}
-  }) as any;
+  });
 
   const step2 = useRef();
   const postMarkProps = useSpring({
