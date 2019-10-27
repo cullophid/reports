@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useSignInMutation } from "../codegen/client";
 import styled from "@emotion/styled";
-import { useSpring, animated, useChain } from "react-spring";
+import { useSpring, animated, useChain, config } from "react-spring";
 import { css } from "@emotion/core";
 import { Text } from "../components/Typography";
 
@@ -71,7 +71,8 @@ export default () => {
     to:
       animationCompleted && loginRequest.data
         ? { opacity: 1.0, transform: "scale(1) translateY(0)" }
-        : {}
+        : {},
+    config: config.slow
   });
 
   const animations = useLetterAnimation(loginRequest.called, () =>
