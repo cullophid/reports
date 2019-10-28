@@ -52,7 +52,7 @@ const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
   useChain(submitted ? [step1, step2, step3] : [step3, step2, step1], [
     0,
     0.6,
-    1.5
+    1
   ]);
 
   return {
