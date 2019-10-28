@@ -6,6 +6,8 @@
   "scripts": {
     "codegen": "graphql-codegen",
     "predev": "yarn run codegen",
+    "next": "next",
+    "now": "now",
     "dev": "next",
     "prisma": "prisma2",
     "build": "echo Building && yarn run codegen && next build",
@@ -43,6 +45,7 @@
     "mysql2": "^1.7.0",
     "next": "^9.0.5",
     "nodemailer": "^6.3.0",
+    "now": "^16.4.4",
     "raw-loader": "^3.1.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -59,6 +62,7 @@
     "@types/node": "^12.7.4",
     "@types/nodemailer": "^6.2.1",
     "@types/react": "^16.9.2",
+    "babel-plugin-module-resolver": "^3.2.0",
     "typescript": "^3.6.2"
   }
 }

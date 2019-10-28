@@ -1,9 +1,7 @@
 {
   "name": "reports",
   "version": 2,
-  "regions": [
-    "arn1"
-  ],
+  "regions": ["arn1"],
   "env": {
     "GMAIL_USER": "andreas.moller@gmail.com",
     "GMAIL_PASS": "mfaxbafsfwscjzwx",
