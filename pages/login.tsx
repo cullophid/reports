@@ -6,22 +6,22 @@ import { css } from "@emotion/core";
 import { Text } from "../components/Typography";
 
 const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
-  console.log({ submitted });
   const step1 = useRef();
   const formProps = useSpring({
     ref: step1,
     from: {
       boxShadow: "0 1px 3px rgba(0, 0, 0, 0.2)",
-      height: 50,
-      padding: 0
+      height: 50
     },
     to: submitted
       ? {
           height: 300,
-          padding: 32,
           boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)"
         }
-      : {}
+      : {
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.2)",
+          height: 50
+        }
   });
 
   const step2 = useRef();
@@ -49,7 +49,11 @@ const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
     onRest: () => onRest()
   });
 
-  useChain(submitted ? [step1, step2, step3] : [step3, step2, step1]);
+  useChain(submitted ? [step1, step2, step3] : [step3, step2, step1], [
+    0,
+    0.6,
+    1.5
+  ]);
 
   return {
     form: {
@@ -78,7 +82,6 @@ export default () => {
   const animations = useLetterAnimation(loginRequest.called, () =>
     setAnimationCompleted(true)
   );
-  console.log("Am I rendered at build time or run time?");
 
   return (
     <Layout>
@@ -96,7 +99,7 @@ export default () => {
       ) : (
         <Form
           isSending={loginRequest.called}
-          style={animations.form}
+          style={{ ...animations.form, padding: loginRequest.called ? 32 : 0 }}
           onSubmit={e => {
             e.preventDefault();
             login({
