@@ -66,11 +66,13 @@ export const Page = ({ children }: Props) => {
         request: async (operation: Operation) => {
           try {
             const authToken = await jwt.current;
-            operation.setContext({
-              headers: {
-                Authorization: `Bearer ${authToken}`
-              }
-            });
+            if (authToken) {
+              operation.setContext({
+                headers: {
+                  Authorization: `Bearer ${authToken}`
+                }
+              });
+            }
           } catch (e) {
             console.error(e);
           }

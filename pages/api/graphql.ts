@@ -30,6 +30,7 @@ const apolloServer = new ApolloServer({
   context: async ({ req }: { req: MicroRequest }) => {
     let session: Session = {};
     if (req.headers.authorization) {
+      console.log(req.headers.authorization);
       const auth_token = req.headers.authorization.split(/\s/)[1];
       console.log({ auth_token });
       if (auth_token) {
@@ -38,7 +39,6 @@ const apolloServer = new ApolloServer({
     }
     const connection = await client.connect();
     const db = connection.db("reports");
-    console.log({ session });
     return {
       ...dataLayer(db),
       session

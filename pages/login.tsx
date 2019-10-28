@@ -98,7 +98,6 @@ export default () => {
         </animated.div>
       ) : (
         <Form
-          isSending={loginRequest.called}
           style={{ ...animations.form, padding: loginRequest.called ? 32 : 0 }}
           onSubmit={e => {
             e.preventDefault();
@@ -125,6 +124,7 @@ export default () => {
               id="email-input"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              style={{ border: loginRequest.called && "none !important" }}
             />
           </div>
           <Stamp style={{ padding: loginRequest.called ? 6 : 0 }}>
@@ -146,7 +146,7 @@ const Layout = styled.div`
   grid-auto-columns: auto;
 `;
 
-const Form = styled(animated.form)<{ isSending: boolean }>`
+const Form = styled(animated.form)`
   display: grid;
   box-sizing: border-box;
   justify-self: center;
@@ -164,13 +164,6 @@ const Form = styled(animated.form)<{ isSending: boolean }>`
   @media (max-width: 700px) {
     width: 100%;
   }
-  ${p =>
-    p.isSending &&
-    css`
-      ${EmailInput} {
-        border: none !important;
-      }
-    `}
 `;
 
 const PostStamp = styled(animated.img)`
