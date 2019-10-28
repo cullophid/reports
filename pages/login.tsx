@@ -78,6 +78,7 @@ export default () => {
   const animations = useLetterAnimation(loginRequest.called, () =>
     setAnimationCompleted(true)
   );
+  console.log("Am I rendered at build time or run time?");
 
   return (
     <Layout>
