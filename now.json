@@ -6,7 +6,7 @@
     "GMAIL_USER": "andreas.moller@gmail.com",
     "GMAIL_PASS": "mfaxbafsfwscjzwx",
     "JWT_SECRET": "@jwt-secret",
-    "MONGODB_URL": "@mongodb-url",
+    "MONGODB_URL": "@mongodb",
     "ORIGIN": "https://reports.now.sh"
   },
   "build": {
