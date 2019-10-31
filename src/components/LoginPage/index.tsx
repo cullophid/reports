@@ -82,6 +82,15 @@ export const LoginPage = () => {
     setAnimationCompleted(true)
   );
 
+  const fadeInForm = useSpring({
+    from: {
+      opacity: 0
+    },
+    to: {
+      opacity: 1
+    }
+  });
+
   return (
     <Layout>
       {loginRequest.error && animationCompleted && (
@@ -97,7 +106,11 @@ export const LoginPage = () => {
         </animated.div>
       ) : (
         <Form
-          style={{ ...animations.form, padding: loginRequest.called ? 32 : 0 }}
+          style={{
+            ...animations.form,
+            ...fadeInForm,
+            padding: loginRequest.called ? 32 : 0
+          }}
           onSubmit={e => {
             e.preventDefault();
             login({

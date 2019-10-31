@@ -1,4 +1,6 @@
 import { MutationResolvers } from "../../../codegen/api";
+import { knex } from "../../knex";
+import { Report } from "../../Models";
 
 export const updateReport: MutationResolvers["updateReport"] = async (
   _,
@@ -8,24 +10,18 @@ export const updateReport: MutationResolvers["updateReport"] = async (
   if (!ctx.session.user) {
     throw new Error("You must be authenticated");
   }
+  const reports = knex<Report>("reports");
 
-  const { id: _id, ...data } = report;
-
-  const current = await ctx.collections.reports.findOne({
-    _id,
-    owner: ctx.session.user.sub
-  });
+  const { id, ...data } = report;
+  const current = await reports
+    .where("id", id)
+    .andWhere("ownerId", ctx.session.user.sub)
+    .first();
 
   if (!current) {
     throw new Error("Report does not exist");
   }
-  await ctx.collections.reports.update(
-    {
-      _id
-    },
-    {
-      $set: data
-    }
-  );
-  return ctx.collections.reports.findOne({ _id });
+
+  await reports.where("id", id).update(data);
+  return await reports.where("id", id).first();
 };

@@ -1,5 +1,5 @@
 export type User = {
-  _id: string;
+  id: string;
   createdAt: Date;
   email: string;
   firstName: string;
@@ -7,22 +7,22 @@ export type User = {
 };
 
 export type Report = {
-  _id: string;
-  owner: string;
+  id: string;
+  ownerId: string;
   width: number;
   height: number;
   title: string;
   createdAt: Date;
-  slides: Slide[];
 };
 
 export type Slide = {
   id: string;
-  charts: Chart[];
+  reportId: string;
 };
 
 export type Chart = {
   id: string;
+  slideId: string;
   x: number;
   y: number;
   width: number;

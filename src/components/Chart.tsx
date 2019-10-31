@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import { ChartFragment } from "../codegen/client";
+import { Chart as ChartType } from "../codegen/client";
 import { css } from "@emotion/core";
 import { colors } from "../theme";
 import { MouseEvent } from "react";
 type Props = {
-  chart: ChartFragment;
+  chart: ChartType;
   onClick: (e: MouseEvent) => void;
   selected: boolean;
 };
@@ -12,7 +12,7 @@ type Props = {
 export const Chart = (props: Props) => {
   return <ChartFrame {...props.chart} selected={props.selected} />;
 };
-const ChartFrame = styled.div<ChartFragment & { selected: boolean }>`
+const ChartFrame = styled.div<ChartType & { selected: boolean }>`
   position: absolute;
   left: ${p => p.x}px;
   top: ${p => p.y}px;

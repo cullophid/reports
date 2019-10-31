@@ -33,7 +33,7 @@ export type AuthToken = {
 export const createAuthToken = (user: User) =>
   sign(
     {
-      sub: user._id,
+      sub: user.id,
       email: user.email,
       iat: Date.now() / 1000
     },
@@ -43,7 +43,7 @@ export const verifyAuthToken = (token: string) =>
   verify(token) as Promise<AuthToken>;
 
 export const createRefreshToken = (user: User) =>
-  sign({ userId: user._id }, { expiresIn: "30d" });
+  sign({ userId: user.id }, { expiresIn: "30d" });
 export const verifyRefreshToken = (token: string) =>
   verify(token) as Promise<{ userId: string }>;
 

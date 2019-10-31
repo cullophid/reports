@@ -1,12 +1,15 @@
 {
   "name": "reports",
   "version": 2,
-  "regions": ["arn1"],
+  "regions": ["cdg1"],
   "env": {
     "GMAIL_USER": "andreas.moller@gmail.com",
     "GMAIL_PASS": "mfaxbafsfwscjzwx",
     "JWT_SECRET": "@jwt-secret",
-    "MONGODB_URL": "@mongodb",
+    "MYSQL_HOST": "reports-instance-1.c1tfdja0iwqz.eu-west-1.rds.amazonaws.com",
+    "MYSQL_USER": "admin",
+    "MYSQL_PASSWORD": "@mysql-password",
+    "MYSQL_DATABASE": "reports",
     "ORIGIN": "https://reports.now.sh"
   },
   "build": {

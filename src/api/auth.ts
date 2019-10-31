@@ -1,33 +1,29 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createRefreshToken, verifySigninToken } from "./helpers/jwt";
-import { MongoClient, ObjectId } from "mongodb";
 import { User } from "./Models";
-
-const client = new MongoClient(process.env.MONGODB_URL, {
-  useNewUrlParser: true
-});
+import cuid from "cuid";
+import { knex } from "./knex";
 
 export const auth = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const connection = await client.connect();
-    const userCollection = connection.db("reports").collection<User>("users");
     const { signin_token } = req.query;
     const { email } = await verifySigninToken(signin_token as string);
 
-    let user = await userCollection.findOne({
-      email
-    });
+    let user = await knex<User>("users")
+      .first()
+      .where("email", email);
 
     if (!user) {
-      const _id = new ObjectId().toHexString();
-      await userCollection.insertOne({
-        _id,
+      const id = cuid();
+      await knex<User>("users").insert({
+        id,
         email,
         firstName: "",
-        lastName: "",
-        createdAt: new Date()
+        lastName: ""
       });
-      user = await userCollection.findOne({ _id });
+      user = await knex<User>("users")
+        .where("id", id)
+        .first();
     }
 
     const refreshToken = await createRefreshToken(user);

@@ -4,12 +4,8 @@ import {
   createRefreshToken,
   verifyRefreshToken
 } from "./helpers/jwt";
-import { MongoClient, ObjectId } from "mongodb";
 import { User } from "./Models";
-
-const client = new MongoClient(process.env.MONGODB_URL, {
-  useNewUrlParser: true
-});
+import { knex } from "./knex";
 
 export const refresh_token = (req: NextApiRequest, res: NextApiResponse) => {
   const refresh_token = req.cookies.refresh_token;
@@ -31,13 +27,13 @@ export const refresh_token = (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const getNewTokens = async (refresh_token: string) => {
-  const connection = await client.connect();
-  const userCollection = connection.db("reports").collection<User>("users");
   const { userId } = await verifyRefreshToken(refresh_token);
   if (!userId) {
     throw new Error("Token does not contain a userId");
   }
-  const user = await userCollection.findOne({ _id: userId });
+  const user = await knex<User>("users")
+    .where("id", userId)
+    .first();
   if (!user) {
     throw new Error("User does not exist");
   }

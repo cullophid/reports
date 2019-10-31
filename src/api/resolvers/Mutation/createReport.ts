@@ -1,6 +1,8 @@
 import { MutationResolvers } from "../../../codegen/api";
 import { AuthenticationError } from "apollo-server-core";
-import { ObjectId } from "mongodb";
+import cuid from "cuid";
+import { knex } from "../../knex";
+import { Report } from "../../Models";
 
 export const createReport: MutationResolvers["createReport"] = async (
   _,
@@ -11,16 +13,17 @@ export const createReport: MutationResolvers["createReport"] = async (
     throw new AuthenticationError("You are not logged in");
   }
 
-  const _id = new ObjectId().toHexString();
-  await ctx.collections.reports.insertOne({
-    _id,
+  const id = cuid();
+  await knex<Report>("reports").insert({
+    id,
     title,
     width: 1280,
     height: 720,
     createdAt: new Date(),
-    owner: ctx.session.user.sub,
-    slides: []
+    ownerId: ctx.session.user.sub
   });
 
-  return ctx.collections.reports.findOne({ _id });
+  return await knex<Report>("reports")
+    .where("id", id)
+    .first();
 };

@@ -5,7 +5,6 @@ const GMAIL_PASS = process.env.GMAIL_PASS;
 const GMAIL_USER = process.env.GMAIL_USER;
 
 export const signin: MutationResolvers["signin"] = async (_, { email }) => {
-  console.log("SIGN IN");
   const emailTransport = createTransport({
     service: "gmail",
     auth: {
@@ -13,6 +12,8 @@ export const signin: MutationResolvers["signin"] = async (_, { email }) => {
       pass: GMAIL_PASS
     }
   });
+
+  console.log({ email });
 
   const signin_token = await createSigninToken(email);
 

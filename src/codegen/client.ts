@@ -56,7 +56,7 @@ export type Query = {
    __typename?: 'Query',
   currentUser?: Maybe<User>,
   reports: Array<Report>,
-  report: Report,
+  report?: Maybe<Report>,
 };
 
 
@@ -102,58 +102,6 @@ export type User = {
   lastName: Scalars['String'],
   reports: Array<Report>,
 };
-export type ReportFragment = (
-  { __typename?: 'Report' }
-  & Pick<Report, 'id' | 'title' | 'width' | 'height'>
-  & { slides: Array<(
-    { __typename?: 'Slide' }
-    & Pick<Slide, 'id'>
-    & { charts: Array<{ __typename?: 'Chart' }
-      & ChartFragment
-    > }
-  )> }
-);
-
-export type ChartFragment = (
-  { __typename?: 'Chart' }
-  & Pick<Chart, 'id' | 'x' | 'y' | 'width' | 'height'>
-);
-
-export type ReportGetQueryVariables = {
-  id: Scalars['ID']
-};
-
-
-export type ReportGetQuery = (
-  { __typename?: 'Query' }
-  & { report: { __typename?: 'Report' }
-    & ReportFragment
-   }
-);
-
-export type ReportUpdateMutationVariables = {
-  report: ReportInput
-};
-
-
-export type ReportUpdateMutation = (
-  { __typename?: 'Mutation' }
-  & { updateReport: (
-    { __typename: 'Report' }
-    & Pick<Report, 'id'>
-  ) }
-);
-
-export type SignInMutationVariables = {
-  email: Scalars['String']
-};
-
-
-export type SignInMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'signin'>
-);
-
 export type ReportListGetQueryVariables = {};
 
 
@@ -180,29 +128,62 @@ export type ReportListCreateReportMutation = (
     & ReportListReportFragment
    }
 );
-export const ChartFragmentDoc = gql`
-    fragment Chart on Chart {
-  id
-  x
-  y
-  width
-  height
-}
-    `;
-export const ReportFragmentDoc = gql`
-    fragment Report on Report {
-  id
-  title
-  width
-  height
-  slides {
-    id
-    charts {
-      ...Chart
-    }
-  }
-}
-    ${ChartFragmentDoc}`;
+
+export type SignInMutationVariables = {
+  email: Scalars['String']
+};
+
+
+export type SignInMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'signin'>
+);
+
+export type ReportFragment = (
+  { __typename?: 'Report' }
+  & Pick<Report, 'id' | 'title' | 'width' | 'height'>
+  & { slides: Array<{ __typename?: 'Slide' }
+    & ReportSlideFragment
+  > }
+);
+
+export type ReportSlideFragment = (
+  { __typename?: 'Slide' }
+  & Pick<Slide, 'id'>
+  & { charts: Array<{ __typename?: 'Chart' }
+    & ReportChartFragment
+  > }
+);
+
+export type ReportChartFragment = (
+  { __typename?: 'Chart' }
+  & Pick<Chart, 'id' | 'x' | 'y' | 'width' | 'height'>
+);
+
+export type ReportGetQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type ReportGetQuery = (
+  { __typename?: 'Query' }
+  & { report: Maybe<{ __typename?: 'Report' }
+    & ReportFragment
+  > }
+);
+
+export type ReportUpdateMutationVariables = {
+  report: ReportInput
+};
+
+
+export type ReportUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & { updateReport: (
+    { __typename: 'Report' }
+    & Pick<Report, 'id'>
+  ) }
+);
 export const ReportListReportFragmentDoc = gql`
     fragment ReportListReport on Report {
   id
@@ -211,6 +192,79 @@ export const ReportListReportFragmentDoc = gql`
   height
 }
     `;
+export const ReportChartFragmentDoc = gql`
+    fragment ReportChart on Chart {
+  id
+  x
+  y
+  width
+  height
+}
+    `;
+export const ReportSlideFragmentDoc = gql`
+    fragment ReportSlide on Slide {
+  id
+  charts {
+    ...ReportChart
+  }
+}
+    ${ReportChartFragmentDoc}`;
+export const ReportFragmentDoc = gql`
+    fragment Report on Report {
+  id
+  title
+  width
+  height
+  slides {
+    ...ReportSlide
+  }
+}
+    ${ReportSlideFragmentDoc}`;
+export const ReportListGetDocument = gql`
+    query ReportListGet {
+  reports {
+    ...ReportListReport
+  }
+}
+    ${ReportListReportFragmentDoc}`;
+
+    export function useReportListGetQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ReportListGetQuery, ReportListGetQueryVariables>) {
+      return ApolloReactHooks.useQuery<ReportListGetQuery, ReportListGetQueryVariables>(ReportListGetDocument, baseOptions);
+    }
+      export function useReportListGetLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ReportListGetQuery, ReportListGetQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<ReportListGetQuery, ReportListGetQueryVariables>(ReportListGetDocument, baseOptions);
+      }
+      
+export type ReportListGetQueryHookResult = ReturnType<typeof useReportListGetQuery>;
+export type ReportListGetQueryResult = ApolloReactCommon.QueryResult<ReportListGetQuery, ReportListGetQueryVariables>;
+export const ReportListCreateReportDocument = gql`
+    mutation ReportListCreateReport($title: String!) {
+  createReport(title: $title) {
+    ...ReportListReport
+  }
+}
+    ${ReportListReportFragmentDoc}`;
+export type ReportListCreateReportMutationFn = ApolloReactCommon.MutationFunction<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>;
+
+    export function useReportListCreateReportMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>) {
+      return ApolloReactHooks.useMutation<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>(ReportListCreateReportDocument, baseOptions);
+    }
+export type ReportListCreateReportMutationHookResult = ReturnType<typeof useReportListCreateReportMutation>;
+export type ReportListCreateReportMutationResult = ApolloReactCommon.MutationResult<ReportListCreateReportMutation>;
+export type ReportListCreateReportMutationOptions = ApolloReactCommon.BaseMutationOptions<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>;
+export const SignInDocument = gql`
+    mutation SignIn($email: String!) {
+  signin(email: $email)
+}
+    `;
+export type SignInMutationFn = ApolloReactCommon.MutationFunction<SignInMutation, SignInMutationVariables>;
+
+    export function useSignInMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignInMutation, SignInMutationVariables>) {
+      return ApolloReactHooks.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, baseOptions);
+    }
+export type SignInMutationHookResult = ReturnType<typeof useSignInMutation>;
+export type SignInMutationResult = ApolloReactCommon.MutationResult<SignInMutation>;
+export type SignInMutationOptions = ApolloReactCommon.BaseMutationOptions<SignInMutation, SignInMutationVariables>;
 export const ReportGetDocument = gql`
     query ReportGet($id: ID!) {
   report(id: $id) {
@@ -244,48 +298,3 @@ export type ReportUpdateMutationFn = ApolloReactCommon.MutationFunction<ReportUp
 export type ReportUpdateMutationHookResult = ReturnType<typeof useReportUpdateMutation>;
 export type ReportUpdateMutationResult = ApolloReactCommon.MutationResult<ReportUpdateMutation>;
 export type ReportUpdateMutationOptions = ApolloReactCommon.BaseMutationOptions<ReportUpdateMutation, ReportUpdateMutationVariables>;
-export const SignInDocument = gql`
-    mutation SignIn($email: String!) {
-  signin(email: $email)
-}
-    `;
-export type SignInMutationFn = ApolloReactCommon.MutationFunction<SignInMutation, SignInMutationVariables>;
-
-    export function useSignInMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignInMutation, SignInMutationVariables>) {
-      return ApolloReactHooks.useMutation<SignInMutation, SignInMutationVariables>(SignInDocument, baseOptions);
-    }
-export type SignInMutationHookResult = ReturnType<typeof useSignInMutation>;
-export type SignInMutationResult = ApolloReactCommon.MutationResult<SignInMutation>;
-export type SignInMutationOptions = ApolloReactCommon.BaseMutationOptions<SignInMutation, SignInMutationVariables>;
-export const ReportListGetDocument = gql`
-    query ReportListGet {
-  reports {
-    ...ReportListReport
-  }
-}
-    ${ReportListReportFragmentDoc}`;
-
-    export function useReportListGetQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ReportListGetQuery, ReportListGetQueryVariables>) {
-      return ApolloReactHooks.useQuery<ReportListGetQuery, ReportListGetQueryVariables>(ReportListGetDocument, baseOptions);
-    }
-      export function useReportListGetLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ReportListGetQuery, ReportListGetQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<ReportListGetQuery, ReportListGetQueryVariables>(ReportListGetDocument, baseOptions);
-      }
-      
-export type ReportListGetQueryHookResult = ReturnType<typeof useReportListGetQuery>;
-export type ReportListGetQueryResult = ApolloReactCommon.QueryResult<ReportListGetQuery, ReportListGetQueryVariables>;
-export const ReportListCreateReportDocument = gql`
-    mutation ReportListCreateReport($title: String!) {
-  createReport(title: $title) {
-    ...ReportListReport
-  }
-}
-    ${ReportListReportFragmentDoc}`;
-export type ReportListCreateReportMutationFn = ApolloReactCommon.MutationFunction<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>;
-
-    export function useReportListCreateReportMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>) {
-      return ApolloReactHooks.useMutation<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>(ReportListCreateReportDocument, baseOptions);
-    }
-export type ReportListCreateReportMutationHookResult = ReturnType<typeof useReportListCreateReportMutation>;
-export type ReportListCreateReportMutationResult = ApolloReactCommon.MutationResult<ReportListCreateReportMutation>;
-export type ReportListCreateReportMutationOptions = ApolloReactCommon.BaseMutationOptions<ReportListCreateReportMutation, ReportListCreateReportMutationVariables>;

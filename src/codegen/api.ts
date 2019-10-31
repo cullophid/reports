@@ -57,7 +57,7 @@ export type Query = {
    __typename?: 'Query',
   currentUser?: Maybe<User>,
   reports: Array<Report>,
-  report: Report,
+  report?: Maybe<Report>,
 };
 
 
@@ -229,7 +229,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   currentUser: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   reports: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType>,
-  report: Resolver<ResolversTypes['Report'], ParentType, ContextType, RequireFields<QueryReportArgs, 'id'>>,
+  report: Resolver<Maybe<ResolversTypes['Report']>, ParentType, ContextType, RequireFields<QueryReportArgs, 'id'>>,
 };
 
 export type ReportResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Report'] = ResolversParentTypes['Report']> = {
