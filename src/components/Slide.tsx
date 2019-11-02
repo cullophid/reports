@@ -1,26 +1,27 @@
-import React, { forwardRef, Ref, RefObject } from "react"
-import styled from "@emotion/styled"
-import useResizeListener from "react-resize-aware"
-import { colors } from "../theme"
+import React, { forwardRef, Ref } from "react";
+import styled from "@emotion/styled";
+import useResizeListener from "react-resize-aware";
+import { colors } from "../theme";
 
 type SlideProps = {
-  children?: React.ReactNode
-  width: number
-  height: number
-  onClick?: (e: React.MouseEvent) => void
-  selected?: boolean
-}
-export const Slide = forwardRef((props: SlideProps, ref: RefObject<HTMLElement>) => {
-  const [resizeListener, sizes] = useResizeListener()
-  const { width, height, children } = props
-  const scale = sizes.width / width
+  children?: React.ReactNode;
+  width: number;
+  height: number;
+  onClick?: (e: React.MouseEvent) => void;
+  selected?: boolean;
+};
+
+export const Slide = forwardRef((props: SlideProps, ref: Ref<HTMLElement>) => {
+  const [resizeListener, sizes] = useResizeListener();
+  const { width, height, children } = props;
+  const scale = sizes.width / width;
   return (
     <Background
       ref={ref}
       onClick={props.onClick}
       scale={scale}
       height={height}
-      selected={props.selected}
+      selected={props.selected || false}
       show={scale != 0}
     >
       {resizeListener}
@@ -28,16 +29,16 @@ export const Slide = forwardRef((props: SlideProps, ref: RefObject<HTMLElement>)
         {children}
       </Content>
     </Background>
-  )
-})
+  );
+});
 type BackgroundProps = {
-  scale: number
-  height: number
-  selected: boolean
-  show: boolean
-}
+  scale: number;
+  height: number;
+  selected: boolean;
+  show: boolean;
+};
 const Background = styled.section<BackgroundProps>`
-  opacity:${p => p.show ? 1 : 0};
+  opacity: ${p => (p.show ? 1 : 0)};
   transition: 600ms opacity;
   background: white;
   position: relative;
@@ -49,7 +50,7 @@ const Background = styled.section<BackgroundProps>`
 
   border: ${p =>
     p.selected ? `1px solid  ${colors.primary}` : "1px solid transparent"};
-`
+`;
 
 const Content = styled.div<{ scale: number; height: number; width: number }>`
   position: absolute;
@@ -59,4 +60,4 @@ const Content = styled.div<{ scale: number; height: number; width: number }>`
   width: ${p => p.width}px;
   transform: scale(${p => p.scale});
   transform-origin: top left;
-`
+`;

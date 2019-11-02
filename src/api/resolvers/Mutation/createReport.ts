@@ -2,28 +2,35 @@ import { MutationResolvers } from "../../../codegen/api";
 import { AuthenticationError } from "apollo-server-core";
 import cuid from "cuid";
 import { knex } from "../../knex";
-import { Report } from "../../Models";
+import { Report, Slide } from "../../Models";
 
 export const createReport: MutationResolvers["createReport"] = async (
   _,
   { title },
   ctx
 ) => {
-  if (!ctx.session.user) {
+  const { user } = ctx.session;
+  if (!user) {
     throw new AuthenticationError("You are not logged in");
   }
 
-  const id = cuid();
-  await knex<Report>("reports").insert({
-    id,
-    title,
-    width: 1280,
-    height: 720,
-    createdAt: new Date(),
-    ownerId: ctx.session.user.sub
-  });
+  const reportId = cuid();
+  return knex.transaction(async trx => {
+    await trx<Report>("reports").insert({
+      id: reportId,
+      title,
+      width: 1280,
+      height: 720,
+      createdAt: new Date(),
+      ownerId: user.sub
+    });
+    await trx<Slide>("slides").insert({
+      id: cuid(),
+      reportId
+    });
 
-  return await knex<Report>("reports")
-    .where("id", id)
-    .first();
+    return (await trx<Report>("reports")
+      .where("id", reportId)
+      .first())!;
+  });
 };

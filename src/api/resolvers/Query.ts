@@ -21,9 +21,11 @@ export const Query: QueryResolvers = {
     if (!user) {
       throw new AuthenticationError("You are not authenticated");
     }
-    return knex<Report>("reports")
-      .where("id", id)
-      .andWhere("ownerId", ctx.session.user.sub)
-      .first();
+    return (
+      (await knex<Report>("reports")
+        .where("id", id)
+        .andWhere("ownerId", user.sub)
+        .first()) || null
+    );
   }
 };

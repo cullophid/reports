@@ -5,7 +5,7 @@ import { useSpring, animated, useChain, config } from "react-spring";
 import { Text } from "../Typography";
 
 const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
-  const step1 = useRef();
+  const step1 = useRef(null);
   const formProps = useSpring({
     ref: step1,
     from: {
@@ -23,7 +23,7 @@ const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
         }
   });
 
-  const step2 = useRef();
+  const step2 = useRef(null);
   const postMarkProps = useSpring({
     ref: step2,
     from: {
@@ -33,7 +33,7 @@ const useLetterAnimation = (submitted: boolean, onRest: () => void) => {
     to: submitted ? { opacity: 1 } : { opacity: 0 }
   });
 
-  const step3 = useRef();
+  const step3 = useRef(null);
   const formProps2 = useSpring({
     ref: step3,
     delay: 500,
@@ -94,7 +94,7 @@ export const LoginPage = () => {
   return (
     <Layout>
       {loginRequest.error && animationCompleted && (
-        <Text as="p" color="red">
+        <Text color="red">
           {loginRequest.error.graphQLErrors[0]
             ? loginRequest.error.graphQLErrors[0].message
             : loginRequest.error.message}
@@ -102,7 +102,7 @@ export const LoginPage = () => {
       )}
       {loginRequest.data && animationCompleted ? (
         <animated.div style={successProps}>
-          <Text as="p">We have sent you an email with a link to sign in.</Text>
+          <Text>We have sent you an email with a link to sign in.</Text>
         </animated.div>
       ) : (
         <Form
@@ -136,7 +136,9 @@ export const LoginPage = () => {
               id="email-input"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              style={{ border: loginRequest.called && "none !important" }}
+              style={{
+                border: loginRequest.called ? "none !important" : undefined
+              }}
             />
           </div>
           <Stamp style={{ padding: loginRequest.called ? 6 : 0 }}>

@@ -7,7 +7,7 @@
     "codegen": "graphql-codegen",
     "predev": "yarn run codegen",
     "next": "next",
-    "dev": "next",
+    "dev": "source .env && next",
     "prisma": "prisma2",
     "build": "echo Building && yarn run codegen && next build",
     "now-build": "echo Building && yarn run codegen && next build",

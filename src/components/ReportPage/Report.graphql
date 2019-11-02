@@ -1,0 +1,34 @@
+fragment Report on Report {
+  id
+  title
+  width
+  height
+  slides {
+    ...ReportSlide
+  }
+}
+fragment ReportSlide on Slide {
+  id
+  charts {
+    ...ReportChart
+  }
+}
+fragment ReportChart on Chart {
+  id
+  x
+  y
+  width
+  height
+}
+
+query ReportGet($id: ID!) {
+  report(id: $id) {
+    ...Report
+  }
+}
+
+mutation ReportUpdate($report: ReportInput!) {
+  updateReport(report: $report) {
+    ...Report
+  }
+}

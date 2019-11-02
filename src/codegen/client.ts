@@ -22,7 +22,7 @@ export type Chart = {
 };
 
 export type ChartInput = {
-  id?: Maybe<Scalars['ID']>,
+  id: Scalars['ID'],
   x: Scalars['Int'],
   y: Scalars['Int'],
   width: Scalars['Int'],
@@ -49,7 +49,7 @@ export type MutationCreateReportArgs = {
 
 
 export type MutationUpdateReportArgs = {
-  report?: Maybe<ReportInput>
+  report: ReportInput
 };
 
 export type Query = {
@@ -89,7 +89,7 @@ export type Slide = {
 };
 
 export type SlideInput = {
-  id?: Maybe<Scalars['ID']>,
+  id: Scalars['ID'],
   charts: Array<ChartInput>,
 };
 
@@ -179,10 +179,9 @@ export type ReportUpdateMutationVariables = {
 
 export type ReportUpdateMutation = (
   { __typename?: 'Mutation' }
-  & { updateReport: (
-    { __typename: 'Report' }
-    & Pick<Report, 'id'>
-  ) }
+  & { updateReport: { __typename?: 'Report' }
+    & ReportFragment
+   }
 );
 export const ReportListReportFragmentDoc = gql`
     fragment ReportListReport on Report {
@@ -285,11 +284,10 @@ export type ReportGetQueryResult = ApolloReactCommon.QueryResult<ReportGetQuery,
 export const ReportUpdateDocument = gql`
     mutation ReportUpdate($report: ReportInput!) {
   updateReport(report: $report) {
-    id
-    __typename
+    ...Report
   }
 }
-    `;
+    ${ReportFragmentDoc}`;
 export type ReportUpdateMutationFn = ApolloReactCommon.MutationFunction<ReportUpdateMutation, ReportUpdateMutationVariables>;
 
     export function useReportUpdateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ReportUpdateMutation, ReportUpdateMutationVariables>) {

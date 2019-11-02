@@ -1,17 +1,31 @@
 import styled from "@emotion/styled";
-import { Chart as ChartType } from "../codegen/client";
+import { Chart as ChartType } from "../../codegen/client";
 import { css } from "@emotion/core";
-import { colors } from "../theme";
+import { colors } from "../../theme";
 import { MouseEvent } from "react";
+import { useDrag } from "react-use-gesture";
 type Props = {
   chart: ChartType;
   onClick: (e: MouseEvent) => void;
+  onDrag: (isDown: boolean, delta: [number, number]) => void;
   selected: boolean;
 };
 
 export const Chart = (props: Props) => {
-  return <ChartFrame {...props.chart} selected={props.selected} />;
+  const bind = useDrag(({ down, delta }) => {
+    props.onDrag(down, delta);
+  });
+
+  return (
+    <ChartFrame
+      {...props.chart}
+      {...bind()}
+      onClick={props.onClick}
+      selected={props.selected}
+    />
+  );
 };
+
 const ChartFrame = styled.div<ChartType & { selected: boolean }>`
   position: absolute;
   left: ${p => p.x}px;

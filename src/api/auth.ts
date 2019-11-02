@@ -21,9 +21,9 @@ export const auth = async (req: NextApiRequest, res: NextApiResponse) => {
         firstName: "",
         lastName: ""
       });
-      user = await knex<User>("users")
+      user = (await knex<User>("users")
         .where("id", id)
-        .first();
+        .first())!;
     }
 
     const refreshToken = await createRefreshToken(user);

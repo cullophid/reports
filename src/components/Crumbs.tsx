@@ -39,7 +39,5 @@ export const CrumbLink = (props: CrumbLinkProps) => (
 );
 
 export const CrumbTitle = (props: { children: ReactNode }) => (
-  <Title as="h1" fontSize="1rem">
-    {props.children}
-  </Title>
+  <Title fontSize="1rem">{props.children}</Title>
 );

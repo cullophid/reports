@@ -23,7 +23,7 @@ export type Chart = {
 };
 
 export type ChartInput = {
-  id?: Maybe<Scalars['ID']>,
+  id: Scalars['ID'],
   x: Scalars['Int'],
   y: Scalars['Int'],
   width: Scalars['Int'],
@@ -50,7 +50,7 @@ export type MutationCreateReportArgs = {
 
 
 export type MutationUpdateReportArgs = {
-  report?: Maybe<ReportInput>
+  report: ReportInput
 };
 
 export type Query = {
@@ -90,7 +90,7 @@ export type Slide = {
 };
 
 export type SlideInput = {
-  id?: Maybe<Scalars['ID']>,
+  id: Scalars['ID'],
   charts: Array<ChartInput>,
 };
 
@@ -223,7 +223,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   signin: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSigninArgs, 'email'>>,
   createReport: Resolver<ResolversTypes['Report'], ParentType, ContextType, RequireFields<MutationCreateReportArgs, 'title'>>,
-  updateReport: Resolver<ResolversTypes['Report'], ParentType, ContextType, MutationUpdateReportArgs>,
+  updateReport: Resolver<ResolversTypes['Report'], ParentType, ContextType, RequireFields<MutationUpdateReportArgs, 'report'>>,
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
