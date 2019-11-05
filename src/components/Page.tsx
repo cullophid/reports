@@ -43,7 +43,10 @@ export const Page = ({ children }: Props) => {
       return auth_token;
     } catch (e) {
       console.error(e);
-      if (UNAUTHENTICATED_ROUTES.includes(router.pathname) === false) {
+      if (
+        UNAUTHENTICATED_ROUTES.includes(router.pathname) === false &&
+        typeof window !== "undefined"
+      ) {
         router.push("/login");
       }
     }

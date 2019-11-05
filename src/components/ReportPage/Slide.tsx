@@ -1,4 +1,4 @@
-import { ReportSlideFragment } from "../../codegen/client";
+import { ReportSlideFragment, ReportChartFragment } from "../../codegen/client";
 import { useContext, useRef, useState } from "react";
 import { ReportContext } from "./reportContext";
 import useMeasure from "../../hooks/useMeasure";
@@ -80,42 +80,55 @@ export const Slide = (props: SlideProps) => {
         {slide.charts.map(chart => {
           return (
             <Chart
-              onDrag={(isDragging, [dx, dy]) => {
-                let selection = context.selection;
-                if (!selection.includes(chart.id)) {
-                  selection = [chart.id];
-                  setContext({ ...context, selection });
-                }
-                if (selection.includes(chart.id)) {
-                  update({
-                    ...slide,
-                    charts: slide.charts.map(chart => {
-                      if (context.selection.includes(chart.id)) {
-                        return {
-                          ...chart,
-                          x: Math.round(chart.x + dx / scale),
-                          y: Math.round(chart.y + dy / scale)
-                        };
-                      }
-                      return chart;
-                    })
-                  });
-                }
-              }}
-              key={chart.id}
-              selected={context.selection.some(id => id === chart.id)}
-              chart={chart}
-              onClick={e => {
-                console.log({ chart });
-                if (context.tool === "select") {
-                  setContext({
+              onDrag={({ delta: [dx, dy], altKey, shiftKey, first }) => {
+                if (context.selection.includes(chart.id) === false && first) {
+                  return setContext({
                     ...context,
-                    selection: e.nativeEvent.shiftKey
+                    selection: shiftKey
                       ? [...context.selection, chart.id]
                       : [chart.id]
                   });
                 }
+                if (altKey && first) {
+                  const newCharts = context.selection
+                    .map(id => {
+                      const chart = slide.charts.find(c => c.id === id);
+                      return (
+                        chart && {
+                          ...chart,
+                          id: cuid()
+                        }
+                      );
+                    })
+                    .filter(Boolean) as ReportChartFragment[];
+
+                  update({
+                    ...slide,
+                    charts: [...slide.charts, ...newCharts]
+                  });
+                  console.log(newCharts);
+                  return setContext({
+                    ...context,
+                    selection: newCharts.map(({ id }) => id)
+                  });
+                }
+                update({
+                  ...slide,
+                  charts: slide.charts.map(c => {
+                    if (context.selection.includes(c.id)) {
+                      return {
+                        ...c,
+                        x: c.x + dx / scale,
+                        y: c.y + dy / scale
+                      };
+                    }
+                    return c;
+                  })
+                });
               }}
+              key={chart.id}
+              selected={context.selection.some(id => id === chart.id)}
+              chart={chart}
             />
           );
         })}

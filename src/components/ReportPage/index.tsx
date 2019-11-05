@@ -5,7 +5,7 @@ import { Crumbs, CrumbTitle, CrumbLink } from "../Crumbs";
 import { Header, HeaderSection } from "../Header";
 import { Icon } from "../Icon";
 import { FlatButton, Button } from "../Button";
-import { useState, KeyboardEvent, useRef } from "react";
+import { useState, KeyboardEvent, useRef, useReducer } from "react";
 import { css, keyframes } from "@emotion/core";
 import cuid from "cuid";
 
@@ -28,7 +28,6 @@ export const ReportPage = () => {
   const router = useRouter();
   const reportId = router.query.id as string;
   const slide = router.query.slide as string;
-
   const contextValue = useState<ReportContextType>({
     tool: "select",
     selection: []

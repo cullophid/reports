@@ -37,10 +37,10 @@ type Slide {
 
 type Chart {
   id: ID!
-  x: Int!
-  y: Int!
-  width: Int!
-  height: Int!
+  x: Float!
+  y: Float!
+  width: Float!
+  height: Float!
 }
 
 input ReportInput {
@@ -58,8 +58,8 @@ input SlideInput {
 
 input ChartInput {
   id: ID!
-  x: Int!
-  y: Int!
-  width: Int!
-  height: Int!
+  x: Float!
+  y: Float!
+  width: Float!
+  height: Float!
 }

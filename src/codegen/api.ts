@@ -16,18 +16,18 @@ export type Scalars = {
 export type Chart = {
    __typename?: 'Chart',
   id: Scalars['ID'],
-  x: Scalars['Int'],
-  y: Scalars['Int'],
-  width: Scalars['Int'],
-  height: Scalars['Int'],
+  x: Scalars['Float'],
+  y: Scalars['Float'],
+  width: Scalars['Float'],
+  height: Scalars['Float'],
 };
 
 export type ChartInput = {
   id: Scalars['ID'],
-  x: Scalars['Int'],
-  y: Scalars['Int'],
-  width: Scalars['Int'],
-  height: Scalars['Int'],
+  x: Scalars['Float'],
+  y: Scalars['Float'],
+  width: Scalars['Float'],
+  height: Scalars['Float'],
 };
 
 
@@ -183,6 +183,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Slide: ResolverTypeWrapper<Slide>,
   Chart: ResolverTypeWrapper<Chart>,
+  Float: ResolverTypeWrapper<Scalars['Float']>,
   Mutation: ResolverTypeWrapper<{}>,
   ReportInput: ReportInput,
   SlideInput: SlideInput,
@@ -201,6 +202,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'],
   Slide: Slide,
   Chart: Chart,
+  Float: Scalars['Float'],
   Mutation: {},
   ReportInput: ReportInput,
   SlideInput: SlideInput,
@@ -210,10 +212,10 @@ export type ResolversParentTypes = {
 
 export type ChartResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Chart'] = ResolversParentTypes['Chart']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  x: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
-  y: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
-  width: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
-  height: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  x: Resolver<ResolversTypes['Float'], ParentType, ContextType>,
+  y: Resolver<ResolversTypes['Float'], ParentType, ContextType>,
+  width: Resolver<ResolversTypes['Float'], ParentType, ContextType>,
+  height: Resolver<ResolversTypes['Float'], ParentType, ContextType>,
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
