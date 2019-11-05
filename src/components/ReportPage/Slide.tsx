@@ -159,6 +159,6 @@ const SlideBackground = styled.section<{ width: number; height: number }>`
   position: relative;
   background: white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  width: ${p => p.width}px;
-  height: ${p => p.height}px;
+  width: ${p => p.width}em;
+  height: ${p => p.height}em;
 `;

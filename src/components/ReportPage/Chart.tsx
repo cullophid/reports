@@ -24,10 +24,10 @@ export const Chart = (props: Props) => {
 
 const ChartFrame = styled.div<ChartType & { selected: boolean }>`
   position: absolute;
-  left: ${p => p.x}px;
-  top: ${p => p.y}px;
-  width: ${p => p.width}px;
-  height: ${p => p.height}px;
+  left: ${p => p.x}em;
+  top: ${p => p.y}em;
+  width: ${p => p.width}em;
+  height: ${p => p.height}em;
   background: #f0f0f0;
   border: 1px solid #dedede;
   ${p =>

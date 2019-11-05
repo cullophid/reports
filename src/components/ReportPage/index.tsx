@@ -13,6 +13,8 @@ import { useReport } from "./useReport";
 import useMeasure from "../../hooks/useMeasure";
 import { ReportContextType, ReportContext, Tool } from "./reportContext";
 import { Slide } from "./Slide";
+import { usePinch } from "react-use-gesture";
+import { clamp } from "lodash";
 
 const getModifiers = (e: KeyboardEvent) =>
   new Set(
@@ -185,6 +187,7 @@ const Scene = styled.main<{ tool: Tool; scale: number }>`
   width: 100%;
   place-content: center center;
   overflow: hidden;
+  font-size: ${p => p.scale}px;
   ${p => {
     switch (p.tool) {
       case "insert_chart":
@@ -192,11 +195,7 @@ const Scene = styled.main<{ tool: Tool; scale: number }>`
           cursor: crosshair;
         `;
     }
-  }}
-  & > * {
-    transform: scale(${p => p.scale});
-    transform-origin: 50% 50%;
-  }
+  }};
 `;
 
 const LoadingIndicator = () => (
