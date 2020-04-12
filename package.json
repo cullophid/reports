@@ -57,6 +57,7 @@
     "styled-system": "^5.1.2"
   },
   "devDependencies": {
+    "@architect/sandbox": "^1.9.3",
     "@types/auth0-js": "^9.10.6",
     "@types/dotenv": "^6.1.1",
     "@types/jsonwebtoken": "^8.3.3",
