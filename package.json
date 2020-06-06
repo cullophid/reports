@@ -31,7 +31,7 @@
     "@types/mongodb": "^3.3.5",
     "@types/styled-system": "^5.1.1",
     "apollo-boost": "^0.4.4",
-    "apollo-server-micro": "^2.9.0",
+    "apollo-server-micro": "^2.14.2",
     "babel-plugin-emotion": "^10.0.19",
     "cuid": "^2.1.6",
     "dataloader": "^1.4.0",
